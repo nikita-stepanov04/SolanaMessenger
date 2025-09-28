@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolanaMessenger.Application
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolanaMessenger.Web", "SolanaMessenger.Web\SolanaMessenger.Web.csproj", "{4F6722AB-8C5C-4872-AA71-15B14AB1FC01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolanaMessenger.Infrastructure.Blockchain", "SolanaMessenger.Infrastructure.Blockchain\SolanaMessenger.Infrastructure.Blockchain.csproj", "{062C24B1-6513-2D67-90A5-EC05B3B09653}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4F6722AB-8C5C-4872-AA71-15B14AB1FC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F6722AB-8C5C-4872-AA71-15B14AB1FC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F6722AB-8C5C-4872-AA71-15B14AB1FC01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062C24B1-6513-2D67-90A5-EC05B3B09653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062C24B1-6513-2D67-90A5-EC05B3B09653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062C24B1-6513-2D67-90A5-EC05B3B09653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062C24B1-6513-2D67-90A5-EC05B3B09653}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
