@@ -13,8 +13,7 @@ namespace SolanaMessenger.Web
             var services = builder.Services;
             var config = builder.Configuration;
 
-            services
-                .AddControllers()
+            services.AddControllers()
                 .SetUpJsonOptions();
 
             services.AddEndpointsApiExplorer();
@@ -26,7 +25,6 @@ namespace SolanaMessenger.Web
             services.SetupApplicationDependencyInjection();
 
             services.SetUpCors();
-            services.SetUpOptions();
             services.SetUpIdentity(config);
 
             var app = builder.Build();

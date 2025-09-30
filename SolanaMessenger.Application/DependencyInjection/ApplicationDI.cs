@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Application.BusinessServices;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
-using SolanaMessenger.Application.DTOs.Users;
+using SolanaMessenger.Application.Cryptography;
 
 namespace SolanaMessenger.Application.DependencyInjection
 {
@@ -13,6 +13,14 @@ namespace SolanaMessenger.Application.DependencyInjection
 
             services.AddScoped<IUserBS, UserBS>();
             services.AddScoped<ITokenBS, TokenBS>();
+
+            services.AddOptions<JwtSettings>()
+                .BindConfiguration("Jwt")
+                .ValidateDataAnnotations()
+                .Validate(
+                    validation: s => s.AccessTokenKey != s.RefreshTokenKey,
+                    failureMessage: "Access token can not be equal to refresh token"
+                ).ValidateOnStart();
             return services;
         }
     }

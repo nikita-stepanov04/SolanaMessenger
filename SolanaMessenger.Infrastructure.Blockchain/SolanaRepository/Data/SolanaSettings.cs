@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SolanaMessenger.Infrastructure.Blockchain
-{
+namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
+{ 
     public class SolanaSettings
     {
         [Required] public string WalletPublicKey { get; set; } = null!;

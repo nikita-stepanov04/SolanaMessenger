@@ -2,6 +2,7 @@
 {
     internal class DataWrapper
     {
+        public DataWrapper() { }
         internal DataWrapper(string type, string data, int part = 0)
         {
             Type = type;

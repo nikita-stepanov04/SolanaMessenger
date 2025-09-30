@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Solnet.Rpc;
 using Solnet.Rpc.Core.Sockets;
 using Solnet.Rpc.Types;
@@ -7,9 +8,9 @@ using System.Text.Json;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
-    internal class SolanaTransactionSocketListener : IDisposable
+    public class SolanaTransactionSocketListener : IDisposable
     {
-        private const int AWAITING_TIMEOUT = 30; // seconds
+        private const int AWAITING_TIMEOUT = 30 * 1000; // seconds
         private const string DEV_WSS_ENDPOINT = "wss://api.devnet.solana.com";
         private const string MAIN_WSS_ENDPOINT = "wss://api.mainnet-beta.solana.com";
 
@@ -18,9 +19,11 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         private readonly SubscriptionState _subscriptionState;
         private readonly ConcurrentDictionary<string, EventWaitingPayload> _pendingSignatures = new();
 
-        internal SolanaTransactionSocketListener(string walletPublicKey, ILoggerFactory loggerFactory, bool isDev)
+        public SolanaTransactionSocketListener(ILoggerFactory loggerFactory, IOptions<SolanaSettings> solOpts)
         {
-            string endpoint = isDev ? DEV_WSS_ENDPOINT : MAIN_WSS_ENDPOINT;
+            var solSettings = solOpts.Value;
+
+            string endpoint = solSettings.UseDevelopingSolanaCluster ? DEV_WSS_ENDPOINT : MAIN_WSS_ENDPOINT;
 
             _logger = loggerFactory.CreateLogger<SolanaTransactionSocketListener>();
 
@@ -30,7 +33,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             _logger.LogInformation("Solana RPC Streaming listener successfully connected to: {e}", endpoint);
 
             _subscriptionState = _wssClient.SubscribeLogInfo(
-                walletPublicKey,
+                solSettings.WalletPublicKey,
                 (state, result) =>
                 {
                     var signature = result.Value.Signature;
@@ -69,6 +72,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 {
                     using (ewp)
                     {
+                        _logger.LogWarning("Timeout reached: no confirmation event received for transaction {t}", signature);
                         ewp.Tcs.TrySetResult(false);
                     }
                 }

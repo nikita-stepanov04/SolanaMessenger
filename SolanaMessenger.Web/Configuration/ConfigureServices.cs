@@ -29,18 +29,5 @@ namespace SolanaMessenger.Web
             });
             return services;
         }
-
-        public static IServiceCollection SetUpOptions(this IServiceCollection services)
-        {
-            services.AddOptions<JwtSettings>()
-                .BindConfiguration("Jwt")
-                .ValidateDataAnnotations()
-                .Validate(
-                    validation: s => s.AccessTokenKey != s.RefreshTokenKey,
-                    failureMessage: "Access token can not be equal to refresh token"
-                ).ValidateOnStart();
-
-            return services;
-        }
     }
 }

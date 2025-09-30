@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
-    internal class SolanaTransactionManager<TObject>
+    public class SolanaTransactionManager<TObject>
         where TObject : class, new()
     {
         private const int MAX_REQUESTS_RETRIES = 3;
@@ -39,7 +39,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             _account = new Account(_solSettings.WalletPrivateKey, _solSettings.WalletPublicKey);
         }
 
-        public async Task<List<string>> SendObjectAsync(TObject obj)
+        internal async Task<List<string>> SendObjectAsync(TObject obj)
         {
             var slices = SliceObject(obj);
             var tasks = slices.Select(s => SendMessageAsync(s));
@@ -133,6 +133,8 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
                 return sendingResponse.Result;
             }
+
+            _logger.LogCritical("Failed to send message {message}", message);
             return null;
         }
     }

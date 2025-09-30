@@ -4,15 +4,19 @@
         where TObject : class, new()
     {
         private readonly SolanaTransactionManager<TObject> _transactionManager;
+        private readonly HeliusTransactionFetcher<TObject> _transactionFetcher;
 
-        internal SolanaRepository(SolanaTransactionManager<TObject> transactionManager)
+        public SolanaRepository(
+            SolanaTransactionManager<TObject> transactionManager,
+            HeliusTransactionFetcher<TObject> transactionFetcher)
         {
             _transactionManager = transactionManager;
+            _transactionFetcher = transactionFetcher;
         }
 
-        public Task<TObject> GetObjectAsync(List<string> signatures)
+        public async Task<TObject> GetObjectAsync(List<string> signatures)
         {
-            throw new NotImplementedException();
+            return await _transactionFetcher.GetObjectAsync(signatures);
         }
 
         public async Task<List<string>> WriteObjectAsync(TObject obj)
