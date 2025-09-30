@@ -51,7 +51,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
             var sb = new StringBuilder();
             foreach (var dw in memoStrings!
-                .Select(s => JsonSerializer.Deserialize<DataWrapper>(s!)!)
+                .Select(sW => DataWrapper.Deserialize(sW!))
                 .OrderBy(dw => dw.Part))
             {
                 sb.Append(dw.Data);

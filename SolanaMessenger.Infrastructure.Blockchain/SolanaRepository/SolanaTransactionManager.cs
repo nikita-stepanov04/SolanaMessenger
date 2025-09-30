@@ -60,7 +60,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             var objectType = typeof(TObject).Name;
             var serializedObj = JsonSerializer.Serialize(obj);
             var wrappedObj = new DataWrapper(objectType, serializedObj);
-            var serializedWrappedObj = JsonSerializer.Serialize(wrappedObj);
+            var serializedWrappedObj = wrappedObj.Serialize();
 
             if (serializedWrappedObj.Length <= MAX_TRANSACTION_LENGTH)
                 return new List<string> { serializedWrappedObj };
@@ -81,7 +81,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 string chunkData = serializedObj.Substring(i * chunkLength, length);
 
                 var chunkDataWrapper = new DataWrapper(objectType, chunkData, i);
-                var serializedChunkDataWrapper = JsonSerializer.Serialize(chunkDataWrapper);
+                var serializedChunkDataWrapper = chunkDataWrapper.Serialize();
 
                 slicedObj.Add(serializedChunkDataWrapper);
             }
