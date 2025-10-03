@@ -22,26 +22,33 @@ namespace SolanaMessenger.Web.Controllers
             _tokenBS = tokenBS;
         }
 
-        [HttpGet("check-login")]
-        public async Task<IActionResult> CheckLogin(string login)
+        [HttpGet("{login}")]
+        public async Task<IActionResult> GetByLogin([FromRoute] string login)
+        {
+            var user = await _userBS.GetByLoginAsync(login);
+            return Ok(user);
+        }
+
+        [HttpGet("check-login/{login}")]
+        public async Task<IActionResult> CheckLogin([FromRoute] string login)
         {
             var result = await _userBS.IsLoginNotTakenAsync(login);
             return Ok(result);
         }
 
         [HttpPost("registration")]
-        public async Task<IActionResult> Registration([FromBody] UserDTO dto)
+        public async Task<IActionResult> Registration([FromBody] UserRegistrationDTO dto)
         {
             var userID = await _userBS.RegisterUserAsync(dto);
 
-            if (userID == 0)
+            if (userID == Guid.Empty)
                 return BadRequest(new MessageResponse("User with specified login has already been registered"));
 
             return Ok(new IDResponse(userID));
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] UserLogInDTO dto)
         {
             var user = await _userBS.CheckCredentialsForLoginAsync(dto);
 

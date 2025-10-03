@@ -4,6 +4,7 @@ using Solnet.Programs;
 using Solnet.Rpc;
 using Solnet.Rpc.Builders;
 using Solnet.Wallet;
+using Solnet.Wallet.Utilities;
 using System.Text.Json;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
@@ -39,7 +40,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             _account = new Account(_solSettings.WalletPrivateKey, _solSettings.WalletPublicKey);
         }
 
-        internal async Task<List<string>> SendObjectAsync(TObject obj)
+        internal async Task<byte[]?> SendObjectAsync(TObject obj)
         {
             var slices = SliceObject(obj);
             var tasks = slices.Select(s => SendMessageAsync(s));
@@ -49,10 +50,12 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             if (!success)
             {
                 _logger.LogError("Failed to write object of type {t} to blockchain", typeof(TObject).Name);
-                throw new ObjectWritingToBlockchainException();
+                return null;
             }
 
-            return signatures!.Select(s => s!).ToList();
+            return signatures!
+                .SelectMany(s => Encoders.Base58.DecodeData(s!))
+                .ToArray();
         }
 
         private List<string> SliceObject(TObject obj)

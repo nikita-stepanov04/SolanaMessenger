@@ -1,9 +1,9 @@
 ﻿namespace SolanaMessenger.Web;
 public class IDResponse
 {
-    public IDResponse(long id) 
+    public IDResponse(Guid id) 
     {
         ID = id;
     }
-    public long ID { get; set; }
+    public Guid ID { get; set; }
 }

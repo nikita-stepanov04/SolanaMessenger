@@ -12,7 +12,7 @@ using SolanaMessenger.Infrastructure.EFRepository;
 namespace SolanaMessenger.Infrastructure.PostgresMigrations
 {
     [DbContext(typeof(EFDataContext))]
-    [Migration("20250923162914_Initial")]
+    [Migration("20251003182809_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,11 +27,8 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.InvalidatedToken", b =>
                 {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateExpiration")
                         .HasColumnType("timestamp with time zone");
@@ -49,42 +46,16 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.User", b =>
                 {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.Property<byte[]>("PasswordHash")
+                    b.Property<byte[]>("Signatures")
                         .IsRequired()
                         .HasColumnType("bytea");
-
-                    b.Property<byte[]>("PublicEncryptionKey")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<short>("Role")
-                        .HasColumnType("smallint");
-
-                    b.Property<byte[]>("Salt")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("SecondName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
 
                     b.HasKey("ID");
 

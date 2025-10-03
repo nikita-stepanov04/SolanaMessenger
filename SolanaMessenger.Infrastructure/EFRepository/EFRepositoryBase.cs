@@ -17,7 +17,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
             await DbContext.Set<TEntity>().AddAsync(entity);
         }       
 
-        public async Task<TEntity?> GetByIDAsync(long id)
+        public async Task<TEntity?> GetByIDAsync(Guid id)
         {
             return await DbContext.Set<TEntity>().FindAsync(id);
         }

@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SolanaMessenger.Infrastructure
 {
-    public interface IInfrastructureManager
+    public interface IInfrastructureDIManager
     {
-        IServiceCollection SetupInfrastructure(IServiceCollection services, IConfiguration config);
+        IServiceCollection SetupInfrastructureDI(IServiceCollection services, IConfiguration config);
     }
 }

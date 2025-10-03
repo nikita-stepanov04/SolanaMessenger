@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Application.BusinessServices;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
 using SolanaMessenger.Application.Cryptography;
 
 namespace SolanaMessenger.Application.DependencyInjection
 {
-    public static class ApplicationDI
+    public class DefaultApplicationDIManager : IApplicationDIManager
     {
-        public static IServiceCollection SetupApplicationDependencyInjection(this IServiceCollection services)
+        public IServiceCollection SetupApplicationDI(IServiceCollection services, IConfiguration config)
         {
-            services.AddAutoMapper(cfg => { }, typeof(ApplicationDI).Assembly);
+            services.AddAutoMapper(cfg => { }, typeof(DefaultApplicationDIManager).Assembly);
 
             services.AddScoped<IUserBS, UserBS>();
             services.AddScoped<ITokenBS, TokenBS>();

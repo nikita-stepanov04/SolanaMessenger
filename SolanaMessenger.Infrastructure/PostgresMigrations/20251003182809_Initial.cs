@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -16,8 +15,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 name: "InvalidatedTokens",
                 columns: table => new
                 {
-                    ID = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ID = table.Column<Guid>(type: "uuid", nullable: false),
                     TokenID = table.Column<string>(type: "varchar(32)", nullable: false),
                     DateExpiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -30,16 +28,9 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 name: "Users",
                 columns: table => new
                 {
-                    ID = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ID = table.Column<Guid>(type: "uuid", nullable: false),
                     Login = table.Column<string>(type: "varchar(50)", nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
-                    PublicEncryptionKey = table.Column<byte[]>(type: "bytea", nullable: false),
-                    Salt = table.Column<byte[]>(type: "bytea", nullable: false),
-                    Role = table.Column<short>(type: "smallint", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(50)", nullable: false),
-                    SecondName = table.Column<string>(type: "varchar(50)", nullable: false),
-                    LastName = table.Column<string>(type: "varchar(50)", nullable: false)
+                    Signatures = table.Column<byte[]>(type: "bytea", nullable: false)
                 },
                 constraints: table =>
                 {

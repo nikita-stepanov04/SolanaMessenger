@@ -14,19 +14,6 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
                 entity.Property(e => e.Login)
                    .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.FirstName)
-                    .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.SecondName)
-                    .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.LastName)
-                    .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.Role)
-                    .HasConversion<short>()
-                    .HasColumnType("smallint");
             });
         }
     }

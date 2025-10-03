@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
-    public class EFInfrastructureManager : IInfrastructureManager
+    public class EFInfrastructureDIManager : IInfrastructureDIManager
     {
-        public IServiceCollection SetupInfrastructure(IServiceCollection services, IConfiguration config)
+        public IServiceCollection SetupInfrastructureDI(IServiceCollection services, IConfiguration config)
         {
             string? dbConnection = config
                 .GetConnectionString("DbConnection");

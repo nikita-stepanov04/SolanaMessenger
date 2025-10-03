@@ -110,7 +110,7 @@ namespace SolanaMessenger.Application.BusinessServices
             return true;
         }
 
-        public async Task<InvalidatedToken?> GetByIDAsync(long id)
+        public async Task<InvalidatedToken?> GetByIDAsync(Guid id)
         {
             return await _tokenRep.GetByIDAsync(id);
         }

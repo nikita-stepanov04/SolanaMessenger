@@ -1,6 +1,6 @@
 ﻿namespace SolanaMessenger.Domain.Entities
 {
-    public class User : EntityBase
+    public class UserData : EntityBase
     {
         public string Login { get; set; } = null!;
         public byte[] PasswordHash { get; set; } = null!;

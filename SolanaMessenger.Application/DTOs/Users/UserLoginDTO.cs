@@ -2,7 +2,7 @@
 
 namespace SolanaMessenger.Application.DTOs
 {
-    public class UserLoginDTO : DTOBase
+    public class UserLogInDTO : DTOBase
     {
         [Required(ErrorMessage = "Login is required.")]
         [StringLength(50, MinimumLength = 6, ErrorMessage = "Login must be between 6 and 50 characters.")]

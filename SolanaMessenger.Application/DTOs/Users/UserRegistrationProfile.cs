@@ -4,20 +4,11 @@ using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Application.DTOs.Users
 {
-    public class UserMappingProfile : Profile
+    public class UserRegistrationProfile : Profile
     {
-        public UserMappingProfile() 
+        public UserRegistrationProfile()
         {
-            CreateMap<UserData, UserDTO>()
-                .ForMember(
-                    dest => dest.PublicEncryptionKey,
-                    opt => opt.ConvertUsing(new ByteArrToStringConverter(), src => src.PublicEncryptionKey)
-                )
-                .ForMember(
-                    dest => dest.Salt,
-                    opt => opt.ConvertUsing(new ByteArrToStringConverter(), src => src.Salt)
-                )
-                .ReverseMap()
+            CreateMap<UserRegistrationDTO, UserData>()
                 .ForMember(
                     dest => dest.PublicEncryptionKey,
                     opt => opt.ConvertUsing(new StringToByteArrConverter(), src => src.PublicEncryptionKey)

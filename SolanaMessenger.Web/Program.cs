@@ -2,6 +2,9 @@ using SolanaMessenger.Application.DependencyInjection;
 using SolanaMessenger.Infrastructure;
 using SolanaMessenger.Infrastructure.EFRepository;
 using SolanaMessenger.Web.Identity;
+using SolanaMessenger.Infrastructure.Blockchain;
+using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;
+using SolanaMessenger.Application;
 
 namespace SolanaMessenger.Web
 {
@@ -19,10 +22,14 @@ namespace SolanaMessenger.Web
             services.AddEndpointsApiExplorer();
             services.SetUpSwagger();
 
-            IInfrastructureManager infManager = new EFInfrastructureManager();
-            infManager.SetupInfrastructure(services, config);
+            IInfrastructureDIManager infManager = new EFInfrastructureDIManager();
+            infManager.SetupInfrastructureDI(services, config);
 
-            services.SetupApplicationDependencyInjection();
+            IBlockchainInfrastructureDIManager blkManager = new SolanaBlockchainDIManager();
+            blkManager.SetupBlockchainInfrastructureDI(services, config);
+
+            IApplicationDIManager appManager = new DefaultApplicationDIManager();
+            appManager.SetupApplicationDI(services, config);
 
             services.SetUpCors();
             services.SetUpIdentity(config);

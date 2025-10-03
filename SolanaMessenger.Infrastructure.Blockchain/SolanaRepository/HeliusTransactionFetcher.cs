@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Solnet.Rpc.Models;
+using Solnet.Wallet.Utilities;
 using System.Text;
 using System.Text.Json;
 
@@ -10,7 +10,8 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         where TObject : class, new()
     {
         const int REQUEST_TIMEOUT = 30; // seconds
-        private const int MAX_REQUESTS_RETRIES = 3;
+        const int SIGNATURE_LENGTH = 64;
+        const int MAX_REQUESTS_RETRIES = 3;
         const string DEV_URL = "https://devnet.helius-rpc.com";
         const string MAIN_URL = "https://mainnet.helius-rpc.com";
 
@@ -36,17 +37,18 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             _endpoint = $"{baseUrl}/?api-key={_solanaSettings.HeliusApiKey}";
         }
 
-        public async Task<TObject> GetObjectAsync(List<string> signatures)
+        public async Task<TObject?> GetObjectAsync(byte[] signaturesBytes)
         {
+            var signatures = RestoreSignature(signaturesBytes);
             var tasks = signatures.Select(s => GetTransactionAsync(s));
             var memoStrings = await Task.WhenAll(tasks);
 
             var success = memoStrings?.All(s => s != null) ?? false;
-            
+
             if (!success)
             {
                 _logger.LogCritical("Failed to fetch object of type {t} from blockchain", typeof(TObject).Name);
-                throw new ObjectFetchingException();
+                return null;
             }
 
             var sb = new StringBuilder();
@@ -98,6 +100,20 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
             _logger.LogCritical("Failed to fetch {transaction}", signature);
             return null;
+        }
+
+        private List<string> RestoreSignature(byte[] signatures)
+        {
+            var result = new List<string>();
+            var count = signatures.Length / 64;
+
+            for (int i = 0; i < count; i++)
+            {
+                var sigBytes = signatures.AsSpan(i * SIGNATURE_LENGTH, SIGNATURE_LENGTH);
+                result.Add(Encoders.Base58.EncodeData(sigBytes.ToArray()));
+            }
+
+            return result;
         }
     }
 }

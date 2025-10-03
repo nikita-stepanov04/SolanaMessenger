@@ -3,13 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SolanaMessenger.Application.DTOs
 {
-    public class UserDTO : DTOBase
+    public class UserRegistrationDTO
     {
-        public Guid ID { get; set; }
 
         [Required(ErrorMessage = "Login is required.")]
         [StringLength(50, MinimumLength = 6, ErrorMessage = "Login must be between 6 and 50 characters.")]
         public string Login { get; set; } = null!;
+
+        [Required(ErrorMessage = "Password is required.")]
+        [StringLength(50, ErrorMessage = "Password must be at most 50 characters.")]
+        public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Public encryption key is required.")]
         [Base64String(ErrorMessage = "Public encryption key must be a valid base64 string.")]
@@ -34,5 +37,6 @@ namespace SolanaMessenger.Application.DTOs
         public string LastName { get; set; } = null!;
 
         public Role Role { get; set; } = Role.User;
+        
     }
 }

@@ -8,7 +8,13 @@ namespace SolanaMessenger.Infrastructure.EFRepository
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TEntity>().HasKey(e => e.ID);
+            modelBuilder.Entity<TEntity>()
+                .HasKey(e => e.ID);
+
+            modelBuilder.Entity<TEntity>()
+                .Property(e => e.ID)
+                .ValueGeneratedNever();
+
             OnEntityModelCreating(modelBuilder);
         }
 

@@ -14,12 +14,12 @@
             _transactionFetcher = transactionFetcher;
         }
 
-        public async Task<TObject> GetObjectAsync(List<string> signatures)
+        public async Task<TObject?> GetObjectAsync(byte[] signatures)
         {
             return await _transactionFetcher.GetObjectAsync(signatures);
         }
 
-        public async Task<List<string>> WriteObjectAsync(TObject obj)
+        public async Task<byte[]?> WriteObjectAsync(TObject obj)
         {
             return await _transactionManager.SendObjectAsync(obj);
         }
