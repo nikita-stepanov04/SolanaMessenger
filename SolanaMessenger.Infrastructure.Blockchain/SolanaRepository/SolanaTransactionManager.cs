@@ -49,10 +49,11 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             var success = signatures?.All(s => s != null) ?? false;
             if (!success)
             {
-                _logger.LogError("Failed to write object of type {t} to blockchain", typeof(TObject).Name);
+                _logger.LogCritical("Failed to write object of type {t} to blockchain", typeof(TObject).Name);
                 return null;
             }
 
+            _logger.LogInformation("Successfully wrote object of type {t} to blockchain", typeof(TObject).Name);
             return signatures!
                 .SelectMany(s => Encoders.Base58.DecodeData(s!))
                 .ToArray();

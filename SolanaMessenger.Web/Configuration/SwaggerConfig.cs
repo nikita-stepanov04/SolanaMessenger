@@ -8,7 +8,7 @@ namespace SolanaMessenger.Web
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WarehouseApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SolanaMessenger", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

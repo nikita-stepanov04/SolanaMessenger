@@ -1,10 +1,11 @@
+using SolanaMessenger.Application;
 using SolanaMessenger.Application.DependencyInjection;
 using SolanaMessenger.Infrastructure;
-using SolanaMessenger.Infrastructure.EFRepository;
-using SolanaMessenger.Web.Identity;
 using SolanaMessenger.Infrastructure.Blockchain;
 using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;
-using SolanaMessenger.Application;
+using SolanaMessenger.Infrastructure.EFRepository;
+using SolanaMessenger.Web.Configuration;
+using SolanaMessenger.Web.Identity;
 
 namespace SolanaMessenger.Web
 {
@@ -15,6 +16,8 @@ namespace SolanaMessenger.Web
             var builder = WebApplication.CreateBuilder(args);
             var services = builder.Services;
             var config = builder.Configuration;
+
+            builder.SetupLogger();
 
             services.AddControllers()
                 .SetUpJsonOptions();

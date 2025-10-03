@@ -59,6 +59,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 sb.Append(dw.Data);
             }
 
+            _logger.LogInformation("Successfully fetched object of type {t} from blockchain", typeof(TObject).Name);
             return JsonSerializer.Deserialize<TObject>(sb.ToString())!;
         }
 
