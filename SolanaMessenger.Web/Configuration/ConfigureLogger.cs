@@ -17,6 +17,15 @@ namespace SolanaMessenger.Web.Configuration
                 .WriteTo.Console(
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {ClassName}: {Message:lj}{NewLine}{Exception}"
                 )
+                .WriteTo.File(
+                    path: Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                        "SolanaMessenger", "logs"
+                    ),
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 7,
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}"
+                )
                 .CreateLogger();
 
             Log.Logger = logger;
