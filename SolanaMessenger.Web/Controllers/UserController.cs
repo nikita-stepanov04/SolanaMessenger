@@ -4,6 +4,7 @@ using SolanaMessenger.Application;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
 using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
+using SolanaMessenger.Web.Identity;
 using SolanaMessenger.Web.Models;
 
 namespace SolanaMessenger.Web.Controllers
@@ -23,6 +24,7 @@ namespace SolanaMessenger.Web.Controllers
         }
 
         [HttpGet("{login}")]
+        [ProducesResponseType<UserDTO>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByLogin([FromRoute] string login)
         {
             var user = await _userBS.GetByLoginAsync(login);
@@ -30,24 +32,29 @@ namespace SolanaMessenger.Web.Controllers
         }
 
         [HttpGet("check-login/{login}")]
+        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
         public async Task<IActionResult> CheckLogin([FromRoute] string login)
         {
             var result = await _userBS.IsLoginNotTakenAsync(login);
-            return Ok(result);
+            return Ok(new BoolResponse(result));
         }
 
         [HttpPost("registration")]
+        [ProducesResponseType<IDResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<MessageResponse>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Registration([FromBody] UserRegistrationDTO dto)
         {
-            var userID = await _userBS.RegisterUserAsync(dto);
+            var result = await _userBS.RegisterUserAsync(dto);
 
-            if (userID == Guid.Empty)
-                return BadRequest(new MessageResponse("User with specified login has already been registered"));
+            if (result.HasError)
+                return BadRequest(new MessageResponse(result.ErrorMessage));
 
-            return Ok(new IDResponse(userID));
+            return Ok(new IDResponse(result.Result));
         }
 
         [HttpPost("login")]
+        [ProducesResponseType<TokensResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<MessageResponse>(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] UserLogInDTO dto)
         {
             var user = await _userBS.CheckCredentialsForLoginAsync(dto);
@@ -61,8 +68,9 @@ namespace SolanaMessenger.Web.Controllers
             return Ok(new TokensResponse(accessToken, refreshToken));
         }
 
-        [Authorize]
         [HttpPost("logout")]
+        [Authorize(Policy = Policies.AuthorizedAny)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest req)
         {
             await _tokenBS.RevokeToken(AccessToken);
@@ -72,6 +80,8 @@ namespace SolanaMessenger.Web.Controllers
         }
 
         [HttpPost("refresh")]
+        [ProducesResponseType<RefreshResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<MessageResponse>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest req)
         {
             var accRes = _tokenBS.ValidateAccessTokenForRefresh(AccessToken);

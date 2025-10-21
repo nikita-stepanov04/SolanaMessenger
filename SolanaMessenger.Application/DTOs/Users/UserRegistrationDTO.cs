@@ -1,11 +1,11 @@
-﻿using SolanaMessenger.Domain.Entities;
+﻿using Microsoft.Extensions.Options;
+using SolanaMessenger.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace SolanaMessenger.Application.DTOs
 {
-    public class UserRegistrationDTO
+    public class UserRegistrationDTO : DTOBase
     {
-
         [Required(ErrorMessage = "Login is required.")]
         [StringLength(50, MinimumLength = 6, ErrorMessage = "Login must be between 6 and 50 characters.")]
         public string Login { get; set; } = null!;
@@ -13,16 +13,14 @@ namespace SolanaMessenger.Application.DTOs
         [Required(ErrorMessage = "Password is required.")]
         [StringLength(50, ErrorMessage = "Password must be at most 50 characters.")]
         public string Password { get; set; } = null!;
+        
+        [StringLength(50, ErrorMessage = "Password must be at most 50 characters.")]
+        public string MasterPassword { get; set; } = null!;
 
         [Required(ErrorMessage = "Public encryption key is required.")]
         [Base64String(ErrorMessage = "Public encryption key must be a valid base64 string.")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Public encryption key must be at least 1 character.")]
-        public string PublicEncryptionKey { get; set; } = null!;
-
-        [Required(ErrorMessage = "Salt is required.")]
-        [Base64String(ErrorMessage = "Salt must be a valid base64 string.")]
-        [StringLength(50, MinimumLength = 1, ErrorMessage = "Salt must be at least 1 character.")]
-        public string Salt { get; set; } = null!;
+        public string X25519Pub { get; set; } = null!;
 
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "First name must be between 3 and 50 characters.")]
@@ -36,7 +34,6 @@ namespace SolanaMessenger.Application.DTOs
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Last name must be between 3 and 50 characters.")]
         public string LastName { get; set; } = null!;
 
-        public Role Role { get; set; } = Role.User;
-        
+        public Role Role { get; set; } = Role.User;        
     }
 }

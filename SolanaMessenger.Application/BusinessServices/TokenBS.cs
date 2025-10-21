@@ -31,6 +31,7 @@ namespace SolanaMessenger.Application.BusinessServices
             var claims = new List<Claim>()
             {
                 new Claim(JwtClaimType.Login, user.Login),
+                new Claim(JwtClaimType.UserID, user.ID.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(JwtClaimType.TokenID, NewRandomGUID())
             };
@@ -126,6 +127,7 @@ namespace SolanaMessenger.Application.BusinessServices
             var tokenID = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtClaimType.TokenID)!.Value;
             return await _tokenRep.IsTokenPresentAsync(tokenID);
         }
+
         private string GetTokenID(JwtSecurityToken jwtToken) => jwtToken.Claims.FirstOrDefault(c => c.Type == JwtClaimType.TokenID)!.Value;
         private string NewRandomGUID() => Guid.NewGuid().ToString().Replace("-", string.Empty);
     }

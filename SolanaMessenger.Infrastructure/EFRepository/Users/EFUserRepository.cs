@@ -12,5 +12,10 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         {
             return await DbContext.Users.Where(u => u.Login == login).FirstOrDefaultAsync();
         }
+
+        public async Task<List<User>> GetByIDsAsync(List<Guid> usersIDs)
+        {
+            return await DbContext.Users.Where(u => usersIDs.Contains(u.ID)).ToListAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
 using SolanaMessenger.Domain.Entities;
@@ -13,14 +14,18 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IUserRepository _userRep;
         private readonly IBlockchainRepository<UserData> _blockchainRep;
 
+        private readonly AdminSettings _adminSettings;
+
         public UserBS(
             IMapper mapper,
             IUserRepository userRep,
-            IBlockchainRepository<UserData> blockchainRep)
+            IBlockchainRepository<UserData> blockchainRep,
+            IOptions<AdminSettings> adminOpts)
         {
             _mapper = mapper;
             _userRep = userRep;
             _blockchainRep = blockchainRep;
+            _adminSettings = adminOpts.Value;
         }
 
         public async Task<UserDTO?> GetByLoginAsync(string login)
@@ -34,21 +39,31 @@ namespace SolanaMessenger.Application.BusinessServices
             return _mapper.Map<UserDTO?>(userData);
         }
 
-        public async Task<Guid> RegisterUserAsync(UserRegistrationDTO userDTO)
+        public async Task<OperationResult<Guid>> RegisterUserAsync(UserRegistrationDTO userDTO)
         {
             var userData = _mapper.Map<UserData>(userDTO);
 
-            if (!await IsLoginNotTakenAsync(userData.Login)) 
-                return Guid.Empty;
+            if (!await IsLoginNotTakenAsync(userData.Login))
+            {
+                return OperationResult.Error<Guid>("Login is already taken");
+            }
+            else if (
+                userDTO.Role == Role.Admin &&
+                userDTO.MasterPassword != _adminSettings.AdminMasterPassword)
+            {
+                return OperationResult.Error<Guid>("Invalid master password for admin registration");
+            }            
 
             var id = Guid.NewGuid();
-
             userData.ID = id;
-            userData.PasswordHash = Hashing.Sha256(userDTO.Password);
-           
+
+            var hashRes = Hashing.PBKDF2(userDTO.Password);
+            userData.PasswordHash = hashRes.Hash;
+            userData.Salt = hashRes.Salt;
+
             var signatures = await _blockchainRep.WriteObjectAsync(userData);
-            if (signatures == null)
-                return Guid.Empty;
+            if (signatures == null) 
+                return OperationResult.Error<Guid>();
 
             var user = new User
             {
@@ -59,7 +74,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             await _userRep.AddAsync(user);
             await _userRep.SaveChangesAsync();
-            return userData.ID;           
+            return OperationResult.Success(user.ID);           
         }
 
         public async Task<bool> IsLoginNotTakenAsync(string login)
@@ -75,10 +90,13 @@ namespace SolanaMessenger.Application.BusinessServices
                 ? await _blockchainRep.GetObjectAsync(user.Signatures)
                 : null;
 
-            if (userData == null || !userData.PasswordHash.SequenceEqual(Hashing.Sha256(userDTO.Password))) 
+            if (userData == null) return null;
+
+            var reqPasswordHashRes = Hashing.PBKDF2(userDTO.Password, userData.Salt);
+            if (!reqPasswordHashRes.Hash.SequenceEqual(userData.PasswordHash))
                 return null;
 
             return _mapper.Map<UserDTO>(userData);
         }
-    }
+    }    
 }

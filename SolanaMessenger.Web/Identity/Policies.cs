@@ -1,8 +1,8 @@
 ﻿namespace SolanaMessenger.Web.Identity
 {
-    public enum Policies
+    public class Policies
     {
-        AdminsOnly = 0,
-        UsersOnly = 1
+        public const string AuthorizedAdmins = "AuthorizedAdmins";
+        public const string AuthorizedAny = "AuthorizedAny";
     }
 }

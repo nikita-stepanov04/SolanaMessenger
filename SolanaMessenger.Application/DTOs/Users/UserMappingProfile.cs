@@ -10,21 +10,13 @@ namespace SolanaMessenger.Application.DTOs.Users
         {
             CreateMap<UserData, UserDTO>()
                 .ForMember(
-                    dest => dest.PublicEncryptionKey,
-                    opt => opt.ConvertUsing(new ByteArrToStringConverter(), src => src.PublicEncryptionKey)
-                )
-                .ForMember(
-                    dest => dest.Salt,
-                    opt => opt.ConvertUsing(new ByteArrToStringConverter(), src => src.Salt)
+                    dest => dest.X25519Pub,
+                    opt => opt.ConvertUsing(new ByteArrToStringConverter(), src => src.X25519Pub)
                 )
                 .ReverseMap()
                 .ForMember(
-                    dest => dest.PublicEncryptionKey,
-                    opt => opt.ConvertUsing(new StringToByteArrConverter(), src => src.PublicEncryptionKey)
-                )
-                .ForMember(
-                    dest => dest.Salt,
-                    opt => opt.ConvertUsing(new StringToByteArrConverter(), src => src.Salt)
+                    dest => dest.X25519Pub,
+                    opt => opt.ConvertUsing(new StringToByteArrConverter(), src => src.X25519Pub)
                 );
         }
     }

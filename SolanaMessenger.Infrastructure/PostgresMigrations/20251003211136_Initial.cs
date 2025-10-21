@@ -12,6 +12,19 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Chats",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Signatures = table.Column<byte[]>(type: "bytea", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chats", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InvalidatedTokens",
                 columns: table => new
                 {
@@ -37,6 +50,35 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                     table.PrimaryKey("PK_Users", x => x.ID);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ChatUser",
+                columns: table => new
+                {
+                    ChatsID = table.Column<Guid>(type: "uuid", nullable: false),
+                    UsersID = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatUser", x => new { x.ChatsID, x.UsersID });
+                    table.ForeignKey(
+                        name: "FK_ChatUser_Chats_ChatsID",
+                        column: x => x.ChatsID,
+                        principalTable: "Chats",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChatUser_Users_UsersID",
+                        column: x => x.UsersID,
+                        principalTable: "Users",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatUser_UsersID",
+                table: "ChatUser",
+                column: "UsersID");
+
             migrationBuilder.CreateIndex(
                 name: "IX_InvalidatedTokens_TokenID",
                 table: "InvalidatedTokens",
@@ -53,7 +95,13 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ChatUser");
+
+            migrationBuilder.DropTable(
                 name: "InvalidatedTokens");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -2,6 +2,7 @@
 {
     internal class DataWrapper
     {
+        const short VERSION = 1;
         public DataWrapper() { }
         internal DataWrapper(string type, string data, int part = 0)
         {
@@ -14,16 +15,16 @@
         public string Type { get; set; } = null!;
         public string Data { get; set; } = null!;
 
-        internal string Serialize() => $"{Part}|{Type}|{Data}";
+        internal string Serialize() => $"{VERSION}|{Part}|{Type}|{Data}";
 
         internal static DataWrapper Deserialize(string serializedWrapper)
         {
-            var parts = serializedWrapper.Split('|', 3);
+            var parts = serializedWrapper.Split('|', 4);
             return new DataWrapper
             {
-                Part = int.Parse(parts[0]),
-                Type = parts[1],
-                Data = parts[2]
+                Part = int.Parse(parts[1]),
+                Type = parts[2],
+                Data = parts[3]
             };
         }
     }

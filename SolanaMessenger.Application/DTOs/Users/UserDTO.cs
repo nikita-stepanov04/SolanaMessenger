@@ -14,12 +14,7 @@ namespace SolanaMessenger.Application.DTOs
         [Required(ErrorMessage = "Public encryption key is required.")]
         [Base64String(ErrorMessage = "Public encryption key must be a valid base64 string.")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Public encryption key must be at least 1 character.")]
-        public string PublicEncryptionKey { get; set; } = null!;
-
-        [Required(ErrorMessage = "Salt is required.")]
-        [Base64String(ErrorMessage = "Salt must be a valid base64 string.")]
-        [StringLength(50, MinimumLength = 1, ErrorMessage = "Salt must be at least 1 character.")]
-        public string Salt { get; set; } = null!;
+        public string X25519Pub { get; set; } = null!;
 
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "First name must be between 3 and 50 characters.")]

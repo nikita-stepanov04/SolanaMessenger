@@ -1,5 +1,4 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SolanaMessenger.Application.Cryptography
@@ -24,13 +23,6 @@ namespace SolanaMessenger.Application.Cryptography
     {
         public const string Login = "login";
         public const string TokenID = "tokenId";
-    }
-
-    public class JwtSettings
-    {
-        [Required] public string AccessTokenKey { get; set; } = null!;
-        [Required] public string RefreshTokenKey { get; set; } = null!;
-        [Required] public int AccessTokenExpirationMinutes { get; set; }
-        [Required] public int RefreshTokenExpirationDays { get; set; }
+        public const string UserID = "userId";
     }
 }

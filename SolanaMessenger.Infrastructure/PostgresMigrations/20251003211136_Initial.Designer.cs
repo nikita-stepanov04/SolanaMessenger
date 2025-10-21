@@ -12,7 +12,7 @@ using SolanaMessenger.Infrastructure.EFRepository;
 namespace SolanaMessenger.Infrastructure.PostgresMigrations
 {
     [DbContext(typeof(EFDataContext))]
-    [Migration("20251003182809_Initial")]
+    [Migration("20251003211136_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,9 +21,45 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ChatUser", b =>
+                {
+                    b.Property<Guid>("ChatsID")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UsersID")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ChatsID", "UsersID");
+
+                    b.HasIndex("UsersID");
+
+                    b.ToTable("ChatUser");
+                });
+
+            modelBuilder.Entity("SolanaMessenger.Domain.Entities.Chat", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<byte[]>("Signatures")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Chats");
+                });
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.InvalidatedToken", b =>
                 {
@@ -63,6 +99,21 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ChatUser", b =>
+                {
+                    b.HasOne("SolanaMessenger.Domain.Entities.Chat", null)
+                        .WithMany()
+                        .HasForeignKey("ChatsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SolanaMessenger.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

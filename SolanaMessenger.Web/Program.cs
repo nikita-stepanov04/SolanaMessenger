@@ -1,5 +1,4 @@
 using SolanaMessenger.Application;
-using SolanaMessenger.Application.DependencyInjection;
 using SolanaMessenger.Infrastructure;
 using SolanaMessenger.Infrastructure.Blockchain;
 using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;

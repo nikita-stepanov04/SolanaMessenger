@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Memory;
+using SolanaMessenger.Application;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
 using SolanaMessenger.Application.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
@@ -40,8 +41,8 @@ namespace SolanaMessenger.Web.Identity
 
             services.AddAuthorization(opts =>
             {
-                opts.AddPolicy(nameof(Policies.AdminsOnly), p => p.RequireRole(nameof(Roles.Admin)));
-                opts.AddPolicy(nameof(Policies.UsersOnly), p => p.RequireRole(nameof(Roles.User)));
+                opts.AddPolicy(Policies.AuthorizedAdmins, p => p.RequireRole(nameof(Roles.Admin)));
+                opts.AddPolicy(Policies.AuthorizedAny, p => p.RequireAuthenticatedUser());
             });
 
             return services;

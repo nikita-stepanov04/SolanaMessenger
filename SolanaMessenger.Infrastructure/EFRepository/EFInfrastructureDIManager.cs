@@ -15,6 +15,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
             services.AddDbContext<EFDataContext>(opts =>
             {
+                opts.UseLazyLoadingProxies();
                 opts.UseNpgsql(dbConnection, dbOpts =>
                     dbOpts.MigrationsAssembly("SolanaMessenger.Infrastructure"));
             });
