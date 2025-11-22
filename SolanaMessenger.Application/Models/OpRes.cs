@@ -2,7 +2,7 @@
 
 namespace SolanaMessenger.Application
 {
-    public class OperationResult<TResult>
+    public class OpRes<TResult>
     {
         public TResult? Result { get; set; }        
         public string? ErrorMessage { get; set; }
@@ -12,21 +12,21 @@ namespace SolanaMessenger.Application
         public bool HasError => !string.IsNullOrEmpty(ErrorMessage);        
     }
 
-    public static class OperationResult
+    public static class OpRes
     {
-        public static OperationResult<TResult> Error<TResult>(string message) => new OperationResult<TResult>
+        public static OpRes<TResult> Err<TResult>(string message) => new OpRes<TResult>
         {
             Result = default,
             ErrorMessage = message
         };
 
-        public static OperationResult<TResult> Error<TResult>() => new OperationResult<TResult>
+        public static OpRes<TResult> Err<TResult>() => new OpRes<TResult>
         {
             Result = default,
             ErrorMessage = "Something went wrong"
         };
 
-        public static OperationResult<TResult> Success<TResult>(TResult result) => new OperationResult<TResult>
+        public static OpRes<TResult> Success<TResult>(TResult result) => new OpRes<TResult>
         {
             Result = result
         };

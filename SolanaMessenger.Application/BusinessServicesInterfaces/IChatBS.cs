@@ -5,7 +5,7 @@ namespace SolanaMessenger.Application
     public interface IChatBS
     {
         Task<List<ChatMinimalDTO>> GetAllByUserIDAsync(Guid userID);
-        Task<OperationResult<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID);
-        Task<OperationResult<Guid>> CreateChatAsync(ChatCreateDTO chatDTO);
+        Task<OpRes<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID);
+        Task<OpRes<Guid>> CreateChatAsync(ChatCreateDTO chatDTO);
     }
 }

@@ -32,20 +32,20 @@ namespace SolanaMessenger.Application.BusinessServices
             _blockchainUserRep = blockchainUserRep;
         }
 
-        public async Task<OperationResult<Guid>> CreateChatAsync(ChatCreateDTO chatDTO)
+        public async Task<OpRes<Guid>> CreateChatAsync(ChatCreateDTO chatDTO)
         {
             var usersIDs = chatDTO.ChatUsersIDs;
             var users = await _userRep.GetByIDsAsync(usersIDs);
 
             if (users.Count != usersIDs.Count)
-                return OperationResult.Error<Guid>("One or more users do not exist.");
+                return OpRes.Err<Guid>("One or more users do not exist.");
 
             var usesrDataTasks = users.Select(u => _blockchainUserRep.GetObjectAsync(u.Signatures));
             var usersData = await Task.WhenAll(usesrDataTasks);
 
             var success = usersData.All(ud => ud != null);
             if (!success)
-                return OperationResult.Error<Guid>();
+                return OpRes.Err<Guid>();
 
             var chatID = Guid.NewGuid();
             var encryption = new Encryption();
@@ -85,7 +85,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             var signatures = await _blockchainChatRep.WriteObjectAsync(chatData);
             if (signatures == null)
-                return OperationResult.Error<Guid>();
+                return OpRes.Err<Guid>();
 
             var chat = new Chat()
             {
@@ -98,26 +98,26 @@ namespace SolanaMessenger.Application.BusinessServices
             await _chatRep.AddAsync(chat);
             await _chatRep.SaveChangesAsync();
 
-            return OperationResult.Success(chatID);
+            return OpRes.Success(chatID);
         }
 
-        public async Task<OperationResult<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID)
+        public async Task<OpRes<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID)
         {
             var chat = await _chatRep.GetByIDAsync(chatId);
             var isMember = chat?.Users.Any(u => u.ID == userID) ?? false;
 
             if (chat == null)
-                return OperationResult.Error<ChatDTO>("Chat not found.");
+                return OpRes.Err<ChatDTO>("Chat not found.");
             else if (!isMember)
-                return OperationResult.Error<ChatDTO>("User is not a member of the chat.");
+                return OpRes.Err<ChatDTO>("User is not a member of the chat.");
 
             var chatData = await _blockchainChatRep.GetObjectAsync(chat.Signatures);
 
             if (chatData == null) 
-                return OperationResult.Error<ChatDTO>();
+                return OpRes.Err<ChatDTO>();
 
             var dto = _mapper.Map<ChatDTO>(chatData, opts => opts.Items["UserID"] = userID);
-            return OperationResult.Success(dto);
+            return OpRes.Success(dto);
         }
 
         public async Task<List<ChatMinimalDTO>> GetAllByUserIDAsync(Guid userID)

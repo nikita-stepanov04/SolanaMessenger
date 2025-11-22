@@ -39,19 +39,19 @@ namespace SolanaMessenger.Application.BusinessServices
             return _mapper.Map<UserDTO?>(userData);
         }
 
-        public async Task<OperationResult<Guid>> RegisterUserAsync(UserRegistrationDTO userDTO)
+        public async Task<OpRes<Guid>> RegisterUserAsync(UserRegistrationDTO userDTO)
         {
             var userData = _mapper.Map<UserData>(userDTO);
 
             if (!await IsLoginNotTakenAsync(userData.Login))
             {
-                return OperationResult.Error<Guid>("Login is already taken");
+                return OpRes.Err<Guid>("Login is already taken");
             }
             else if (
                 userDTO.Role == Role.Admin &&
                 userDTO.MasterPassword != _adminSettings.AdminMasterPassword)
             {
-                return OperationResult.Error<Guid>("Invalid master password for admin registration");
+                return OpRes.Err<Guid>("Invalid master password for admin registration");
             }            
 
             var id = Guid.NewGuid();
@@ -63,7 +63,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             var signatures = await _blockchainRep.WriteObjectAsync(userData);
             if (signatures == null) 
-                return OperationResult.Error<Guid>();
+                return OpRes.Err<Guid>();
 
             var user = new User
             {
@@ -74,7 +74,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             await _userRep.AddAsync(user);
             await _userRep.SaveChangesAsync();
-            return OperationResult.Success(user.ID);           
+            return OpRes.Success(user.ID);           
         }
 
         public async Task<bool> IsLoginNotTakenAsync(string login)
