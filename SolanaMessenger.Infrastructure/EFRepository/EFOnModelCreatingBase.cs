@@ -1,23 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
-    public abstract class EFOnModelCreatingBase<TEntity>
+    public abstract class EFOnModelCreatingBase<TEntity> : IEntityTypeConfiguration<TEntity>
         where TEntity : EntityBase
     {
-        public void OnModelCreating(ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<TEntity> model)
         {
-            modelBuilder.Entity<TEntity>()
-                .HasKey(e => e.ID);
-
-            modelBuilder.Entity<TEntity>()
-                .Property(e => e.ID)
+            model.HasKey(e => e.ID);
+            model.Property(e => e.ID)
                 .ValueGeneratedNever();
 
-            OnEntityModelCreating(modelBuilder);
+            OnModelCreating(model);
         }
 
-        protected abstract void OnEntityModelCreating(ModelBuilder modelBuilder);
+        protected abstract void OnModelCreating(EntityTypeBuilder<TEntity> model);
     }
 }

@@ -1,18 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
     internal class EFOnInvalidatedTokenModelCreating : EFOnModelCreatingBase<InvalidatedToken>
     {
-        protected override void OnEntityModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(EntityTypeBuilder<InvalidatedToken> model)
         {
-            modelBuilder.Entity<InvalidatedToken>(entity =>
-            {
-                entity.HasIndex(e => e.TokenID);
-                entity.Property(e => e.TokenID)
-                    .HasColumnType("varchar(32)");
-            });
+            model.HasIndex(e => e.TokenID);
+            model.Property(e => e.TokenID)
+                .HasColumnType("varchar(32)");
         }
     }
 }

@@ -1,16 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
     public class EFOnMessageModelCreating : EFOnModelCreatingBase<Message>
     {
-        protected override void OnEntityModelCreating(ModelBuilder modelBuilder) 
+        protected override void OnModelCreating(EntityTypeBuilder<Message> model)
         {
-            modelBuilder.Entity<Message>(e =>
-            {
-                e.HasIndex(m => m.Timestamp);
-            });
+            model.HasIndex(m => m.Timestamp);
         }
     }
 }

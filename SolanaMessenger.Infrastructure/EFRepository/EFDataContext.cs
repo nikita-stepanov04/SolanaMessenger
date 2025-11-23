@@ -15,12 +15,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            new EFOnChatModelCreating().OnModelCreating(modelBuilder);
-            new EFOnUserModelCreating().OnModelCreating(modelBuilder);
-            new EFOnMessageModelCreating().OnModelCreating(modelBuilder);
-            new EFOnInvalidatedTokenModelCreating().OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(EFDataContext).Assembly);
         }
     }
 }
