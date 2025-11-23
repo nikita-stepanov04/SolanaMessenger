@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SolanaMessenger.Domain.Entities;
 
-namespace SolanaMessenger.Infrastructure.EFRepository.Chats
+namespace SolanaMessenger.Infrastructure.EFRepository
 {
     public class EFOnChatModelCreating : EFOnModelCreatingBase<Chat>
     {

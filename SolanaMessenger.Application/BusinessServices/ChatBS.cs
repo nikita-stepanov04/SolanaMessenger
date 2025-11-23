@@ -40,8 +40,8 @@ namespace SolanaMessenger.Application.BusinessServices
             if (users.Count != usersIDs.Count)
                 return OpRes.Err<Guid>("One or more users do not exist.");
 
-            var usesrDataTasks = users.Select(u => _blockchainUserRep.GetObjectAsync(u.Signatures));
-            var usersData = await Task.WhenAll(usesrDataTasks);
+            var userDataTasks = users.Select(u => _blockchainUserRep.GetObjectAsync(u.Signatures));
+            var usersData = await Task.WhenAll(userDataTasks);
 
             var success = usersData.All(ud => ud != null);
             if (!success)
@@ -79,7 +79,7 @@ namespace SolanaMessenger.Application.BusinessServices
             {
                 ID = chatID,
                 Name = chatDTO.Name,
-                TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 UserPayload = userPayload
             };
 
