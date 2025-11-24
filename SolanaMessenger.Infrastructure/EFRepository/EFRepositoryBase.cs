@@ -1,4 +1,5 @@
-﻿using SolanaMessenger.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
@@ -6,6 +7,8 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         where TEntity : EntityBase
     {
         protected EFDataContext DbContext { get; }
+
+        public DbSet<TEntity> DbSet => DbContext.Set<TEntity>();
 
         public EFRepositoryBase(EFDataContext context) 
         {

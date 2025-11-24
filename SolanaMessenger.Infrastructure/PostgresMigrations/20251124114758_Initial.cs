@@ -12,7 +12,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Chats",
+                name: "Chat",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -21,11 +21,11 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chats", x => x.ID);
+                    table.PrimaryKey("PK_Chat", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvalidatedTokens",
+                name: "InvalidatedToken",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -34,11 +34,11 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvalidatedTokens", x => x.ID);
+                    table.PrimaryKey("PK_InvalidatedToken", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -47,11 +47,11 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.ID);
+                    table.PrimaryKey("PK_User", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
+                name: "Message",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uuid", nullable: false),
@@ -61,11 +61,11 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.ID);
+                    table.PrimaryKey("PK_Message", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Messages_Chats_ChatID",
+                        name: "FK_Message_Chat_ChatID",
                         column: x => x.ChatID,
-                        principalTable: "Chats",
+                        principalTable: "Chat",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -81,15 +81,15 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 {
                     table.PrimaryKey("PK_ChatUser", x => new { x.ChatsID, x.UsersID });
                     table.ForeignKey(
-                        name: "FK_ChatUser_Chats_ChatsID",
+                        name: "FK_ChatUser_Chat_ChatsID",
                         column: x => x.ChatsID,
-                        principalTable: "Chats",
+                        principalTable: "Chat",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChatUser_Users_UsersID",
+                        name: "FK_ChatUser_User_UsersID",
                         column: x => x.UsersID,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -100,23 +100,23 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 column: "UsersID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvalidatedTokens_TokenID",
-                table: "InvalidatedTokens",
+                name: "IX_InvalidatedToken_TokenID",
+                table: "InvalidatedToken",
                 column: "TokenID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChatID",
-                table: "Messages",
+                name: "IX_Message_ChatID",
+                table: "Message",
                 column: "ChatID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_Timestamp",
-                table: "Messages",
+                name: "IX_Message_Timestamp",
+                table: "Message",
                 column: "Timestamp");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Login",
-                table: "Users",
+                name: "IX_User_Login",
+                table: "User",
                 column: "Login",
                 unique: true);
         }
@@ -128,16 +128,16 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                 name: "ChatUser");
 
             migrationBuilder.DropTable(
-                name: "InvalidatedTokens");
+                name: "InvalidatedToken");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "Message");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "Chat");
         }
     }
 }

@@ -4,7 +4,7 @@ namespace SolanaMessenger.Application
 {
     public interface IMessageBS
     {
-        Task<OpRes<Guid>> WriteMessage(WriteMessageDTO dto);
-        Task<List<MessageDTO>> GetMessagesForChat(Guid chatID, long? lastMessageTimestamp = null);
+        Task<OpRes<MessageDTO>> WriteMessage(WriteMessageDTO dto, Guid userID);
+        Task<List<MessageDTO>> LoadChatMessages(Guid chatID, long? lastMessageTimestamp = null);
     }
 }

@@ -17,7 +17,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -55,7 +55,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.InvalidatedToken", b =>
@@ -74,7 +74,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 
                     b.HasIndex("TokenID");
 
-                    b.ToTable("InvalidatedTokens");
+                    b.ToTable("InvalidatedToken");
                 });
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.Message", b =>
@@ -98,7 +98,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
 
                     b.HasIndex("Timestamp");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("SolanaMessenger.Domain.Entities.User", b =>
@@ -119,7 +119,7 @@ namespace SolanaMessenger.Infrastructure.PostgresMigrations
                     b.HasIndex("Login")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ChatUser", b =>

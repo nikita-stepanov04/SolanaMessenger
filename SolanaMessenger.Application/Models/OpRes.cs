@@ -2,7 +2,7 @@
 
 namespace SolanaMessenger.Application
 {
-    public class OpRes<TResult>
+    public record struct OpRes<TResult>
     {
         public TResult? Result { get; set; }        
         public string? ErrorMessage { get; set; }

@@ -8,14 +8,14 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         public EFUserRepository(EFDataContext context) 
             : base(context) { }
 
-        public async Task<User?> GetByLoginAsync(string login)
+        public Task<User?> GetByLoginAsync(string login)
         {
-            return await DbContext.Users.Where(u => u.Login == login).FirstOrDefaultAsync();
+            return DbSet.Where(u => u.Login == login).FirstOrDefaultAsync();
         }
 
-        public async Task<List<User>> GetByIDsAsync(List<Guid> usersIDs)
+        public Task<List<User>> GetByIDsAsync(List<Guid> usersIDs)
         {
-            return await DbContext.Users.Where(u => usersIDs.Contains(u.ID)).ToListAsync();
+            return DbSet.Where(u => usersIDs.Contains(u.ID)).ToListAsync();
         }
     }
 }

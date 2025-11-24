@@ -10,7 +10,15 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
         public Task<List<Chat>> GetAllByUserIDAsync(Guid userID)
         {
-            return DbContext.Chats.Where(c => c.Users.Any(u => u.ID == userID)).ToListAsync();
+            return DbSet.Where(c => c.Users.Any(u => u.ID == userID)).ToListAsync();
+        }
+
+        public Task<bool> IsUserAChatMemberAsync(Guid chatID, Guid userID)
+        {
+            return DbSet.AnyAsync(
+                ch => ch.ID == chatID && 
+                ch.Users.Any(u => u.ID == userID)
+            );
         }
     }
 }

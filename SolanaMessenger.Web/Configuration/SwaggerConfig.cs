@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi;
 
 namespace SolanaMessenger.Web
 {
@@ -20,19 +20,9 @@ namespace SolanaMessenger.Web
                     Scheme = "Bearer"
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(doc => new OpenApiSecurityRequirement()
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] {}
-                    }
+                    [new OpenApiSecuritySchemeReference("Bearer", doc)] = []
                 });
             });
             return services;

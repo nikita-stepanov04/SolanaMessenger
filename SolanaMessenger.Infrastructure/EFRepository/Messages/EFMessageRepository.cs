@@ -10,7 +10,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
         public Task<List<Message>> GetMessagesAsync(Guid chatID, int count, long? lastMessageTimestamp = null)
         {
-            return DbContext.Messages.Where(m => m.ChatID == chatID
+            return DbSet.Where(m => m.ChatID == chatID
                 && (lastMessageTimestamp == null || m.Timestamp < lastMessageTimestamp))
                 .OrderByDescending(m => m.Timestamp)
                 .Take(count)

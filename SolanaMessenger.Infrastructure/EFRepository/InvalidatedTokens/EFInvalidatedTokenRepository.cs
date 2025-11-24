@@ -8,9 +8,9 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         public EFInvalidatedTokenRepository(EFDataContext context) 
             : base(context) { }
 
-        public async Task<bool> IsTokenPresentAsync(string tokenId)
+        public Task<bool> IsTokenPresentAsync(string tokenId)
         {
-            return await DbContext.InvalidatedTokens.AnyAsync(t => t.TokenID == tokenId);
+            return DbSet.AnyAsync(t => t.TokenID == tokenId);
         }
     }
 }

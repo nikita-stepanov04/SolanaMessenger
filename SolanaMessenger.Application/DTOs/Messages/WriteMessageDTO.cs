@@ -5,12 +5,6 @@ namespace SolanaMessenger.Application.DTOs
     public class WriteMessageDTO : DTOBase
     {
         [Required]
-        public Guid ID { get; set; }
-
-        [Required]
-        public Guid UserID { get; set; }
-
-        [Required]
         public Guid ChatID { get; set; }
 
         [Required]
