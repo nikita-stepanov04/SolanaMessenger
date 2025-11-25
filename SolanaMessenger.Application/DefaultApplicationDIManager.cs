@@ -14,6 +14,7 @@ namespace SolanaMessenger.Application
             services.AddScoped<IUserBS, UserBS>();
             services.AddScoped<ITokenBS, TokenBS>();
             services.AddScoped<IChatBS, ChatBS>();
+            services.AddScoped<IMessageBS, MessageBS>();
 
             services.AddOptions<JwtSettings>()
                 .BindConfiguration("Jwt")
@@ -27,6 +28,12 @@ namespace SolanaMessenger.Application
                 .BindConfiguration("Admins")
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+
+            services.AddOptions<ChatSettings>()
+                .BindConfiguration("Chat")
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
             return services;
         }
     }

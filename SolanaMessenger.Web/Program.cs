@@ -4,6 +4,7 @@ using SolanaMessenger.Infrastructure.Blockchain;
 using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;
 using SolanaMessenger.Infrastructure.EFRepository;
 using SolanaMessenger.Web.Configuration;
+using SolanaMessenger.Web.Hubs;
 using SolanaMessenger.Web.Identity;
 
 namespace SolanaMessenger.Web
@@ -33,6 +34,8 @@ namespace SolanaMessenger.Web
             IApplicationDIManager appManager = new DefaultApplicationDIManager();
             appManager.SetupApplicationDI(services, config);
 
+            services.SetUpHubs();
+
             services.SetUpCors();
             services.SetUpIdentity(config);
 
@@ -47,8 +50,8 @@ namespace SolanaMessenger.Web
             app.UseAuthorization();
 
             app.MapGet("/", async context => context.Response.Redirect("/swagger/index.html", false));
-
             app.MapControllers();
+            app.MapHubs();
 
             app.Run();
         }

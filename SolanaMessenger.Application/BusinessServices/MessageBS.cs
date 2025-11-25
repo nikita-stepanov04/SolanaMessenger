@@ -13,6 +13,7 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IChatRepository _chatRep;
         private readonly IMessageRepository _messageRep;
         private readonly IBlockchainRepository<MessageData> _messageBlockchainRep;
+        private readonly INewMessageNotification _notificator;
         private readonly ChatSettings _chatSettings;
 
         public MessageBS(
@@ -20,46 +21,60 @@ namespace SolanaMessenger.Application.BusinessServices
             IMessageRepository messageRep,
             IBlockchainRepository<MessageData> blockchainMessageRep,
             IOptions<ChatSettings> chatOpts,
-            IChatRepository chatRep)
+            IChatRepository chatRep,
+            INewMessageNotification notificator)
         {
             _mapper = mapper;
             _messageRep = messageRep;
             _chatSettings = chatOpts.Value;
             _messageBlockchainRep = blockchainMessageRep;
             _chatRep = chatRep;
+            _notificator = notificator;
         }
 
-        public async Task<List<MessageDTO>> LoadChatMessages(Guid chatID, long? lastMessageTimestamp = null)
+        public async Task<OpRes<List<MessageDTO>>> LoadChatMessagesAsync(Guid chatID, Guid userID, long lastMessageTimestamp = 0)
         {
+            var validResult = await _chatRep.IsUserAChatMemberAsync(chatID, userID);
+            if (!validResult) return OpRes.Err<List<MessageDTO>>("User is not a chat member");
+
             var messages = await _messageRep.GetMessagesAsync(chatID, _chatSettings.MessagesPerRequest, lastMessageTimestamp);
-            return _mapper.Map<List<MessageDTO>>(messages);
+            var tasks = messages.Select(m => _messageBlockchainRep.GetObjectAsync(m.Signatures));
+
+            var messageData = await Task.WhenAll(tasks);
+            var messageDTOs = _mapper.Map<List<MessageDTO>>(messageData);
+            return OpRes.Success(messageDTOs);
         }
 
-        public async Task<OpRes<MessageDTO>> WriteMessage(WriteMessageDTO dto, Guid userID)
+        public async Task<OpRes<Guid>> WriteMessageAsync(WriteMessageDTO dto, Guid userID)
         {
             var validResult = await _chatRep.IsUserAChatMemberAsync(dto.ChatID, userID);
-            if (!validResult) return OpRes.Err<MessageDTO>("User is not a chat member");
+            if (!validResult) return OpRes.Err<Guid>("User is not a chat member");
 
             var messageID = Guid.NewGuid();
+            var timestamp = LinuxTimeStamp.UtcNow;
 
             var messageData = _mapper.Map<MessageData>(dto);
             messageData.ID = messageID;
             messageData.UserID = userID;
+            messageData.Timestamp = timestamp;
 
             var signatures = await _messageBlockchainRep.WriteObjectAsync(messageData);
             if (signatures == null)
-                return OpRes.Err<MessageDTO>();
+                return OpRes.Err<Guid>();
 
             var message = new Message()
             {
                 ID = messageID,
                 ChatID = dto.ChatID,
+                Timestamp = timestamp,
                 Signatures = signatures
             };
             await _messageRep.AddAsync(message);
             await _messageRep.SaveChangesAsync();
 
-            return OpRes.Success(_mapper.Map<MessageDTO>(messageData));
+            _notificator.Notify(messageData);
+
+            return OpRes.Success(messageID);
         }
     }
 }

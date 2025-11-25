@@ -8,6 +8,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         {
             services.AddScoped<IUserRepository, EFUserRepository>();
             services.AddScoped<IChatRepository, EFChatRepository>();
+            services.AddScoped<IMessageRepository, EFMessageRepository>();
             services.AddScoped<IInvalidatedTokenRepository, EFInvalidatedTokenRepository>();
             return services;
         }

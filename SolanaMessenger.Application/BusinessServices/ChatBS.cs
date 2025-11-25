@@ -79,7 +79,7 @@ namespace SolanaMessenger.Application.BusinessServices
             {
                 ID = chatID,
                 Name = chatDTO.Name,
-                TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                TimeStamp = LinuxTimeStamp.UtcNow,
                 UserPayload = userPayload
             };
 
