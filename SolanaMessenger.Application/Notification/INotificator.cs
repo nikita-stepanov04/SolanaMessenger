@@ -1,8 +1,8 @@
 ﻿namespace SolanaMessenger.Application
 {
-    public interface INotification<T> 
+    public interface INotificator<T> 
         where T : class
     {
-        void Notify(T obj);
+        Task NotifyAsync(T obj);
     }
 }

@@ -6,7 +6,7 @@ namespace SolanaMessenger.Web
     {
         public static void SetUpNotifications(this IServiceCollection services)
         {
-            services.AddScoped<INewMessageNotification, NewMessageNotification>();
+            services.AddScoped<INewMessageNotificator, NewMessageNotification>();
         }
     }
 }

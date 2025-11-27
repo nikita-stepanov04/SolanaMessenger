@@ -1,18 +1,22 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SolanaMessenger.Application;
-using SolanaMessenger.Domain.Entities;
+using SolanaMessenger.Application.DTOs;
 using SolanaMessenger.Web.Hubs;
 
 namespace SolanaMessenger.Web
 {
-    public class NewMessageNotification : NotificationBase<MessageHub>, INewMessageNotification
+    public class NewMessageNotification 
+        : NotificationBase<MessageHub, IMessageHub>, INewMessageNotificator
     {
-        public NewMessageNotification(IHubContext<MessageHub> hubContext) 
+        public NewMessageNotification(IHubContext<MessageHub, IMessageHub> hubContext)
             : base(hubContext) { }
 
-        public void Notify(MessageData obj)
+        public async Task NotifyAsync(MessageDTO message)
         {
-
+            var chatID = message.ChatID.ToString();
+            await HubContext.Clients
+                .Group(chatID)
+                .ReceiveMessage(message);
         }
     }
 }

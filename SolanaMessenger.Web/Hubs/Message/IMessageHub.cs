@@ -4,6 +4,6 @@ namespace SolanaMessenger.Web.Hubs
 {
     public interface IMessageHub
     {
-        Task SendMessageAsync(MessageDTO message);
+        Task ReceiveMessage(MessageDTO message);
     }
 }
