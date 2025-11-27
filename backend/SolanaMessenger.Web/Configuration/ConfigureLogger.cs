@@ -10,7 +10,7 @@ namespace SolanaMessenger.Web.Configuration
         {
             var logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .MinimumLevel.Override("LuckyPennySoftware.AutoMapper.License", LogEventLevel.Fatal)
                 .Enrich.FromLogContext()
                 .Enrich.With<ShortSourceContextEnricher>()
