@@ -1,0 +1,19 @@
+<div [formGroup]="parentForm">
+  <label class="form-label ms-2">{{label}}</label>
+  <input
+    type="text"
+    class="form-control"
+    formControlName="{{controlName}}"
+    placeholder="{{ 'str001' | res | async }}"
+    [class.is-invalid]="fh.isInvalid(control)"
+  >
+  <div class="invalid-feedback">
+    @if (fh.hasError(control, 'required')) {
+      <span>Login is required</span>
+    } @if (fh.hasError(control, 'minlength')) {
+      <span>Login minimum length is n signs</span>
+    } @if (fh.hasError(control, 'maxlength')) {
+      <span>Login maximum length is n signs</span>
+    }
+  </div>
+</div>
