@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoginInput} from '../../components/inputs/login-input/login-input';
 import {AuthTemplate} from '../../templates/auth/auth-template';
-import {ResourcesPipe} from '../../pipes/resources-pipe';
-import {AsyncPipe} from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
+import {PasswordInput} from '../../components/inputs/password-input/password-input';
 
 @Component({
   selector: 'app-login-page',
@@ -11,8 +11,8 @@ import {AsyncPipe} from '@angular/common';
     ReactiveFormsModule,
     LoginInput,
     AuthTemplate,
-    ResourcesPipe,
-    AsyncPipe,
+    TranslatePipe,
+    PasswordInput,
   ],
   templateUrl: './login-page.html',
   styles: ``,
@@ -24,8 +24,8 @@ export class LoginPage {
     private  fb: FormBuilder
   ) {
     this.loginForm = this.fb.group({
-      login: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(32)]],
+      login: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
     });
   }
 

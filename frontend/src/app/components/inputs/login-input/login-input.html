@@ -4,16 +4,16 @@
     type="text"
     class="form-control"
     formControlName="{{controlName}}"
-    placeholder="{{ 'str001' | res | async }}"
+    placeholder="{{ 'str001' | translate }}"
     [class.is-invalid]="fh.isInvalid(control)"
   >
   <div class="invalid-feedback">
     @if (fh.hasError(control, 'required')) {
-      <span>Login is required</span>
+      <span>{{ 'str005' | translate }}</span>
     } @if (fh.hasError(control, 'minlength')) {
-      <span>Login minimum length is n signs</span>
+      <span>{{ 'str006' | translate }}</span>
     } @if (fh.hasError(control, 'maxlength')) {
-      <span>Login maximum length is n signs</span>
+      <span>{{ 'str007' | translate }}</span>
     }
   </div>
 </div>

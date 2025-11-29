@@ -1,0 +1,22 @@
+<div class="dropdown">
+  <button
+      class="btn btn-secondary btm-lg dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false">
+    <i class="fa-solid fa-language"></i>
+  </button>
+  <ul class="dropdown-menu" style="width: auto; min-width: 3.7rem">
+    @for (lang of resource.getLanguages(); track lang) {
+      <li>
+        <a
+            class="dropdown-item text-center"
+            [ngClass]="{'active': resource.getSelectedLanguage() == lang}"
+            style="cursor: pointer"
+            (click)="resource.switchLang(lang)">
+          {{lang}}
+        </a>
+      </li>
+    }
+  </ul>
+</div>

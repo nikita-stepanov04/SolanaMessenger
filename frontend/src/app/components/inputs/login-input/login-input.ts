@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { InputBase} from '../input-base';
 import {ReactiveFormsModule} from '@angular/forms';
-import {AsyncPipe} from '@angular/common';
-import {ResourcesPipe} from '../../../pipes/resources-pipe';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login-input',
   imports: [
     ReactiveFormsModule,
-    AsyncPipe,
-    ResourcesPipe
+    TranslatePipe
   ],
   templateUrl: './login-input.html',
   styles: ``,

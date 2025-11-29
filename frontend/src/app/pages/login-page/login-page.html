@@ -1,18 +1,25 @@
 <app-auth-template>
   <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h2 class="text-center mb-3">{{ 'str003' | res | async }}</h2>
+    <h2 class="text-center mb-3">{{ 'str003' | translate }}</h2>
     <div class="mb-3">
       <app-login-input
-        label="{{ 'str002' | res | async }}"
+        label="{{ 'str002' | translate }}"
         controlName="login"
         [parentForm]="loginForm">
       </app-login-input>
     </div>
+    <div class="mb-3">
+      <app-password-input
+        label="{{'str012' | translate}}"
+        controlName="password"
+        [parentForm]="loginForm">
+      </app-password-input>
+    </div>
     <div class="d-grid mt-4 mb-2">
-      <button class="btn btn-primary" [disabled]="loginForm.invalid">{{'str003' | res | async }}</button>
+      <button class="btn btn-primary" [disabled]="loginForm.invalid">{{'str003' | translate }}</button>
       <a
         class="link-secondary mt-2 text-center"
-        routerLink="/register">{{ 'str004' | res | async }}</a>
+        routerLink="/register">{{ 'str004' | translate }}</a>
     </div>
   </form>
 </app-auth-template>

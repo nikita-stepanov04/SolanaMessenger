@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {LangTypes} from '@models/resources/langTypes';
-import {Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ResourcesService {
   constructor(private translate: TranslateService) {
-    const langs = LangTypes.supportedLangs
-    this.translate.addLangs(langs);
-    this.translate.setFallbackLang(langs[0]);
-    this.translate.use(langs[0]);
-  }
-
-  switchLang(lang: string) {
+    const lang = this.getSelectedLanguage();
+    this.translate.addLangs(LangTypes.supportedLangs);
+    this.translate.setFallbackLang(lang);
     this.translate.use(lang);
   }
 
-  get(key: string): Observable<string> {
-    return this.translate.get(key);
+  switchLang(lang: string) {
+    localStorage.setItem('lang', lang);
+    this.translate.use(lang);
+  }
+
+  getLanguages(): string[] {
+    return LangTypes.supportedLangs;
+  }
+
+  getSelectedLanguage(): string {
+    return localStorage.getItem('lang') ?? LangTypes.supportedLangs[0];
   }
 }
