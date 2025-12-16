@@ -11,6 +11,10 @@ export class ResourcesService {
     this.translate.use(lang);
   }
 
+  get(key: string): string{
+    return this.translate.instant(key);
+  }
+
   switchLang(lang: string) {
     localStorage.setItem('lang', lang);
     this.translate.use(lang);
