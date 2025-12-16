@@ -32,7 +32,7 @@ namespace SolanaMessenger.Web.Controllers
         }
 
         [HttpGet("check-login/{login}")]
-        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
+        [ProducesResponseType<BoolResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> CheckLogin([FromRoute] string login)
         {
             var result = await _userBS.IsLoginNotTakenAsync(login);

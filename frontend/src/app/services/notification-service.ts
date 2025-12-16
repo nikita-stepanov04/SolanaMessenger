@@ -22,7 +22,7 @@ export class NotificationService {
     } else if (status) {
       this.update(`Error ${status}`, false);
     } else {
-      this.update('Unexpected error happened', false)
+      this.update(err, false)
     }
   }
 

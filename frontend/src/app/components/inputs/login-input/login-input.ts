@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import { InputBase} from '../input-base';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -13,5 +13,5 @@ import {TranslatePipe} from '@ngx-translate/core';
   styles: ``,
 })
 export class LoginInput extends InputBase {
-
+  @Output() blurEvent = new EventEmitter<void>();
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {LangTypes} from '@models/resources/langTypes';
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ResourcesService {
@@ -11,8 +12,12 @@ export class ResourcesService {
     this.translate.use(lang);
   }
 
-  get(key: string): string{
+  get(key: string): string {
     return this.translate.instant(key);
+  }
+
+  async getAsync(key: string): Promise<string>{
+    return await firstValueFrom(this.translate.get(key));
   }
 
   switchLang(lang: string) {

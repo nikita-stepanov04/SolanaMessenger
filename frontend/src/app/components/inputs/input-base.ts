@@ -7,6 +7,7 @@ export abstract class InputBase
     extends ComponentBase
     implements OnInit {
   @Input() label: string = '';
+  @Input() placeholder: string = '';
   @Input() controlName: string = '';
   @Input() parentForm!: FormGroup;
 

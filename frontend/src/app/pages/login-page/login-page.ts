@@ -12,6 +12,7 @@ import {ResourcesService} from '../../services/resources-service';
 import {LoadingButton} from '../../components/buttons/loading-button/loading-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
+import {catchError, of} from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -48,7 +49,6 @@ export class LoginPage {
   onSubmit(): void {
     const fv = this.loginForm.value;
     this.loading$.set(true);
-
     this.authService
       .logIn(new UserLoginInfo(fv.login, fv.password))
       .subscribe({
@@ -56,7 +56,8 @@ export class LoginPage {
           this.router.navigate(['/'])
             .then(() => this.notification.success(
               this.resources.get('str013'))); // Login successful
-        }
-      });
+        },
+        error: () => this.notification.error(this.resources.get('str014')) // Incorrect login or password
+      }).add(() => this.loading$.set(false));
   }
 }

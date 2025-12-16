@@ -1,0 +1,68 @@
+<app-auth-template>
+  <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()">
+    <h2 class="text-center mb-3">{{ 'str004' | translate }}</h2>
+    <div class="mb-3">
+      <app-login-input
+        label="{{ 'str002' | translate }}"
+        placeholder="{{ 'str001' | translate }}"
+        controlName="login"
+        (blurEvent)="onLoginBlur()"
+        [parentForm]="registerForm">
+      </app-login-input>
+    </div>
+    <div>
+      <app-password-input
+        label="{{'str012' | translate}}"
+        placeholder="{{'str008' | translate}}"
+        controlName="password"
+        [parentForm]="registerForm">
+      </app-password-input>
+    </div>
+    <div class="mb-3 mt-2">
+      <app-password-input
+        placeholder="{{'str015' | translate}}"
+        controlName="passwordCopy"
+        [parentForm]="registerForm">
+      </app-password-input>
+    </div>
+    <div class="">
+      <app-text-input
+        label="{{'str023' | translate}}"
+        placeholder="{{'str021' | translate}}"
+        controlName="surname"
+        [minLength]="3"
+        [maxLength]="50"
+        [parentForm]="registerForm">
+      </app-text-input>
+    </div>
+    <div class="d-flex mt-1 mb-2">
+      <app-text-input class="flex-grow-1 me-1"
+        placeholder="{{'str020' | translate}}"
+        controlName="name"
+        [minLength]="3"
+        [maxLength]="50"
+        [parentForm]="registerForm">
+      </app-text-input>
+      <app-text-input class="flex-grow-1 ms-1"
+        placeholder="{{'str022' | translate}}"
+        controlName="patronymic"
+        [minLength]="3"
+        [maxLength]="50"
+        [parentForm]="registerForm">
+      </app-text-input>
+    </div>
+    <div class="d-grid mt-4 mb-2">
+      <app-loading-button
+        text="{{'str004' | translate }}"
+        [disabled]="registerForm.invalid"
+        [loading$]="loading$">
+      </app-loading-button>
+      <app-router-link
+        text="{{'str003' | translate }}"
+        [path]="RoutePath.Register">
+      </app-router-link>
+    </div>
+  </form>
+</app-auth-template>

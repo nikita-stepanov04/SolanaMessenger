@@ -5,20 +5,18 @@
   <input
     type="text"
     class="form-control"
-    (blur)="blurEvent.emit()"
-    placeholder="{{placeholder}}"
     formControlName="{{controlName}}"
+    placeholder="{{placeholder}}"
     [class.is-invalid]="fh.isInvalid(control)"
   >
   <div class="invalid-feedback">
     @if (fh.hasError(control, 'required')) {
-      <span>{{ 'str005' | translate }}</span>
+      <span>{{ 'str019' | translate }}</span>
     } @if (fh.hasError(control, 'minlength')) {
-      <span>{{ 'str006' | translate }}</span>
+      <span>{{minLengthValidation}}</span>
     } @if (fh.hasError(control, 'maxlength')) {
-      <span>{{ 'str007' | translate }}</span>
-    } @else if (fh.hasError(control, 'loginTaken')) {
-    <span>{{ 'str024' | translate }}</span>
+      <span>{{maxLengthValidation}}</span>
     }
   </div>
 </div>
+
