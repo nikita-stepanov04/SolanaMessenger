@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {booleanAttribute, Component, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoginInput} from '../../components/inputs/login-input/login-input';
 import {AuthTemplate} from '../../templates/auth/auth-template';
@@ -9,6 +9,9 @@ import {UserLoginInfo} from '@models/auth/req/userLoginInfo';
 import {NotificationService} from '../../services/notification-service';
 import {Router} from '@angular/router';
 import {ResourcesService} from '../../services/resources-service';
+import {LoadingButton} from '../../components/buttons/loading-button/loading-button';
+import {RedirectLink} from '../../components/links/router-link/router-link';
+import {RoutePath} from '../../app.routes';
 
 @Component({
   selector: 'app-login-page',
@@ -18,12 +21,16 @@ import {ResourcesService} from '../../services/resources-service';
     AuthTemplate,
     TranslatePipe,
     PasswordInput,
+    LoadingButton,
+    RedirectLink,
   ],
   templateUrl: './login-page.html',
   styles: ``,
 })
 export class LoginPage {
+  readonly RoutePath = RoutePath;
   loginForm: FormGroup;
+  loading$ = signal<boolean>(false);
 
   constructor(
     private router: Router,
@@ -40,6 +47,8 @@ export class LoginPage {
 
   onSubmit(): void {
     const fv = this.loginForm.value;
+    this.loading$.set(true);
+
     this.authService
       .logIn(new UserLoginInfo(fv.login, fv.password))
       .subscribe({
@@ -48,6 +57,6 @@ export class LoginPage {
             .then(() => this.notification.success(
               this.resources.get('str013'))); // Login successful
         }
-      })
+      });
   }
 }

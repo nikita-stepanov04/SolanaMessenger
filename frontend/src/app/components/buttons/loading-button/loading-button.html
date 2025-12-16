@@ -1,0 +1,11 @@
+<div class="d-grid">
+  <button
+    class="btn btn-primary"
+    type="submit"
+    [disabled]="disabled || loading$()">
+    {{ text }}
+    @if(loading$()) {
+      <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span>
+    }
+  </button>
+</div>

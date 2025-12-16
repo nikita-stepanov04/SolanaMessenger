@@ -16,10 +16,15 @@
       </app-password-input>
     </div>
     <div class="d-grid mt-4 mb-2">
-      <button class="btn btn-primary" [disabled]="loginForm.invalid">{{'str003' | translate }}</button>
-      <a
-        class="link-secondary mt-2 text-center"
-        routerLink="/register">{{ 'str004' | translate }}</a>
+      <app-loading-button
+        text="{{'str003' | translate }}"
+        [disabled]="loginForm.invalid"
+        [loading$]="loading$">
+      </app-loading-button>
+      <app-router-link
+        text="{{'str004' | translate }}"
+        [path]="RoutePath.Register">
+      </app-router-link>
     </div>
   </form>
 </app-auth-template>
