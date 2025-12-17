@@ -15,6 +15,8 @@ import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
 import {UserRegisterInfo} from '@models/auth/req/userRegisterInfo';
 import {Roles} from '@models/enums/roles';
+import {CryptographyService} from '../../services/cryptography-service';
+import {DefaultCheck} from '../../components/checks/default-check/default-check';
 
 @Component({
   selector: 'app-register-page',
@@ -26,7 +28,8 @@ import {Roles} from '@models/enums/roles';
     PasswordInput,
     TextInput,
     LoadingButton,
-    RedirectLink
+    RedirectLink,
+    DefaultCheck
   ],
   templateUrl: './register-page.html',
   styles: ``,
@@ -34,11 +37,13 @@ import {Roles} from '@models/enums/roles';
 export class RegisterPage {
   registerForm: FormGroup;
   loading$ = signal(false);
+  isAdmin$ = signal(false);
 
   constructor(
     private router: Router,
     private  fb: FormBuilder,
     private authService: AuthService,
+    private cryptography: CryptographyService,
     private resources: ResourcesService,
     private notification: NotificationService
   ) {
@@ -48,7 +53,9 @@ export class RegisterPage {
       passwordCopy: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       surname: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      patronymic: ['', [Validators.minLength(3), Validators.maxLength(50)]]
+      patronymic: ['', [Validators.minLength(3), Validators.maxLength(50)]],
+      role: [''],
+      adminPassword: ['']
     }, {
       validators: passwordMismatchValidator
     });
@@ -59,32 +66,53 @@ export class RegisterPage {
     this.authService
       .checkLoginAvailability(login)
       .subscribe(res => {
-        this.registerForm.get('login')?.setErrors(!res ? { 'loginTaken': true } : null)
+        const loginControl = this.registerForm.get('login')!;
+        if (!res) {
+          loginControl.setErrors({ loginTaken: !res });
+        } else {
+          const errors = { ...loginControl.errors };
+          delete errors['loginTaken'];
+          loginControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
       });
+  }
+
+  onRoleChosen(val: boolean) {
+    this.isAdmin$.set(val);
+    const adminControl = this.registerForm.get('adminPassword')!;
+
+    if (val) adminControl.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(50)]);
+    else adminControl.clearValidators();
+
+    adminControl.updateValueAndValidity();
   }
 
   onSubmit(): void {
     const fv = this.registerForm.value;
+    const keyPair = this.cryptography.deriveX25519KeyPair(fv.password, fv.login);
+    const pubBase64 = this.cryptography.bytesToBase64(keyPair.pub);
+
     const regInfo = new UserRegisterInfo(
       fv.login,
       fv.password,
-      null,
-      'dGVzdA==',
+      fv.adminPassword,
+      pubBase64,
       fv.name,
       fv.surname,
       fv.patronymic,
-      Roles.User
+      Roles.Admin
     );
 
     this.loading$.set(true);
     this.authService
       .register(regInfo)
       .subscribe({
-        next: () => this.notification.success('success'),
-        error: (error) => {
-          this.notification.error(error)
-          console.log(error)
+        next: () => {
+          this.router.navigate([RoutePath.Login])
+            .then(() => this.notification.success(
+              this.resources.get('str027'))); // Account created successfully
         },
+        error: (err) => this.notification.error(err)
       }).add(() => this.loading$.set(false));
   }
 

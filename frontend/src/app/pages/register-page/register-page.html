@@ -3,6 +3,7 @@
       [formGroup]="registerForm"
       (ngSubmit)="onSubmit()">
     <h2 class="text-center mb-3">{{ 'str004' | translate }}</h2>
+
     <div class="mb-3">
       <app-login-input
         label="{{ 'str002' | translate }}"
@@ -12,6 +13,7 @@
         [parentForm]="registerForm">
       </app-login-input>
     </div>
+
     <div>
       <app-password-input
         label="{{'str012' | translate}}"
@@ -20,6 +22,7 @@
         [parentForm]="registerForm">
       </app-password-input>
     </div>
+
     <div class="mb-3 mt-2">
       <app-password-input
         placeholder="{{'str015' | translate}}"
@@ -27,6 +30,7 @@
         [parentForm]="registerForm">
       </app-password-input>
     </div>
+
     <div class="">
       <app-text-input
         label="{{'str023' | translate}}"
@@ -37,7 +41,8 @@
         [parentForm]="registerForm">
       </app-text-input>
     </div>
-    <div class="d-flex mt-1 mb-2">
+
+    <div class="d-flex mt-1">
       <app-text-input class="flex-grow-1 me-1"
         placeholder="{{'str020' | translate}}"
         controlName="name"
@@ -53,6 +58,26 @@
         [parentForm]="registerForm">
       </app-text-input>
     </div>
+
+    <div class="mt-3">
+      <app-default-check
+        controlName="role"
+        text="{{'str025' | translate}}"
+        (clickEvent)="onRoleChosen($event)"
+        [parentForm]="registerForm">
+      </app-default-check>
+    </div>
+
+    @if (isAdmin$()) {
+      <div class="mb-3 mt-2">
+        <app-password-input
+          placeholder="{{'str026' | translate}}"
+          controlName="adminPassword"
+          [parentForm]="registerForm">
+        </app-password-input>
+      </div>
+    }
+
     <div class="d-grid mt-4 mb-2">
       <app-loading-button
         text="{{'str004' | translate }}"
@@ -61,8 +86,9 @@
       </app-loading-button>
       <app-router-link
         text="{{'str003' | translate }}"
-        [path]="RoutePath.Register">
+        [path]="RoutePath.Login">
       </app-router-link>
     </div>
+
   </form>
 </app-auth-template>

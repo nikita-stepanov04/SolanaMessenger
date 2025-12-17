@@ -13,7 +13,7 @@ namespace SolanaMessenger.Application.DTOs
         [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be at most 50 characters.")]
         public string Password { get; set; } = null!;
 
-        [StringLength(50, ErrorMessage = "Password must be at most 50 characters.")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be at most 50 characters.")]
         public string? MasterPassword { get; set; }
 
         [Required(ErrorMessage = "Public encryption key is required.")]

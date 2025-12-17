@@ -53,7 +53,7 @@ export class LoginPage {
       .logIn(new UserLoginInfo(fv.login, fv.password))
       .subscribe({
         next: () => {
-          this.router.navigate(['/'])
+          this.router.navigate([RoutePath.Home])
             .then(() => this.notification.success(
               this.resources.get('str013'))); // Login successful
         },
