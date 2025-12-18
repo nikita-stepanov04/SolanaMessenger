@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {Notification} from '../../components/notification/notification';
 import {NotificationService} from '../../services/notification-service';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-home-page',
@@ -11,6 +12,9 @@ import {NotificationService} from '../../services/notification-service';
   styles: ``,
 })
 export class HomePage {
-    constructor(protected notification: NotificationService) {
-  }
+  constructor(
+    private notification: NotificationService,
+    private http: HttpClient) {  }
+
+
 }

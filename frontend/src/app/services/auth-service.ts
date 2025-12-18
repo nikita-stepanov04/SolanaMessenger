@@ -1,19 +1,30 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {TokenService} from './token-service';
 import {Router} from '@angular/router';
 import {UserLoginInfo} from '@models/auth/req/userLoginInfo';
-import {map, Observable, switchMap, tap} from 'rxjs';
+import {map, Observable, of, switchMap, tap} from 'rxjs';
 import {TokensInfo} from '@models/auth/resp/tokensInfo';
 import {UserInfo} from '@models/auth/resp/userInfo';
 import {UserRegisterInfo} from '@models/auth/req/userRegisterInfo';
 import {BoolResponse} from '@models/global/bool-response';
+import {Polices} from '@models/enums/policies';
+import {Roles} from '@models/enums/roles';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 }
 const USER_INFO_KEY = "UserInfo";
+
+const POLICY_ALLOWED_ROLES = [
+  {
+    Policy: Polices.AuthorizedAny, Roles: [Roles.User, Roles.Admin]
+  },
+  {
+    Policy: Polices.AuthorizedAdmins, Roles: [Roles.Admin]
+  }
+]
 
 @Injectable({
   providedIn: 'root',
@@ -52,17 +63,48 @@ export class AuthService {
       .post(this.registerUrl, registerInfo, httpOptions);
   }
 
+  public refresh(): Observable<string> {
+    const refreshToken = this.tokenService.getRefreshToken();
+    return this.http
+      .post(this.refreshUrl, {
+        refreshToken: refreshToken
+      }, httpOptions)
+      .pipe(
+        tap((resp: any) => this.tokenService.saveAccessToken(resp.accessToken)),
+        switchMap((resp: any) => of(resp.accessToken))
+      );
+  }
+
   public checkLoginAvailability(login: string): Observable<boolean> {
     return this.http
-      .get<BoolResponse>(`${this.checkLoginUrl}/${login}`).pipe(
+      .get<BoolResponse>(`${this.checkLoginUrl}/${login}?test=a`).pipe(
         map(res => res.result)
       );
   }
 
-  private isAuthEndpoint(currentUrl: string) {
+  public getUserData(): UserInfo | null {
+    const infoStr = localStorage.getItem(USER_INFO_KEY);
+    return infoStr ? JSON.parse(infoStr) : null;
+  }
+
+  public isAuthorized(policy: Polices): boolean {
+    if (policy == Polices.NotAuthorized)
+      return true;
+
+    const userData = this.getUserData();
+    if (!userData)
+      return false;
+
+    const policyData = POLICY_ALLOWED_ROLES.find(p => p.Policy === policy);
+    return policyData?.Roles.find(r => r == userData.role) !== undefined;
+  }
+
+  public isAuthEndpoint(currentUrl: string): boolean {
     return this.router.config
-      .filter(route => route.data && route.data['expectedRole'])
+      .filter(route => route.data && route.data['policy'].Policy != Polices.NotAuthorized)
       .map(route => `/${route.path}`)
       .some(route => route.startsWith(currentUrl));
   }
 }
+
+

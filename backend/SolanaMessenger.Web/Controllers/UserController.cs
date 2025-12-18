@@ -54,13 +54,13 @@ namespace SolanaMessenger.Web.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType<TokensResponse>(StatusCodes.Status200OK)]
-        [ProducesResponseType<MessageResponse>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<MessageResponse>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] UserLogInDTO dto)
         {
             var user = await _userBS.CheckCredentialsForLoginAsync(dto);
 
             if (user == null)
-                return Unauthorized(new MessageResponse($"Incorrect login or password"));
+                return BadRequest(new MessageResponse($"Incorrect login or password"));
 
             var accessToken = _tokenBS.GenerateAccessToken(user);
             var refreshToken = _tokenBS.GenerateRefreshToken();
