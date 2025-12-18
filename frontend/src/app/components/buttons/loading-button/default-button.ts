@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {ButtonBase} from '../button-base';
 
 @Component({
-  selector: 'app-loading-button',
+  selector: 'app-default-button',
     imports: [],
-  templateUrl: './loading-button.html',
+  templateUrl: './default-button.html',
   styles: ``,
 })
-export class LoadingButton extends ButtonBase {
+export class DefaultButton extends ButtonBase {
 }

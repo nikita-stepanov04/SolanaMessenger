@@ -11,6 +11,7 @@ import {UserRegisterInfo} from '@models/auth/req/userRegisterInfo';
 import {BoolResponse} from '@models/global/bool-response';
 import {Polices} from '@models/enums/policies';
 import {Roles} from '@models/enums/roles';
+import {RoutePath} from '../app.routes';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -99,11 +100,10 @@ export class AuthService {
     return policyData?.Roles.find(r => r == userData.role) !== undefined;
   }
 
-  public isAuthEndpoint(currentUrl: string): boolean {
-    return this.router.config
-      .filter(route => route.data && route.data['policy'].Policy != Polices.NotAuthorized)
-      .map(route => `/${route.path}`)
-      .some(route => route.startsWith(currentUrl));
+  public logout(): void {
+    localStorage.removeItem(USER_INFO_KEY);
+    this.tokenService.clearTokens();
+    this.router.navigate([RoutePath.Login]);
   }
 }
 

@@ -1,0 +1,18 @@
+<div class="bg-light d-flex align-items-center" style="height: 2.5rem">
+  <h1 class="ms-2 fs-5 fw-semibold flex-grow-1">
+    <span class="align-middle">Solana Messenger</span>
+  </h1>
+
+  <div>
+    <app-language-select>
+    </app-language-select>
+  </div>
+
+  <div class="me-2">
+    <app-tooltip text="{{'str030' | translate}}" placement="left">
+      <a (click)="logout()">
+        <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+      </a>
+    </app-tooltip>
+  </div>
+</div>

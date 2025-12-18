@@ -1,4 +1,4 @@
-import {Component, resource} from '@angular/core';
+import {Component} from '@angular/core';
 import {ResourcesService} from '../../../services/resources-service';
 import {NgClass} from '@angular/common';
 

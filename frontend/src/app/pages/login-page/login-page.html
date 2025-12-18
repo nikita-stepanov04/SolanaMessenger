@@ -18,11 +18,11 @@
       </app-password-input>
     </div>
     <div class="d-grid mt-4 mb-2">
-      <app-loading-button
+      <app-default-button
         text="{{'str003' | translate }}"
         [disabled]="loginForm.invalid"
         [loading$]="loading$">
-      </app-loading-button>
+      </app-default-button>
       <app-router-link
         text="{{'str004' | translate }}"
         [path]="RoutePath.Register">

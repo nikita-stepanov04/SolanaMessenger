@@ -9,7 +9,7 @@ import {UserLoginInfo} from '@models/auth/req/userLoginInfo';
 import {NotificationService} from '../../services/notification-service';
 import {Router} from '@angular/router';
 import {ResourcesService} from '../../services/resources-service';
-import {LoadingButton} from '../../components/buttons/loading-button/loading-button';
+import {DefaultButton} from '../../components/buttons/loading-button/default-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
 import {catchError, of} from 'rxjs';
@@ -22,7 +22,7 @@ import {catchError, of} from 'rxjs';
     AuthTemplate,
     TranslatePipe,
     PasswordInput,
-    LoadingButton,
+    DefaultButton,
     RedirectLink,
   ],
   templateUrl: './login-page.html',

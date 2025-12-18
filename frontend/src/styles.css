@@ -42,3 +42,8 @@
 .fade-out {
   animation: fade-out 300ms ease-out forwards;
 }
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-blue);
+  --bs-tooltip-color: var(--bs-white);
+}
