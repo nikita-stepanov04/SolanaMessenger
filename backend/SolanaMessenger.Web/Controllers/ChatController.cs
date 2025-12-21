@@ -48,7 +48,7 @@ namespace SolanaMessenger.Web.Controllers
         [HttpGet("all")]
         [Authorize(Policy = Policies.AuthorizedAny)]
         [ProducesResponseType<ChatMinimalDTO>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetChatIDs()
+        public async Task<IActionResult> GetMinimalChatsInfo()
         {
             var chats = await _chatBS.GetAllByUserIDAsync(UserID);
             return Ok(chats);

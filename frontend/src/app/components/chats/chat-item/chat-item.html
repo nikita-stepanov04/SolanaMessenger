@@ -1,0 +1,13 @@
+<div class="d-flex py-1 align-items-center chat-item">
+  <div class="ms-2 d-flex align-items-center">
+    <div
+      class="chat-icon"
+      [style.background]="stringToColor(chat.name)">
+      {{ getInitial(chat.name) }}
+    </div>
+  </div>
+
+  <div class="flex-grow-1">
+    <span class="ms-2 fs-4 m-0 align-middle">{{chat.name | titlecase}}</span>
+  </div>
+</div>

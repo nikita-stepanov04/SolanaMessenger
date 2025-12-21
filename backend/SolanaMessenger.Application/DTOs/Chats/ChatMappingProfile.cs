@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SolanaMessenger.Domain.Entities;
+using ByteConvert = System.Convert;
 
 namespace SolanaMessenger.Application.DTOs
 {
@@ -24,11 +25,12 @@ namespace SolanaMessenger.Application.DTOs
             {
                 var userID = Guid.Parse(context.Items["UserID"].ToString()!);
                 var payload = chatData.UserPayload[userID];
+
                 var dto = new UserPayloadDTO()
                 {
-                    Nonce = payload.Nonce,
-                    EphemeralPublicKey = payload.EphemeralPublicKey,
-                    EncryptedMessageEncryptionKey = payload.EncryptedMessageEncryptionKey
+                    Nonce = ByteConvert.ToBase64String(payload.Nonce),
+                    EphemeralPublicKey = ByteConvert.ToBase64String(payload.EphemeralPublicKey),
+                    EncryptedMessageEncryptionKey = ByteConvert.ToBase64String(payload.EncryptedMessageEncryptionKey)
                 };
                 return dto;
             }

@@ -8,6 +8,11 @@
   flex: 1;
 }
 
+.home-content {
+  display: flex;
+  flex-direction: column;
+}
+
 .footer {
   margin-top: auto;
   background-color: #333;
@@ -46,4 +51,24 @@
 .custom-tooltip {
   --bs-tooltip-bg: var(--bs-blue);
   --bs-tooltip-color: var(--bs-white);
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.chat-item:hover {
+  background-color: #ededed;
+}
+
+.chat-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
 }

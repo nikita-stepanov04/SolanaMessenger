@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import {LoginPage} from './pages/login-page/login-page';
-import {HomePage} from './pages/home-page/home-page';
+import {ChatPage} from './pages/home-page/chat-page';
 import {RegisterPage} from './pages/register-page/register-page';
 import {Polices} from '@models/enums/policies';
 import {AuthGuardService} from './services/auth-guard-service';
@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: RoutePath.Home,
-    component: HomePage,
+    component: ChatPage,
     canActivate: [AuthGuardService],
     data: { policy: Polices.AuthorizedAny }
   },

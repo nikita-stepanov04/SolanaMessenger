@@ -1,0 +1,15 @@
+<app-main-template>
+  <div class="flex-grow-1 d-flex">
+    <div class="bg-light sidebar">
+      <cdk-virtual-scroll-viewport itemSize="50">
+        @for(chat of chats$ | async; track chat.id) {
+          <app-chat-item [chat]="chat">
+          </app-chat-item>
+        }
+      </cdk-virtual-scroll-viewport>
+    </div>
+    <div class="flex-grow-1">
+
+    </div>
+  </div>
+</app-main-template>

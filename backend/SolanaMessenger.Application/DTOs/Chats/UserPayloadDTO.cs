@@ -2,8 +2,8 @@
 {
     public class UserPayloadDTO
     {
-        public byte[] EphemeralPublicKey { get; set; } = null!;
-        public byte[] Nonce { get; set; } = null!;
-        public byte[] EncryptedMessageEncryptionKey { get; set; } = null!;
+        public string EphemeralPublicKey { get; set; } = null!;
+        public string Nonce { get; set; } = null!;
+        public string EncryptedMessageEncryptionKey { get; set; } = null!;
     }
 }
