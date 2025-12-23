@@ -1,0 +1,44 @@
+<app-main-template>
+  <div class="flex-grow-1 d-flex">
+    <div class="bg-light sidebar position-relative">
+
+      @if (loading$ | async) {
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            style="width:2rem; height:2rem">
+          </span>
+        </div>
+      }
+
+      @if (loaded$ | async) {
+        <div class="overflow-x-hidden overflow-y-auto d-flex flex-column chat-scroll-sidebar">
+          <app-search-input
+            placeholder="{{'str031' | translate}}"
+            (onInputEvent)="onSearch($event)">
+          </app-search-input>
+
+          <cdk-virtual-scroll-viewport
+                itemSize="38">
+              @for(chat of chats$ | async; track chat.id) {
+                <app-chat-item
+                  [chat]="chat">
+                </app-chat-item>
+              }
+          </cdk-virtual-scroll-viewport>
+        </div>
+      }
+    </div>
+
+    <div class="flex-grow-1">
+      @if (!chatSelected$()) {
+       <div class="d-flex align-items-center justify-content-center w-100 h-100">
+         <div class="bg-light py-1 px-3 rounded-5">{{'str033' | translate}}</div>
+       </div>
+      }
+    </div>
+
+  </div>
+</app-main-template>

@@ -6,6 +6,6 @@ namespace SolanaMessenger.Application
     {
         Task<List<ChatMinimalDTO>> GetAllByUserIDAsync(Guid userID);
         Task<OpRes<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID);
-        Task<OpRes<Guid>> CreateChatAsync(ChatCreateDTO chatDTO);
+        Task<OpRes<ChatMinimalDTO>> CreateChatAsync(ChatCreateDTO chatDTO);
     }
 }

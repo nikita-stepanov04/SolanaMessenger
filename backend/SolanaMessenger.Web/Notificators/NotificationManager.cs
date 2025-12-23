@@ -1,4 +1,5 @@
 ﻿using SolanaMessenger.Application;
+using SolanaMessenger.Application.Notification;
 
 namespace SolanaMessenger.Web
 {
@@ -6,7 +7,8 @@ namespace SolanaMessenger.Web
     {
         public static void SetUpNotifications(this IServiceCollection services)
         {
-            services.AddScoped<INewMessageNotificator, NewMessageNotification>();
+            services.AddScoped<INewChatNotificator, NewChatNotificator>();
+            services.AddScoped<INewMessageNotificator, NewMessageNotificator>();
         }
     }
 }

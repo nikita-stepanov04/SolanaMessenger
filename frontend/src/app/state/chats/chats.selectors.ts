@@ -4,16 +4,10 @@ import {chatsAdapter, ChatsState} from './chats.reducer';
 export const selectChatsState = createFeatureSelector<ChatsState>('chats');
 
 const {
-  selectIds,
-  selectEntities,
   selectAll,
-  selectTotal
 } = chatsAdapter.getSelectors(selectChatsState);
 
-export const selectChatIds = selectIds;
-export const selectChatEntities = selectEntities;
 export const selectAllChats = selectAll;
-export const selectChatsTotal = selectTotal;
 
 export const selectChatsLoading = createSelector(
   selectChatsState,
@@ -25,7 +19,20 @@ export const selectChatsLoaded = createSelector(
   state => state.loaded
 );
 
-export const selectChatsError = createSelector(
+export const selectChatsSearch = createSelector(
   selectChatsState,
-  state => state.error
+  state => state.searchName
 );
+
+export const selectChatsByName = createSelector(
+    selectAllChats,
+    selectChatsSearch,
+    ((chats, search) => !search
+      ? chats
+      : chats.filter(chat =>
+        chat.name
+          .toLowerCase()
+          .includes(search
+              .trim()
+              .toLowerCase()))
+  ));

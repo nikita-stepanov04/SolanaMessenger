@@ -13,7 +13,7 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IChatRepository _chatRep;
         private readonly IMessageRepository _messageRep;
         private readonly IBlockchainRepository<MessageData> _messageBlockchainRep;
-        private readonly INewMessageNotificator _notificator;
+        private readonly INewMessageNotificator _newMessageNotificator;
         private readonly ChatSettings _chatSettings;
 
         public MessageBS(
@@ -22,14 +22,14 @@ namespace SolanaMessenger.Application.BusinessServices
             IBlockchainRepository<MessageData> blockchainMessageRep,
             IOptions<ChatSettings> chatOpts,
             IChatRepository chatRep,
-            INewMessageNotificator notificator)
+            INewMessageNotificator newMessageNotificator)
         {
             _mapper = mapper;
             _messageRep = messageRep;
             _chatSettings = chatOpts.Value;
             _messageBlockchainRep = blockchainMessageRep;
             _chatRep = chatRep;
-            _notificator = notificator;
+            _newMessageNotificator = newMessageNotificator;
         }
 
         public async Task<OpRes<List<MessageDTO>>> LoadChatMessagesAsync(Guid chatID, Guid userID, long lastMessageTimestamp = 0)
@@ -72,7 +72,7 @@ namespace SolanaMessenger.Application.BusinessServices
             await _messageRep.AddAsync(message);
             await _messageRep.SaveChangesAsync();
 
-            await _notificator.NotifyAsync(_mapper.Map<MessageDTO>(messageData));
+            _newMessageNotificator.Notify(_mapper.Map<MessageDTO>(messageData));
 
             return OpRes.Success(messageID);
         }

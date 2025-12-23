@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import {LoginPage} from './pages/login-page/login-page';
-import {ChatPage} from './pages/home-page/chat-page';
+import {ChatPage} from './pages/chat-page/chat-page';
 import {RegisterPage} from './pages/register-page/register-page';
 import {Polices} from '@models/enums/policies';
 import {AuthGuardService} from './services/auth-guard-service';
 
 export enum RoutePath {
   Login = 'login',
-  Home = 'home',
+  Chats = 'chats',
   Register = 'register',
 }
 
@@ -19,7 +19,7 @@ export const routes: Routes = [
     data: { policy: Polices.NotAuthorized }
   },
   {
-    path: RoutePath.Home,
+    path: RoutePath.Chats,
     component: ChatPage,
     canActivate: [AuthGuardService],
     data: { policy: Polices.AuthorizedAny }
@@ -32,6 +32,6 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/' + RoutePath.Home, pathMatch: 'full'
+    redirectTo: '/' + RoutePath.Chats, pathMatch: 'full'
   }
 ];

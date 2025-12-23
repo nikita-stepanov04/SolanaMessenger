@@ -10,7 +10,7 @@ import {LoginInput} from '../../components/inputs/login-input/login-input';
 import {PasswordInput} from '../../components/inputs/password-input/password-input';
 import {passwordMismatchValidator} from '../../validators/password-mismatch';
 import {TextInput} from '../../components/inputs/text-input/text-input';
-import {DefaultButton} from '../../components/buttons/loading-button/default-button';
+import {DefaultButton} from '../../components/buttons/default-button/default-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
 import {UserRegisterInfo} from '@models/auth/req/userRegisterInfo';

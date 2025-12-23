@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
 import {Chat} from '../../../state/chats/chats.models';
-import {TitleCasePipe} from '@angular/common';
+import {DefaultTooltip} from '../../tooltip/default-tooltip';
 
 @Component({
   selector: 'app-chat-item',
   imports: [
-    TitleCasePipe
+    DefaultTooltip
   ],
   templateUrl: './chat-item.html',
   styles: ``,

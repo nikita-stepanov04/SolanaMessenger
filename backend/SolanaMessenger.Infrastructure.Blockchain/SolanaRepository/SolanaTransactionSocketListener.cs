@@ -14,9 +14,10 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         private const string DEV_WSS_ENDPOINT = "wss://api.devnet.solana.com";
         private const string MAIN_WSS_ENDPOINT = "wss://api.mainnet-beta.solana.com";
 
+        private readonly IStreamingRpcClient? _wssClient;
+        private readonly SubscriptionState? _subscriptionState;
+
         private readonly ILogger _logger;
-        private readonly IStreamingRpcClient _wssClient;
-        private readonly SubscriptionState _subscriptionState;
         private readonly ConcurrentDictionary<string, EventWaitingPayload> _pendingSignatures = new();
 
         public SolanaTransactionSocketListener(ILoggerFactory loggerFactory, IOptions<SolanaSettings> solOpts)
@@ -27,35 +28,43 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
             _logger = loggerFactory.CreateLogger<SolanaTransactionSocketListener>();
 
-            _wssClient = ClientFactory.GetStreamingClient(endpoint);
-            _wssClient.ConnectAsync().Wait();
+            try
+            {
+                _wssClient = ClientFactory.GetStreamingClient(endpoint);
+                _wssClient.ConnectAsync().Wait();
 
-            _logger.LogInformation("Solana RPC Streaming listener successfully connected to: {e}", endpoint);
+                _logger.LogInformation("Solana RPC Streaming listener successfully connected to: {e}", endpoint);
 
-            _subscriptionState = _wssClient.SubscribeLogInfo(
-                solSettings.WalletPublicKey,
-                (state, result) =>
-                {
-                    var signature = result.Value.Signature;
-                    if (signature != null)
+                _subscriptionState = _wssClient.SubscribeLogInfo(
+                    solSettings.WalletPublicKey,
+                    (state, result) =>
                     {
-                        bool isOk = result.Value.Error == null;
-
-                        if (isOk)
-                            _logger.LogInformation("Event received => Transaction {t} has been confirmed", signature);
-                        else
-                            _logger.LogWarning("Event received => Transaction {t} was not confirmed, error: {e}",
-                                signature, JsonSerializer.Serialize(result.Value.Error));
-
-                        _pendingSignatures.TryRemove(signature, out var ewp);
-                        using (ewp)
+                        var signature = result.Value.Signature;
+                        if (signature != null)
                         {
-                            ewp?.Tcs.TrySetResult(isOk);
+                            bool isOk = result.Value.Error == null;
+
+                            if (isOk)
+                                _logger.LogInformation("Event received => Transaction {t} has been confirmed", signature);
+                            else
+                                _logger.LogWarning("Event received => Transaction {t} was not confirmed, error: {e}",
+                                    signature, JsonSerializer.Serialize(result.Value.Error));
+
+                            _pendingSignatures.TryRemove(signature, out var ewp);
+                            using (ewp)
+                            {
+                                ewp?.Tcs.TrySetResult(isOk);
+                            }
                         }
-                    }
-                },
-                Commitment.Confirmed
-            );
+                    },
+                    Commitment.Confirmed
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical("Failed to start transaction listener because of exception of type: {exType}",
+                    ex.GetType().Name);
+            }
         }
 
         internal Task<bool> WaitTransactionConfirmation(string signature)
@@ -86,7 +95,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         public void Dispose()
         {
-            _wssClient.Unsubscribe(_subscriptionState);
+            _wssClient?.Unsubscribe(_subscriptionState);
             _logger.LogInformation("Solana RPC Streaming listener successfully closed connection");
         }
 

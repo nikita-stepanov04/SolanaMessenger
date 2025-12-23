@@ -15,7 +15,7 @@ namespace SolanaMessenger.Web.Hubs
         public static void MapHubs(this WebApplication app)
         {
             app.MapGroup("/ws")
-                .MapHub<MessageHub>("/messages");
+                .MapHub<ChatHub>("/chats");
         }
     }
 }

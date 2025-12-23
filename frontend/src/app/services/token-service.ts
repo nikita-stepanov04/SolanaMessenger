@@ -8,8 +8,6 @@ const REFRESH_TOKEN_KEY = "RefreshToken";
   providedIn: 'root',
 })
 export class TokenService {
-  constructor(private errorService: NotificationService) {}
-
   public saveAccessToken(token: string) {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.setItem(TOKEN_KEY, token);

@@ -28,7 +28,7 @@ export class AuthGuardService implements CanActivate {
       this.router
         .navigate([RoutePath.Login])
         .then(async () => {
-          this.notification.error(
+          await this.notification.error(
             await this.resources.getAsync(this.auth.isAuthorized(Polices.AuthorizedAny)
               ? 'str029' : 'str028'));
         });

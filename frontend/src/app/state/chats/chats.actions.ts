@@ -5,5 +5,6 @@ export const loadChats = createAction('[Chats] Load');
 export const loadChatsSuccess = createAction('[Chats] Load Success', props<{ chats: Chat[] }>());
 export const loadChatsFailure = createAction('[Chats] Load Failure', props<{ error: any }>());
 
+export const setChatsSearch = createAction('[Chats] Set Search', props<{ search: string }>());
 export const addChatSuccess = createAction('[Chats] Add Success', props<{ chat: Chat }>());
 

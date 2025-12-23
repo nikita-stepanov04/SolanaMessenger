@@ -3,6 +3,6 @@
     public interface INotificator<T> 
         where T : class
     {
-        Task NotifyAsync(T obj);
+        void Notify(T obj);
     }
 }

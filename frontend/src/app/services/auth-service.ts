@@ -12,6 +12,8 @@ import {BoolResponse} from '@models/global/bool-response';
 import {Polices} from '@models/enums/policies';
 import {Roles} from '@models/enums/roles';
 import {RoutePath} from '../app.routes';
+import {Store} from '@ngrx/store';
+import {clearStore} from '../state/root/root.actions';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -38,6 +40,7 @@ export class AuthService {
   private checkLoginUrl = `${this.baseUrl}/check-login`;
 
   constructor(
+    private store: Store,
     private router: Router,
     private http: HttpClient,
     private tokenService: TokenService ) {}
@@ -103,6 +106,7 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(USER_INFO_KEY);
     this.tokenService.clearTokens();
+    this.store.dispatch(clearStore());
     this.router.navigate([RoutePath.Login]);
   }
 }

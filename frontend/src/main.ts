@@ -9,13 +9,16 @@ import { isDevMode } from '@angular/core';
 import {provideStore} from '@ngrx/store';
 import {reducers} from './app/state/register-reducers';
 import {effects} from './app/state/register-effects';
+import {clearStateMetaReducer} from './app/state/root/root.reducer';
+import { provideRouterStore } from '@ngrx/router-store';
 
 bootstrapApplication(App, {
   ...appConfig,  providers: [
     ...(appConfig.providers || []),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideStore(reducers),
+    provideStore(reducers, { metaReducers: [clearStateMetaReducer] }),
     provideEffects(effects),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), autoPause: true })
-  ]
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), autoPause: true }),
+    provideRouterStore()
+]
 }).catch(err => console.error(err));

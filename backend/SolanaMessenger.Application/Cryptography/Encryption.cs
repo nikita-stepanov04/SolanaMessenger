@@ -34,7 +34,7 @@ namespace SolanaMessenger.Application.Cryptography
             {
                 EphemeralPublicKey = ephemeralPublicKey,
                 Nonce = nonce,
-                WrapedKey = cipherText
+                WrappedKey = cipherText
             };
         }
     }
@@ -43,6 +43,6 @@ namespace SolanaMessenger.Application.Cryptography
     {
         public byte[] EphemeralPublicKey { get; set; } = null!;
         public byte[] Nonce { get; set; } = null!;
-        public byte[] WrapedKey { get; set; } = null!;
+        public byte[] WrappedKey { get; set; } = null!;
     }
 }

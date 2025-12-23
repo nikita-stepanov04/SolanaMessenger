@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
+using SolanaMessenger.Application.Notification;
 using SolanaMessenger.Domain.Entities;
 using SolanaMessenger.Infrastructure;
 using SolanaMessenger.Infrastructure.Blockchain;
+using System;
 
 namespace SolanaMessenger.Application.BusinessServices
 {
@@ -17,35 +19,38 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IChatRepository _chatRep;
         private readonly IBlockchainRepository<ChatData> _blockchainChatRep;
         private readonly IBlockchainRepository<UserData> _blockchainUserRep;
+        private readonly INewChatNotificator _newChatNotificator;
 
         public ChatBS(
             IMapper mapper,
             IUserRepository userRep,
             IChatRepository chatRep,
             IBlockchainRepository<ChatData> blockchainChatRep,
-            IBlockchainRepository<UserData> blockchainUserRep)
+            IBlockchainRepository<UserData> blockchainUserRep,
+            INewChatNotificator newChatNotificator)
         {
             _mapper = mapper;
             _userRep = userRep;
             _chatRep = chatRep;
             _blockchainChatRep = blockchainChatRep;
             _blockchainUserRep = blockchainUserRep;
+            _newChatNotificator = newChatNotificator;
         }
 
-        public async Task<OpRes<Guid>> CreateChatAsync(ChatCreateDTO chatDTO)
+        public async Task<OpRes<ChatMinimalDTO>> CreateChatAsync(ChatCreateDTO chatDTO)
         {
             var usersIDs = chatDTO.ChatUsersIDs;
             var users = await _userRep.GetByIDsAsync(usersIDs);
 
             if (users.Count != usersIDs.Count)
-                return OpRes.Err<Guid>("One or more users do not exist.");
+                return OpRes.Err<ChatMinimalDTO>("One or more users do not exist.");
 
             var userDataTasks = users.Select(u => _blockchainUserRep.GetObjectAsync(u.Signatures));
             var usersData = await Task.WhenAll(userDataTasks);
 
             var success = usersData.All(ud => ud != null);
             if (!success)
-                return OpRes.Err<Guid>();
+                return OpRes.Err<ChatMinimalDTO>();
 
             var chatID = Guid.NewGuid();
             var encryption = new Encryption();
@@ -68,7 +73,7 @@ namespace SolanaMessenger.Application.BusinessServices
                     {
                         EphemeralPublicKey = wd.Wrap.EphemeralPublicKey,
                         Nonce = wd.Wrap.Nonce,
-                        EncryptedMessageEncryptionKey = wd.Wrap.WrapedKey,
+                        EncryptedMessageEncryptionKey = wd.Wrap.WrappedKey,
                         FirstName = wd.UserData.FirstName,
                         SecondName = wd.UserData.SecondName,
                         LastName = wd.UserData.LastName
@@ -85,7 +90,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             var signatures = await _blockchainChatRep.WriteObjectAsync(chatData);
             if (signatures == null)
-                return OpRes.Err<Guid>();
+                return OpRes.Err<ChatMinimalDTO>();
 
             var chat = new Chat()
             {
@@ -98,7 +103,9 @@ namespace SolanaMessenger.Application.BusinessServices
             await _chatRep.AddAsync(chat);
             await _chatRep.SaveChangesAsync();
 
-            return OpRes.Success(chatID);
+            _newChatNotificator.Notify(_mapper.Map<ChatCreatedDTO>(chat));
+
+            return OpRes.Success(_mapper.Map<ChatMinimalDTO>(chat));
         }
 
         public async Task<OpRes<ChatDTO>> GetByChatIDForUserAsync(Guid chatId, Guid userID)

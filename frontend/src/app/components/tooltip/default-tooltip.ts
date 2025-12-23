@@ -12,6 +12,8 @@ type Placement = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 export class DefaultTooltip implements AfterViewChecked, OnDestroy {
   @Input() text: string = '';
   @Input() placement: Placement = 'top';
+  @Input() showDelay: number | undefined;
+  @Input() hideDelay: number | undefined;
   @ViewChild('tooltip') tooltip: ElementRef;
 
   private tooltipInstance: Tooltip;
@@ -21,6 +23,10 @@ export class DefaultTooltip implements AfterViewChecked, OnDestroy {
         title: this.text,
         placement: this.placement,
         fallbackPlacements: [],
+        delay: {
+          show: this.showDelay ?? 0,
+          hide: this.hideDelay ?? 0,
+        }
       });
   }
 

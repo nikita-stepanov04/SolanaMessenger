@@ -1,15 +1,30 @@
 import {inject, Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {loadChats, loadChatsFailure, loadChatsSuccess} from './chats.actions';
-import {catchError, exhaustMap, map, of, tap} from 'rxjs';
+import {catchError, exhaustMap, filter, map, of, tap, withLatestFrom} from 'rxjs';
 import {ChatsService} from './chats.service';
 import {NotificationService} from '../../services/notification-service';
+import {routerNavigatedAction} from '@ngrx/router-store';
+import {RoutePath} from '../../app.routes';
+import {Store} from '@ngrx/store';
+import {selectChatsLoaded} from './chats.selectors';
+
 
 @Injectable()
 export class ChatsEffects {
+  private store = inject(Store);
   private actions$ = inject(Actions);
   private chats = inject(ChatsService);
   private notifications = inject(NotificationService);
+
+  loadOnRoute$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      filter(action => action.payload.event.url.startsWith(`/${RoutePath.Chats}`)),
+      withLatestFrom(this.store.select(selectChatsLoaded)),
+      filter(([_, loaded]) => !loaded),
+      map(() => loadChats())
+    ))
 
   loadChats$ = createEffect(() =>
     this.actions$.pipe(

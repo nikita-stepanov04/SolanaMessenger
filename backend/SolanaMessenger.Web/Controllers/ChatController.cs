@@ -19,7 +19,7 @@ namespace SolanaMessenger.Web.Controllers
 
         [HttpPost("create")]
         [Authorize(Policy = Policies.AuthorizedAdmins)]
-        [ProducesResponseType<IDResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ChatMinimalDTO>(StatusCodes.Status200OK)]
         [ProducesResponseType<MessageResponse>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateChat([FromBody] ChatCreateDTO dto)
         {
@@ -28,7 +28,7 @@ namespace SolanaMessenger.Web.Controllers
             if (result.HasError)
                 return BadRequest(new MessageResponse(result.ErrorMessage));
 
-            return Ok(new IDResponse(result.Result));
+            return Ok(result.Result);
         }
 
         [HttpGet("{chatID}")]

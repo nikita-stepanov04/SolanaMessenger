@@ -9,7 +9,7 @@ import {UserLoginInfo} from '@models/auth/req/userLoginInfo';
 import {NotificationService} from '../../services/notification-service';
 import {Router} from '@angular/router';
 import {ResourcesService} from '../../services/resources-service';
-import {DefaultButton} from '../../components/buttons/loading-button/default-button';
+import {DefaultButton} from '../../components/buttons/default-button/default-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
 import {catchError, of} from 'rxjs';
@@ -53,7 +53,7 @@ export class LoginPage {
       .logIn(new UserLoginInfo(fv.login, fv.password))
       .subscribe({
         next: () => {
-          this.router.navigate([RoutePath.Home])
+          this.router.navigate([RoutePath.Chats])
             .then(() => this.notification.success(
               this.resources.get('str013'))); // Login successful
         },

@@ -6,33 +6,37 @@ using SolanaMessenger.Web.Identity;
 namespace SolanaMessenger.Web.Hubs
 {
     [Authorize(Policy = Policies.AuthorizedAny)]
-    public class MessageHub : Hub<IMessageHub>
+    public class ChatHub : Hub<IChatHub>
     {
-        private const string CHAT_ID = "chatID";
-
         private readonly IChatBS _chatBS;
 
-        public MessageHub(IChatBS chatBS)
+        public ChatHub(IChatBS chatBS)
         {
             _chatBS = chatBS;
         }
 
-        public override async Task OnConnectedAsync()
+        public override Task OnConnectedAsync()
         {
-            var httpContext = Context.GetHttpContext()!;
+            Console.WriteLine("connected");
+            return Task.CompletedTask;
+        }
 
+        [HubMethodName("connectToChat")]
+        public async Task ConnectToChatAsync(Guid chatID)
+        {
             var userID = Guid.Parse(Context.UserIdentifier!);
-            var parseRes = Guid.TryParse(httpContext.Request.Query[CHAT_ID], out var chatID);
-
-            if (!parseRes)
-                throw new HubException("chatID is not specified");
-
             var getChatRes = await _chatBS.GetByChatIDForUserAsync(chatID, userID);
 
             if (getChatRes.HasError)
                 throw new HubException(getChatRes.ErrorMessage);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, chatID.ToString());
+        }
+
+        [HubMethodName("disconnectFromChat")]
+        public async Task DisconnectFromChatAsync(Guid chatID)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatID.ToString());
         }
     }
 }

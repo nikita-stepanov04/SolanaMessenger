@@ -5,13 +5,13 @@ using SolanaMessenger.Web.Hubs;
 
 namespace SolanaMessenger.Web
 {
-    public class NewMessageNotification 
-        : NotificationBase<MessageHub, IMessageHub>, INewMessageNotificator
+    public class NewMessageNotificator 
+        : NotificatorBase<ChatHub, IChatHub, MessageDTO>, INewMessageNotificator
     {
-        public NewMessageNotification(IHubContext<MessageHub, IMessageHub> hubContext)
+        public NewMessageNotificator(IHubContext<ChatHub, IChatHub> hubContext)
             : base(hubContext) { }
 
-        public async Task NotifyAsync(MessageDTO message)
+        protected override async Task NotifyAsync(MessageDTO message)
         {
             var chatID = message.ChatID.ToString();
             await HubContext.Clients

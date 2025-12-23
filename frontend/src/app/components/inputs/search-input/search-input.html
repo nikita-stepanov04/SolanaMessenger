@@ -1,0 +1,13 @@
+<div class="mt-1 mb-2 px-1 input-group flex-nowrap">
+  <span
+      class="input-group-text"
+      id="addon-wrapping">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </span>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="{{placeholder}}"
+    (input)="onInput($event)"
+    aria-describedby="addon-wrapping">
+</div>

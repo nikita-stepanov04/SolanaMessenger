@@ -17,6 +17,14 @@ namespace SolanaMessenger.Application.DTOs
                     dest => dest.UsersData,
                     src => src.ConvertUsing(new ChatDataToChatUsersDataConverter(), src => src)
                 );
+
+            CreateMap<Chat, ChatCreatedDTO>()
+                .ForMember(
+                    dest => dest.UserIDs,
+                    src => src.MapFrom(chat => chat.Users.Select(u => u.ID).ToList())
+                );
+
+            CreateMap<ChatCreatedDTO, ChatMinimalDTO>();
         }
 
         class ChatDataToEncryptionPayloadDTOConverter : IValueConverter<ChatData, UserPayloadDTO>

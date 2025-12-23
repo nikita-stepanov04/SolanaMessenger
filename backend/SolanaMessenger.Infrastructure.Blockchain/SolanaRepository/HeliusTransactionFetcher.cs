@@ -85,18 +85,26 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             {
                 retriesCount++;
 
-                var response = await _httpClient.PostAsync(_endpoint, content);
-
-                if (!response.IsSuccessStatusCode)
+                try
                 {
-                    _logger.LogWarning("Failed to fetch transaction {t}, status code: {c}", signature, response.StatusCode);
-                    continue;
+                    var response = await _httpClient.PostAsync(_endpoint, content);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger.LogWarning("Failed to fetch transaction {t}, status code: {c}", signature, response.StatusCode);
+                        continue;
+                    }
+
+                    var resString = await response.Content.ReadAsStringAsync();
+                    var data = JsonSerializer.Deserialize<HeliusResponse>(resString)!;
+
+                    return data.GetMemoData();
                 }
-
-                var resString = await response.Content.ReadAsStringAsync();
-                var data = JsonSerializer.Deserialize<HeliusResponse>(resString)!;
-
-                return data.GetMemoData();
+                catch (Exception ex)
+                {
+                    _logger.LogCritical("Failed to fetch {transaction} because of exception of type: {exType}",
+                        signature, ex.GetType().Name);
+                }
             }
 
             _logger.LogCritical("Failed to fetch {transaction}", signature);
