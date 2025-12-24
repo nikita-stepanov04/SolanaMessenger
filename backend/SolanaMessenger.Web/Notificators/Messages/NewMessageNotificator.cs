@@ -8,8 +8,11 @@ namespace SolanaMessenger.Web
     public class NewMessageNotificator 
         : NotificatorBase<ChatHub, IChatHub, MessageDTO>, INewMessageNotificator
     {
-        public NewMessageNotificator(IHubContext<ChatHub, IChatHub> hubContext)
-            : base(hubContext) { }
+        public NewMessageNotificator(
+            IHubContext<ChatHub, IChatHub> hubContext,
+            ILoggerFactory loggerFactory)
+            : base(hubContext, loggerFactory)
+        { }
 
         protected override async Task NotifyAsync(MessageDTO message)
         {

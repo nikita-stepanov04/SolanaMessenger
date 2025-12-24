@@ -4,7 +4,7 @@ import {loadChats, loadChatsFailure, loadChatsSuccess} from './chats.actions';
 import {catchError, exhaustMap, filter, map, of, tap, withLatestFrom} from 'rxjs';
 import {ChatsService} from './chats.service';
 import {NotificationService} from '../../services/notification-service';
-import {routerNavigatedAction} from '@ngrx/router-store';
+import {routerNavigationAction} from '@ngrx/router-store';
 import {RoutePath} from '../../app.routes';
 import {Store} from '@ngrx/store';
 import {selectChatsLoaded} from './chats.selectors';
@@ -19,7 +19,7 @@ export class ChatsEffects {
 
   loadOnRoute$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(routerNavigatedAction),
+      ofType(routerNavigationAction),
       filter(action => action.payload.event.url.startsWith(`/${RoutePath.Chats}`)),
       withLatestFrom(this.store.select(selectChatsLoaded)),
       filter(([_, loaded]) => !loaded),

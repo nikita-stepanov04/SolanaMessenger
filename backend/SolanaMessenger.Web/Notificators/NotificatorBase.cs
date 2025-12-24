@@ -10,10 +10,14 @@ namespace SolanaMessenger.Web
         where TNotificationType : class
     {
         protected readonly IHubContext<THub, THubType> HubContext;
+        protected readonly ILogger _logger;
 
-        public NotificatorBase(IHubContext<THub, THubType> hubContext)
+        public NotificatorBase(
+            IHubContext<THub, THubType> hubContext,
+            ILoggerFactory loggerFactory)
         {
             HubContext = hubContext;
+            _logger = loggerFactory.CreateLogger<INotificator<TNotificationType>>();
         }
 
         public void Notify(TNotificationType notification)
@@ -22,13 +26,12 @@ namespace SolanaMessenger.Web
             {
                 try
                 {
-                    Console.WriteLine("\n\n\nbefore\n\n\n");
                     await NotifyAsync(notification);
-                    Console.WriteLine("\n\n\nafter\n\n\n");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    _logger.LogCritical("Exception happened while invoking notification of type {type}\n{ex}",
+                        this.GetType().Name, ex);
                 }
             });
         }
