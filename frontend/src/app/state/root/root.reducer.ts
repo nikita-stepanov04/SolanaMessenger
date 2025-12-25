@@ -1,11 +1,13 @@
 import {ActionReducer} from '@ngrx/store';
-import {clearStore} from './root.actions';
+import {rootActions} from './root.actions';
 
-export function clearStateMetaReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-  return function (state, action) {
-    if (action.type === clearStore.type) {
-      state = undefined;
-    }
-    return reducer(state, action);
-  };
+export const rootReducer = {
+  clearStateMetaReducer(reducer: ActionReducer<any>): ActionReducer<any> {
+    return function (state, action) {
+      if (action.type === rootActions.clearStore.type) {
+        state = undefined;
+      }
+      return reducer(state, action);
+    };
+  }
 }

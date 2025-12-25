@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Chat} from './chats.models';
+import {Chat} from './chats-models';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 

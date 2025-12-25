@@ -1,12 +1,10 @@
 import {Component, Input} from '@angular/core';
-import {Chat} from '../../../state/chats/chats.models';
+import {Chat} from '../../../state/chats/chats-models';
 import {DefaultTooltip} from '../../tooltip/default-tooltip';
 
 @Component({
   selector: 'app-chat-item',
-  imports: [
-    DefaultTooltip
-  ],
+  imports: [],
   templateUrl: './chat-item.html',
   styles: ``,
 })

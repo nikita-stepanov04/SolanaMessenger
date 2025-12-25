@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {LangTypes} from '@models/resources/langTypes';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ResourcesService {
@@ -14,6 +14,10 @@ export class ResourcesService {
 
   get(key: string): string {
     return this.translate.instant(key);
+  }
+
+  getObs(key: string): Observable<string> {
+    return this.translate.get(key);
   }
 
   async getAsync(key: string): Promise<string>{

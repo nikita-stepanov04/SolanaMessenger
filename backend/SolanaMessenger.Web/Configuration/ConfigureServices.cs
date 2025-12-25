@@ -16,15 +16,23 @@ namespace SolanaMessenger.Web
             return builder;
         }
 
-        public static IServiceCollection SetUpCors(this IServiceCollection services)
+        public static IServiceCollection SetUpCors(this IServiceCollection services, IConfiguration config)
         {
+            var allowedHosts = config
+                .GetSection("Cors:AllowedOrigins")
+                .Get<string[]>();
+
+            if (allowedHosts == null)
+                throw new Exception("Cors origins are not defined");
+            
             services.AddCors(opts =>
             {
                 opts.AddPolicy("AllowAll", builder =>
                 {
+                    builder.WithOrigins(allowedHosts);
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
-                    builder.AllowAnyOrigin();
+                    builder.AllowCredentials();
                 });
             });
             return services;

@@ -23,7 +23,7 @@ export class NotificationService {
     this.update(msg, true);
   }
 
-  public async error(err: any): Promise<void> {
+  public error(err: any): void {
     const message = err?.error?.message;
     const status = err?.status;
 
@@ -36,8 +36,9 @@ export class NotificationService {
         this.update(`Error ${status}`, false);
         return;
       }
-      const statusText = await this.resource.getAsync(statusTextCode);
-      this.update(statusText, false);
+      this.resource
+        .getObs(statusTextCode)
+        .subscribe(text => this.update(text, false));
     }
     else {
       this.update(err, false)

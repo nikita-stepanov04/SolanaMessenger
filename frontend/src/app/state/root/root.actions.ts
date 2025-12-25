@@ -1,3 +1,6 @@
 import {createAction} from '@ngrx/store';
 
-export const clearStore = createAction('[App] Clear state');
+export const rootActions = {
+  clearStore: createAction('[App] Clear state')
+}
+

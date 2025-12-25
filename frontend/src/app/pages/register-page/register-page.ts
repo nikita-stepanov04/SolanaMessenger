@@ -1,10 +1,7 @@
 import {Component, signal} from '@angular/core';
 import {AuthTemplate} from '../../templates/auth/auth-template';
-import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth-service';
-import {ResourcesService} from '../../services/resources-service';
-import {NotificationService} from '../../services/notification-service';
+import {AuthService} from '../../state/auth/auth-service';
 import {TranslatePipe} from '@ngx-translate/core';
 import {LoginInput} from '../../components/inputs/login-input/login-input';
 import {PasswordInput} from '../../components/inputs/password-input/password-input';
@@ -13,10 +10,14 @@ import {TextInput} from '../../components/inputs/text-input/text-input';
 import {DefaultButton} from '../../components/buttons/default-button/default-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
-import {UserRegisterInfo} from '@models/auth/req/userRegisterInfo';
+import {UserRegisterInfo} from '../../state/auth/models/req/userRegisterInfo';
 import {Roles} from '@models/enums/roles';
 import {CryptographyService} from '../../services/cryptography-service';
 import {DefaultCheck} from '../../components/checks/default-check/default-check';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AuthSelectors} from '../../state/auth/auth.selectors';
+import {AuthActions} from '../../state/auth/auth-actions';
 
 @Component({
   selector: 'app-register-page',
@@ -36,16 +37,14 @@ import {DefaultCheck} from '../../components/checks/default-check/default-check'
 })
 export class RegisterPage {
   registerForm: FormGroup;
-  loading$ = signal(false);
+  loading$: Observable<boolean>;
   isAdmin$ = signal(false);
 
   constructor(
-    private router: Router,
     private  fb: FormBuilder,
     private authService: AuthService,
     private cryptography: CryptographyService,
-    private resources: ResourcesService,
-    private notification: NotificationService
+    private store: Store,
   ) {
     this.registerForm = this.fb.group({
       login: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
@@ -59,6 +58,8 @@ export class RegisterPage {
     }, {
       validators: passwordMismatchValidator
     });
+
+    this.loading$ = store.select(AuthSelectors.loading);
   }
 
   onLoginBlur() {
@@ -92,28 +93,19 @@ export class RegisterPage {
     const keyPair = this.cryptography.deriveX25519KeyPair(fv.password, fv.login);
     const pubBase64 = this.cryptography.bytesToBase64(keyPair.pub);
 
+    console.log(this.isAdmin$());
     const regInfo = new UserRegisterInfo(
       fv.login,
       fv.password,
-      fv.adminPassword,
+      this.isAdmin$() ? fv.adminPassword : null,
       pubBase64,
       fv.name,
       fv.surname,
       fv.patronymic,
-      Roles.Admin
+      this.isAdmin$() ? Roles.Admin : Roles.User
     );
-
-    this.loading$.set(true);
-    this.authService
-      .register(regInfo)
-      .subscribe({
-        next: () => {
-          this.router.navigate([RoutePath.Login])
-            .then(() => this.notification.success(
-              this.resources.get('str027'))); // Account created successfully
-        },
-        error: (err) => this.notification.error(err)
-      }).add(() => this.loading$.set(false));
+    console.log(regInfo);
+    this.store.dispatch(AuthActions.register({registerInfo: regInfo}));
   }
 
   protected readonly RoutePath = RoutePath;

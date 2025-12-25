@@ -15,12 +15,6 @@ namespace SolanaMessenger.Web.Hubs
             _chatBS = chatBS;
         }
 
-        public override Task OnConnectedAsync()
-        {
-            Console.WriteLine("connected");
-            return Task.CompletedTask;
-        }
-
         [HubMethodName("connectToChat")]
         public async Task ConnectToChatAsync(Guid chatID)
         {

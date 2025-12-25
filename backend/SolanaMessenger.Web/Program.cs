@@ -34,9 +34,8 @@ namespace SolanaMessenger.Web
             IApplicationDIManager appManager = new DefaultApplicationDIManager();
             appManager.SetupApplicationDI(services, config);
 
+            services.SetUpCors(config);
             services.SetUpHubs();
-
-            services.SetUpCors();
             services.SetUpIdentity(config);
 
             var app = builder.Build();

@@ -1,9 +1,12 @@
 import {Component} from '@angular/core';
 import {ButtonBase} from '../button-base';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-default-button',
-    imports: [],
+  imports: [
+    AsyncPipe
+  ],
   templateUrl: './default-button.html',
   styles: ``,
 })

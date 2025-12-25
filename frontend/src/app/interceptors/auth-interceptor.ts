@@ -1,40 +1,40 @@
 import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
 import {inject} from '@angular/core';
-import {AuthService} from '../services/auth-service';
-import {TokenService} from '../services/token-service';
-import {catchError, Observable, switchMap, throwError} from 'rxjs';
-import {Router} from '@angular/router';
-import {RoutePath} from '../app.routes';
+import {catchError, filter, Observable, switchMap, take, throwError} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AuthSelectors} from '../state/auth/auth.selectors';
+import {TokensInfo} from '../state/auth/models/resp/tokensInfo';
+import {AuthActions} from '../state/auth/auth-actions';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
-  const tokens = inject(TokenService);
-  const router = inject(Router);
+  const store = inject(Store);
 
-  const accessToken = tokens.getAccessToken();
-  if (!accessToken)
-    return next(req);
+  return store.select(AuthSelectors.tokenInfo).pipe(
+    take(1),
+    switchMap((tokensInfo: TokensInfo | null) => {
+      if (!tokensInfo)
+        return next(req);
 
-  const authReq = setAuth(accessToken);
+      const authReq = setAuth(tokensInfo.accessToken);
+      return next(authReq).pipe(
+        catchError((err: HttpErrorResponse): Observable<any> => {
+          if (err.status !== 401)
+            return throwError(() => err);
 
-  return next(authReq).pipe(
-    catchError((err: HttpErrorResponse): Observable<any> => {
-      if (err.status === 401) {
-        return auth.refresh()
-          .pipe(
-            switchMap(newAccessToken => {
-              const newAuthReq = setAuth(newAccessToken);
+          store.dispatch(AuthActions.refresh());
+          return store.select(AuthSelectors.state).pipe(
+            filter(state => state.loaded || !!state.error),
+            switchMap(state => {
+              if (state.error)
+                return throwError(() => err);
+              const newAuthReq = setAuth(state.tokenInfo!.accessToken)
               return next(newAuthReq);
-            }),
-            catchError((err: HttpErrorResponse) => {
-              router.navigate([RoutePath.Login])
-              return throwError(() => err)
             })
           );
-      }
-      return throwError(() => err);
+        })
+      );
     })
-  )
+  );
 
   function setAuth(accessToken: string) {
     return req.clone({
