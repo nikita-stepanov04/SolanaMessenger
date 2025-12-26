@@ -1,16 +1,16 @@
-<div class="bg-light d-flex align-items-center header">
-  <h1 class="ms-3 fs-5 fw-semibold flex-grow-1">
-    <span class="align-middle">Solana Messenger</span>
-  </h1>
-
-  <div class="me-1">
-    <app-language-select [class]="'btn-outline-dark'">
-    </app-language-select>
+<div class="bg-light d-flex align-items-center header px-3">
+  <div class="d-flex align-items-center flex-grow-1">
+    <img src="/favicon.ico" alt="Logo" class="me-2" height="25" width="25">
+    <h1 class="fs-5 fw-semibold">Solana Messenger</h1>
   </div>
 
   <div class="me-2">
-    <app-tooltip text="{{'str030' | translate}}" placement="left">
-      <button (click)="logout()" class="btn btn-outline-dark btn-sm px-1">
+    <app-language-select class="btn-outline-dark"></app-language-select>
+  </div>
+
+  <div>
+    <app-tooltip text="{{ 'str030' | translate }}" placement="left">
+      <button (click)="logout()" class="btn btn-outline-dark btn-sm px-2">
         <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
       </button>
     </app-tooltip>

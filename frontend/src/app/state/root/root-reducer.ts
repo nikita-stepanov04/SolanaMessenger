@@ -1,5 +1,5 @@
 import {ActionReducer} from '@ngrx/store';
-import {rootActions} from './root.actions';
+import {rootActions} from './root-actions';
 
 export const rootReducer = {
   clearStateMetaReducer(reducer: ActionReducer<any>): ActionReducer<any> {

@@ -4,12 +4,12 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {NotificationService} from '../../services/notification-service';
 import {AuthService} from './auth-service';
 import {AuthActions} from './auth-actions';
-import {catchError, exhaustMap, map, of, switchMap, take, tap, withLatestFrom} from 'rxjs';
+import {catchError, exhaustMap, map, of, switchMap, tap, withLatestFrom} from 'rxjs';
 import {AuthSelectors} from './auth.selectors';
 import {ResourcesService} from '../../services/resources-service';
 import {Router} from '@angular/router';
 import {RoutePath} from '../../app.routes';
-import {rootActions} from '../root/root.actions';
+import {rootActions} from '../root/root-actions';
 
 @Injectable()
 export class AuthEffects {

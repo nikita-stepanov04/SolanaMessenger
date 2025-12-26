@@ -10,6 +10,8 @@ import {provideStore} from '@ngrx/store';
 import {metaReducers, reducers} from './app/state/register-reducers';
 import {effects} from './app/state/register-effects';
 import { provideRouterStore } from '@ngrx/router-store';
+import {TitleStrategy} from '@angular/router';
+import {NoopTitleStrategy} from './app/services/noop-title-service';
 
 bootstrapApplication(App, {
   ...appConfig,  providers: [
@@ -18,6 +20,7 @@ bootstrapApplication(App, {
     provideStore(reducers, {metaReducers}),
     provideEffects(effects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), autoPause: true }),
-    provideRouterStore()
+    provideRouterStore(),
+    {provide: TitleStrategy, useClass: NoopTitleStrategy}
 ]
 }).catch(err => console.error(err));

@@ -20,7 +20,7 @@ export class ChatsEffects {
   loadOnRoute$ = createEffect(() =>
     this.actions$.pipe(
       ofType(routerNavigationAction),
-      filter(action => action.payload.event.url.startsWith(`/${RoutePath.Chats}`)),
+      filter(action => action.payload.routerState.root.firstChild?.routeConfig?.path == RoutePath.Chats),
       withLatestFrom(this.store.select(ChatsSelectors.loaded)),
       filter(([_, loaded]) => !loaded),
       map(() => ChatActions.loadChats())

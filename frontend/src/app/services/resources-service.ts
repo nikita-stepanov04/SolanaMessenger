@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {LangTypes} from '@models/resources/langTypes';
 import {firstValueFrom, Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {ResourcesActions} from '../state/resources/resources-actions';
 
 @Injectable({ providedIn: 'root' })
 export class ResourcesService {
-  constructor(private translate: TranslateService) {
+  constructor(
+      private translate: TranslateService,
+      private store: Store) {
     const lang = this.getSelectedLanguage();
     this.translate.addLangs(LangTypes.supportedLangs);
     this.translate.setFallbackLang(lang);
@@ -27,6 +31,7 @@ export class ResourcesService {
   switchLang(lang: string) {
     localStorage.setItem('lang', lang);
     this.translate.use(lang);
+    this.store.dispatch(ResourcesActions.changeLanguage());
   }
 
   getLanguages(): string[] {

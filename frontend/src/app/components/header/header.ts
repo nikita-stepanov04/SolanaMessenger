@@ -3,7 +3,7 @@ import {DefaultTooltip} from '../tooltip/default-tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
 import {LanguageSelect} from '../selects/language-select/language-select';
 import {Store} from '@ngrx/store';
-import {rootActions} from '../../state/root/root.actions';
+import {rootActions} from '../../state/root/root-actions';
 
 @Component({
   selector: 'app-header',

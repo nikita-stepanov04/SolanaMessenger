@@ -1,6 +1,6 @@
 import {chatsReducers} from './chats/chats-reducers';
 import {authReducers} from './auth/auth-reducers';
-import {rootReducer} from './root/root.reducer';
+import {rootReducer} from './root/root-reducer';
 import {localStorageSyncReducer} from './local-storage-reducer';
 
 export const reducers = {

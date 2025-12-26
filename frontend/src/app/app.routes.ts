@@ -16,18 +16,21 @@ export const routes: Routes = [
     path: RoutePath.Login,
     component: LoginPage,
     canActivate: [AuthGuardService],
+    title: 'str003',
     data: { policy: Polices.NotAuthorized }
   },
   {
     path: RoutePath.Chats,
     component: ChatPage,
     canActivate: [AuthGuardService],
+    title: 'str035',
     data: { policy: Polices.AuthorizedAny }
   },
   {
     path: RoutePath.Register,
     component: RegisterPage,
     canActivate: [AuthGuardService],
+    title: 'str004',
     data: { policy: Polices.NotAuthorized }
   },
   {
