@@ -1,10 +1,17 @@
 <div class="d-flex py-1 align-items-center chat-item">
-  <div class="ms-2 d-flex align-items-center">
+  <div class="ms-2 d-flex align-items-center position-relative">
     <div
       class="chat-icon"
       [style.background]="stringToColor(chat.name)">
       {{ getInitial(chat.name) }}
     </div>
+
+    @if (chat.isNew) {
+      <span class="position-absolute top-0 start-100 translate-middle fw-medium badge p-1 bg-success">
+        New
+        <span class="visually-hidden">unread messages</span>
+      </span>
+    }
   </div>
 
   <div class="flex-grow-1">

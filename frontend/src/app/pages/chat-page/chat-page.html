@@ -20,7 +20,7 @@
             (onInputEvent)="onSearch($event)">
           </app-search-input>
 
-          <cdk-virtual-scroll-viewport
+          <cdk-virtual-scroll-viewport class="mt-2"
                 itemSize="38">
               @for(chat of chats$ | async; track chat.id) {
                 <app-chat-item

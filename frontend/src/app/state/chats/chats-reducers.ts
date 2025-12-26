@@ -20,5 +20,11 @@ export const chatsReducers = createReducer(
   on(ChatActions.loadChatsFailure, (state, {error}) => ({ ...state, loading: false, loaded: false, error: error})),
 
   on(ChatActions.setChatsSearch, (state, {search}) => ({ ...state, searchName: search })),
-  on(ChatActions.addChatSuccess, (state, {chat}) => chatsAdapter.addOne(chat, state))
+  on(ChatActions.addChatSuccess, (state, {chat}) =>
+    chatsAdapter.addOne({
+      ...chat,
+      lastVisited: Date.now(),
+      isNew: true
+    }, state)
+  )
 )

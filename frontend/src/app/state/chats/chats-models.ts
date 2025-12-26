@@ -3,8 +3,10 @@ export class Chat {
     public id: string,
     public name: string,
     public timestamp: number,
-    public encryptionPayload: UserPayload,
-    public usersData: ChatUsersData[]
+    public encryptionPayload: UserPayload | undefined,
+    public usersData: ChatUsersData[] | undefined,
+    public lastVisited: number,
+    public isNew: boolean
   ) {}
 }
 
