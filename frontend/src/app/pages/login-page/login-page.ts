@@ -8,7 +8,7 @@ import {UserLoginInfo} from '../../state/auth/models/req/userLoginInfo';
 import {DefaultButton} from '../../components/buttons/default-button/default-button';
 import {RedirectLink} from '../../components/links/router-link/router-link';
 import {RoutePath} from '../../app.routes';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AuthSelectors} from '../../state/auth/auth.selectors';
 import {AuthActions} from '../../state/auth/auth-actions';
@@ -49,4 +49,6 @@ export class LoginPage {
       loginInfo: new UserLoginInfo(fv.login, fv.password)
     }));
   }
+
+  protected readonly of = of;
 }

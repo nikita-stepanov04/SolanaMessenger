@@ -9,7 +9,6 @@ import {Store} from '@ngrx/store';
 import {ChatsSelectors} from './chats-selectors';
 import {ChatActions} from './chats-actions';
 
-
 @Injectable()
 export class ChatsEffects {
   private store = inject(Store);
@@ -37,9 +36,30 @@ export class ChatsEffects {
       )
     ));
 
+  loadChatInfo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatActions.openChat),
+      withLatestFrom(this.store.select(ChatsSelectors.openedChat)),
+      exhaustMap(([_, chat]) => {
+        if (chat!.usersData)
+          return of(ChatActions.loadChatInfoSuccess({chat: chat!}));
+
+        return this.chatsService.getChatInfo(chat!.id).pipe(
+          map(chat => ChatActions.loadChatInfoSuccess({chat})),
+          catchError(err => of(ChatActions.loadChatInfoFailure({ chatInfoError: err})))
+        )
+      })
+    ));
+
   notifyErrors$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ChatActions.loadChatsFailure),
       tap(({error}) => this.notifications.error(error))
+    ), { dispatch: false });
+
+  notifyChatInfoErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ChatActions.loadChatInfoFailure),
+      tap(({chatInfoError}) => this.notifications.error(chatInfoError))
     ), { dispatch: false });
 }

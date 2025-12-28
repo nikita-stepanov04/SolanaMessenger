@@ -1,0 +1,22 @@
+<div class="mx-4 mt-2 d-flex align-items-center bg-middle rounded-5">
+  <app-close-button class="ms-1"
+    [class]="'fa-lg close-dark'"
+    [disabled$]="chatInfoLoading$"
+    (onClickEvent)="closeChat()">
+  </app-close-button>
+
+  @if (chatInfoLoading$ | async) {
+    <span
+      class="spinner-border spinner-border-lg spinner-border-sm ms-2 my-1"
+      role="status"
+      aria-hidden="true"
+      style="width: 20px; height: 20px;"></span>
+  } @else {
+    <div class="chat-text fw-medium flex-grow-1">
+      {{(chat$ | async)?.name}}
+    </div>
+    <div class="me-3">
+      <span>{{'str037' | translate}} {{createdAt$ | async}}</span>
+    </div>
+  }
+</div>

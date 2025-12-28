@@ -6,11 +6,19 @@ import {ChatActions} from './chats-actions';
 
 export interface ChatsState extends DefaultState, EntityState<Chat> {
   searchName: string;
+  selectedChatID: string;
+  chatInfoLoading: boolean;
+  chatInfoLoaded: boolean;
+  chatInfoError: any;
 }
 export const chatsAdapter = createEntityAdapter<Chat>({ selectId: chat => chat.id });
 export const initialChatsState: ChatsState = chatsAdapter.getInitialState({
   ...defaultState,
-  searchName: ''
+  searchName: '',
+  selectedChatID: '',
+  chatInfoLoading: false,
+  chatInfoLoaded: false,
+  chatInfoError: null,
 });
 
 export const chatsReducers = createReducer(
@@ -26,5 +34,30 @@ export const chatsReducers = createReducer(
       lastVisited: Date.now(),
       isNew: true
     }, state)
-  )
+  ),
+
+  on(ChatActions.openChat, (state, {chatID}) =>
+    chatsAdapter.updateOne({
+      id: chatID,
+      changes: {lastVisited: Date.now()}
+    }, {
+      ...state,
+      selectedChatID: chatID,
+      chatInfoLoaded: false,
+      chatInfoLoading: true
+    })
+  ),
+  on(ChatActions.closeChat, state => ({...state, selectedChatID: ''})),
+
+  on(ChatActions.loadChatInfoSuccess, (state, { chat }) =>
+    chatsAdapter.updateOne({
+      id: chat.id,
+      changes: chat
+    }, {
+      ...state,
+      chatInfoLoaded: true,
+      chatInfoLoading: false
+    })
+  ),
+  on(ChatActions.loadChatInfoFailure, (state, {chatInfoError}) => ({...state, chatInfoLoading: false, chatInfoLoaded: false, chatInfoError: chatInfoError})),
 )

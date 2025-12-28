@@ -14,7 +14,7 @@ import {UserRegisterInfo} from '../../state/auth/models/req/userRegisterInfo';
 import {Roles} from '@models/enums/roles';
 import {CryptographyService} from '../../services/cryptography-service';
 import {DefaultCheck} from '../../components/checks/default-check/default-check';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AuthSelectors} from '../../state/auth/auth.selectors';
 import {AuthActions} from '../../state/auth/auth-actions';
@@ -109,4 +109,5 @@ export class RegisterPage {
   }
 
   protected readonly RoutePath = RoutePath;
+  protected readonly of = of;
 }

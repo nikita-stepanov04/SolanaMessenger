@@ -12,9 +12,13 @@ export class ChatsService {
     private http: HttpClient) {}
 
   private baseUrl = `${environment.apiBaseUrl}/api/chat`;
-  private getChatsUrl = `${this.baseUrl}/all`;
+  private chatsUrl = `${this.baseUrl}/all`;
 
   getChats(): Observable<Chat[]> {
-    return this.http.get<Chat[]>(this.getChatsUrl);
+    return this.http.get<Chat[]>(this.chatsUrl);
+  }
+
+  getChatInfo(chatID: string): Observable<Chat> {
+    return this.http.get<Chat>(`${this.baseUrl}/${chatID}`);
   }
 }

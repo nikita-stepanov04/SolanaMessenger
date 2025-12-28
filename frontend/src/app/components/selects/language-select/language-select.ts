@@ -1,10 +1,12 @@
-import {Component, Input} from '@angular/core';
-import {ResourcesService} from '../../../services/resources-service';
-import {NgClass} from '@angular/common';
+import {Component, inject, Input} from '@angular/core';
+import {AsyncPipe, NgClass} from '@angular/common';
+import {Store} from '@ngrx/store';
+import {ResourcesSelectors} from '../../../state/resources/resources-selectors';
+import {ResourcesActions} from '../../../state/resources/resources-actions';
 
 @Component({
   selector: 'app-language-select',
-  imports: [NgClass],
+  imports: [NgClass, AsyncPipe],
   templateUrl: './language-select.html',
   styles: ``,
 })
@@ -12,5 +14,7 @@ import {NgClass} from '@angular/common';
 export class LanguageSelect {
   @Input() class: string;
 
-  constructor(protected resource: ResourcesService) {}
+  protected store = inject(Store);
+  protected readonly ResourcesSelectors = ResourcesSelectors;
+  protected readonly ResourcesActions = ResourcesActions;
 }

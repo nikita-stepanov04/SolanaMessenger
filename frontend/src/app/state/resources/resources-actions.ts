@@ -1,5 +1,6 @@
-import {createAction} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 
 export const ResourcesActions = {
-  changeLanguage: createAction('[Resource] Change Language')
+  switchLang: createAction('[Resource] Switch Language', props<{ langCode: string}>()),
+  switchSuccess: createAction('[Resource] Switch Language Success'),
 }

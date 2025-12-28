@@ -4,7 +4,7 @@ import {OrderedArray} from '../../helpers/sorting';
 
 const selectChatsState = createFeatureSelector<ChatsState>('chats');
 
-const { selectAll } = chatsAdapter.getSelectors(selectChatsState);
+const { selectAll, selectEntities } = chatsAdapter.getSelectors(selectChatsState);
 
 export const ChatsSelectors = {
   loading: createSelector(selectChatsState, state => state.loading),
@@ -23,4 +23,11 @@ export const ChatsSelectors = {
         .toArray();
     }
   ),
+  isChatOpened: createSelector(selectChatsState, state => !!state.selectedChatID),
+  chatInfoLoading: createSelector(selectChatsState, state => state.chatInfoLoading),
+  chatInfoLoaded: createSelector(selectChatsState, state => state.chatInfoLoaded),
+  openedChat: createSelector(
+    selectEntities,
+    selectChatsState,
+    (entities, state) => state.selectedChatID ? entities[state.selectedChatID] : null)
 };

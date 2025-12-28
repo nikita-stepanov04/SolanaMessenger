@@ -1,4 +1,6 @@
-<div class="d-flex py-1 align-items-center chat-item">
+<div class="d-flex py-1 align-items-center chat-item"
+    [class.bg-middle]="isSelected | async"
+    (click)="onClick()">
   <div class="ms-2 d-flex align-items-center position-relative">
     <div
       class="chat-icon"
@@ -9,13 +11,12 @@
     @if (chat.isNew) {
       <span class="position-absolute top-0 start-100 translate-middle fw-medium badge p-1 bg-success">
         New
-        <span class="visually-hidden">unread messages</span>
       </span>
     }
   </div>
 
   <div class="flex-grow-1">
-    <div class="text-truncate" style="width: 200px">
+    <div class="text-truncate chat-item-text">
       <span class="chat-text">{{chat.name}}</span>
     </div>
   </div>

@@ -102,12 +102,36 @@
   --bs-tooltip-color: var(--bs-white);
 }
 
-.sidebar {
-  width: 250px;
+@media (max-width: 1024px) {
+  .sidebar {
+    min-width: 250px;
+  }
+  .chat-item-text{
+    width: 200px;
+  }
 }
+@media (min-width: 1025px) and (max-width: 1920px) {
+  .sidebar {
+    width: 350px;
+  }
+  .chat-item-text{
+    width: 300px;
+  }
+}
+
+@media (min-width: 1921px) {
+  .sidebar {
+    width: 400px;
+  }
+  .chat-item-text{
+    width: 350px;
+  }
+}
+
 
 .chat-item:hover {
   background-color: #ededed;
+  cursor: pointer;
 }
 
 .chat-icon {
@@ -129,4 +153,36 @@
   line-height: 30px;
 }
 
+.bg-middle {
+  background-color: #e8e8e8;
+}
 
+.close-light {
+  color: #dddddd;
+}
+.close-light:hover {
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.close-dark {
+  color: #333333;
+}
+.close-dark:hover {
+  color: #636363;
+  cursor: pointer;
+}
+
+.close-light,
+.close-light:hover,
+.close-dark,
+.close-dark:hover {
+  transition: 0.2s;
+}
+
+.chat-input {
+  resize: none;
+  overflow-y: hidden;
+  min-height: 38px;
+  max-height: 200px;
+}

@@ -8,7 +8,7 @@ import {AuthActions} from '../state/auth/auth-actions';
 import {Chat} from '../state/chats/chats-models';
 import {ChatActions} from '../state/chats/chats-actions';
 import {NotificationService} from './notification-service';
-import {ResourcesService} from './resources-service';
+import {ResourcesService} from '../state/resources/resources-service';
 import {stringFormat} from '../helpers/format';
 
 const USER_ADDED_TO_CHAT_COMMAND = "userAddedToChat";
@@ -71,7 +71,7 @@ export class ChatHubService {
   public onAddToChat(chat: Chat) {
     this.store.dispatch(ChatActions.addChatSuccess({chat: chat}));
     this.resources
-      .getObs('str036')
+      .get('str036')
       .subscribe(text => this.notification.success(stringFormat(text, chat.name)));
   }
 }

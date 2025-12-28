@@ -1,0 +1,9 @@
+@if (!(disabled$ | async)) {
+  <a  class="me-1"
+      (click)="onClick()">
+    <i
+      class="fa-solid fa-xmark"
+      [ngClass]="class">
+    </i>
+  </a>
+}

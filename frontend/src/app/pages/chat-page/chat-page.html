@@ -20,24 +20,40 @@
             (onInputEvent)="onSearch($event)">
           </app-search-input>
 
-          <cdk-virtual-scroll-viewport class="mt-2"
-                itemSize="38">
-              @for(chat of chats$ | async; track chat.id) {
-                <app-chat-item
-                  [chat]="chat">
-                </app-chat-item>
-              }
+          <cdk-virtual-scroll-viewport class="mt-2 flex-grow-1 overflow-x-hidden" itemSize="38">
+            <ng-container *cdkVirtualFor="let chat of chats$ | async; trackBy: trackByID">
+              <app-chat-item
+                [chat]="chat"
+                (onClickEvent)="onChatOpen($event)">
+              </app-chat-item>
+            </ng-container>
           </cdk-virtual-scroll-viewport>
         </div>
       }
     </div>
 
     <div class="flex-grow-1">
-      @if (!chatSelected$()) {
-       <div class="d-flex align-items-center justify-content-center w-100 h-100">
-         <div class="bg-light py-1 px-3 rounded-5">{{'str033' | translate}}</div>
-       </div>
+
+      @if (chatSelected$ | async) {
+        <div class="d-flex flex-column h-100">
+          <div>
+            <app-chat-header>
+            </app-chat-header>
+          </div>
+          <div class="flex-grow-1">
+            <app-message></app-message>
+          </div>
+          <div>
+            <app-chat-message-input>
+            </app-chat-message-input>
+          </div>
+        </div>
+      } @else {
+        <div class="d-flex align-items-center justify-content-center w-100 h-100">
+          <div class="bg-light py-1 px-3 rounded-5">{{'str033' | translate}}</div>
+        </div>
       }
+
     </div>
 
   </div>

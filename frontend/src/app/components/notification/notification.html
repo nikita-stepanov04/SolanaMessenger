@@ -4,9 +4,10 @@
       <div class="bg-dark text-danger fw-semibold d-flex justify-content-between align-items-center w-100">
         <div class="mx-auto">{{errorMessage}}</div>
         <div>
-          <a class="me-1 link-light" (click)="notification.clearError()">
-            <i class="fa-solid fa-xmark"></i>
-          </a>
+          <app-close-button
+            [class]="'close-light'"
+            (onClickEvent)="notification.clearError()">
+          </app-close-button>
         </div>
       </div>
     </div>
@@ -17,9 +18,10 @@
       <div class="bg-success text-light fw-semibold d-flex justify-content-between align-items-center w-100">
         <div class="mx-auto">{{successMessage}}</div>
         <div>
-          <a class="me-1 link-light" (click)="notification.clearSuccess()">
-            <i class="fa-solid fa-xmark"></i>
-          </a>
+          <app-close-button
+            [class]="'close-light'"
+            (onClickEvent)="notification.clearSuccess()">
+          </app-close-button>
         </div>
       </div>
     </div>

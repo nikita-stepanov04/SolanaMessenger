@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {NotificationService} from './notification-service';
 import {Polices} from '@models/enums/policies';
-import {ResourcesService} from './resources-service';
+import {ResourcesService} from '../state/resources/resources-service';
 import {RoutePath} from '../app.routes';
 import {Store} from '@ngrx/store';
 import {AuthSelectors} from '../state/auth/auth.selectors';
@@ -31,7 +31,7 @@ export class AuthGuardService implements CanActivate {
 
           this.router.navigate([RoutePath.Login]);
           return this.store.select(AuthSelectors.isAuthorized(Polices.AuthorizedAny)).pipe(
-            switchMap(authorized => this.resources.getObs(authorized? 'str029' : 'str028')),
+            switchMap(authorized => this.resources.get(authorized? 'str029' : 'str028')),
             tap(text => this.notification.error(text)),
             switchMap(() => of(false))
           );

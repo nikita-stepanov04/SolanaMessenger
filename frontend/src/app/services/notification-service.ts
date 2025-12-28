@@ -1,5 +1,5 @@
 import {inject, Injectable, signal} from '@angular/core';
-import {ResourcesService} from './resources-service';
+import {ResourcesService} from '../state/resources/resources-service';
 
 const SUCCESS_AUTOHIDE_TIMEOUT = 1500;
 const ERROR_AUTOHIDE_TIMEOUT = 3500;
@@ -37,7 +37,7 @@ export class NotificationService {
         return;
       }
       this.resource
-        .getObs(statusTextCode)
+        .get(statusTextCode)
         .subscribe(text => this.update(text, false));
     }
     else {

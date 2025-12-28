@@ -3,7 +3,7 @@ import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 import {FormHelperService} from '../services/form-helper-service';
 import {Directive} from '@angular/core';
-import {ResourcesService} from '../services/resources-service';
+import {ResourcesService} from '../state/resources/resources-service';
 
 @Directive()
 export class ComponentBase {

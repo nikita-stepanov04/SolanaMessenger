@@ -81,7 +81,7 @@
     <div class="d-grid mt-4 mb-2">
       <app-default-button
         text="{{'str004' | translate }}"
-        [disabled]="registerForm.invalid"
+        [disabled$]="of(registerForm.invalid)"
         [loading$]="loading$">
       </app-default-button>
       <app-router-link

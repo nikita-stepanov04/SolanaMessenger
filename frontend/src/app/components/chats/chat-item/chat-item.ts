@@ -1,24 +1,32 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {Chat} from '../../../state/chats/chats-models';
-import {DefaultTooltip} from '../../tooltip/default-tooltip';
+import {Store} from '@ngrx/store';
+import {ChatsSelectors} from '../../../state/chats/chats-selectors';
+import {map} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
+import {getInitial, stringToColor} from '../shared';
 
 @Component({
   selector: 'app-chat-item',
-  imports: [],
+  imports: [
+    AsyncPipe
+  ],
   templateUrl: './chat-item.html',
   styles: ``,
 })
 export class ChatItem {
   @Input() chat: Chat;
+  @Output() onClickEvent = new EventEmitter<string>();
 
-  stringToColor(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const color = Math.floor((Math.abs(hash) % 360));
-    return `hsl(${color}, 70%, 50%)`; // приятный цветовой круг
+  private store = inject(Store);
+  protected isSelected = this.store.select(ChatsSelectors.openedChat).pipe(
+    map(chat => chat?.id === this.chat.id)
+  );
+
+  onClick()  {
+    this.onClickEvent.emit(this.chat.id);
   }
 
-  getInitial = (name: string) => name.charAt(0).toUpperCase();
+  protected readonly stringToColor = stringToColor;
+  protected readonly getInitial = getInitial;
 }

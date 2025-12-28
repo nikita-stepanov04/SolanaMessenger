@@ -2,7 +2,7 @@
   <button
     class="btn btn-primary"
     type="submit"
-    [disabled]="disabled || (loading$ | async)">
+    [disabled]="(disabled$ | async) || (loading$ | async)">
     {{ text }}
     @if(loading$ | async) {
       <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span>

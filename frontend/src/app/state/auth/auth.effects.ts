@@ -6,7 +6,7 @@ import {AuthService} from './auth-service';
 import {AuthActions} from './auth-actions';
 import {catchError, exhaustMap, map, of, switchMap, tap, withLatestFrom} from 'rxjs';
 import {AuthSelectors} from './auth.selectors';
-import {ResourcesService} from '../../services/resources-service';
+import {ResourcesService} from '../resources/resources-service';
 import {Router} from '@angular/router';
 import {RoutePath} from '../../app.routes';
 import {rootActions} from '../root/root-actions';
@@ -79,7 +79,7 @@ export class AuthEffects {
   registerSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.registerSuccess),
-      exhaustMap(() => this.resources.getObs('str027')),
+      exhaustMap(() => this.resources.get('str027')),
       tap(text => {
         this.notifications.success(text);
         this.router.navigate([RoutePath.Login]);
@@ -90,21 +90,21 @@ export class AuthEffects {
   registerError$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.registerError),
-      exhaustMap(() => this.resources.getObs('str034')),
+      exhaustMap(() => this.resources.get('str034')),
       tap(errorText => this.notifications.error(errorText))
     ), { dispatch: false });
 
   loginError$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.loginError),
-      exhaustMap(() => this.resources.getObs('str014')),
+      exhaustMap(() => this.resources.get('str014')),
       tap(errorText => this.notifications.error(errorText))
     ), { dispatch: false });
 
   userInfoSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.userInfoSuccess),
-      exhaustMap(() => this.resources.getObs('str013')),
+      exhaustMap(() => this.resources.get('str013')),
       tap(text => {
         this.notifications.success(text);
         this.router.navigate([RoutePath.Chats]);

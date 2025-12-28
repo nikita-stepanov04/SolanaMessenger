@@ -1,0 +1,19 @@
+<div class="mx-4 mb-2 d-flex align-items-center">
+  <div class="w-100 d-flex flex-row">
+    <div class="flex-grow-1">
+      <textarea #messageInput
+        class="form-control chat-input rounded-5"
+        rows="1"
+        placeholder="{{'str038' | translate}}"
+        (input)="onInput()"
+        appAutoResize></textarea>
+    </div>
+    <div class="ms-2 d-flex">
+      <button
+          class="btn btn-primary mt-auto rounded-5"
+          [disabled]="isSendDisabled$()">
+        <i class="fa-solid fa-paper-plane me-1" style="transform: rotate(45deg)"></i>
+      </button>
+    </div>
+  </div>
+</div>
