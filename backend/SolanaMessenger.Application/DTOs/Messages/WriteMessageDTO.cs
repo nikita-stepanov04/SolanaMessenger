@@ -11,10 +11,12 @@ namespace SolanaMessenger.Application.DTOs
         public string Text { get; set; } = null!;
 
         [Required]
-        public byte[] Salt { get; set; } = null!;
+        [Base64String]
+        public string Salt { get; set; } = null!;
 
         [Required]
-        public byte[] Tag { get; set; } = null!;
+        [Base64String]
+        public string Tag { get; set; } = null!;
 
         protected override List<ValidationResult> ValidateAfterBase(ValidationContext context)
         {

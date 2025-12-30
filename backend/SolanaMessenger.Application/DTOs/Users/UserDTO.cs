@@ -26,7 +26,7 @@ namespace SolanaMessenger.Application.DTOs
 
         [Required(ErrorMessage = "Last name is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Last name must be between 3 and 50 characters.")]
-        public string LastName { get; set; } = null!;
+        public string Patronymic { get; set; } = null!;
 
         public Role Role { get; set; } = Role.User;
     }

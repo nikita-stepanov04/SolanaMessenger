@@ -3,11 +3,13 @@ import {authReducers} from './auth/auth-reducers';
 import {rootReducer} from './root/root-reducer';
 import {localStorageSyncReducer} from './local-storage-reducer';
 import {ResourcesReducers} from './resources/resources-reducers';
+import {messagesReducer} from './messages/messges-reducers';
 
 export const reducers = {
   chats: chatsReducers,
   auth: authReducers,
   resources: ResourcesReducers,
+  messages: messagesReducer
 };
 
 export const metaReducers = [

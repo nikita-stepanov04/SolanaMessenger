@@ -1,18 +1,42 @@
-<div class="ms-4 py-1 align-items-center">
-  <div class="d-flex" style="max-width: 50%">
-    <div class="flex-grow-0">
-      <div
-        class="chat-icon"
-        [style.background]="stringToColor('asdfasdfasdfasdf')">
-        {{ getInitial('asdfasdlfkja;sdlfkjas') }}
+<div class="align-items-center w-100"
+     [ngClass]="isPreviousMessageFromTheSameSender ? 'mt-1' : 'mt-2'">
+  <div class="d-flex"
+       [ngClass]="isOutgoingMessage ? 'flex-row-reverse text-end' : 'flex-row'">
+
+    <!-- Icon -->
+    <app-tooltip [text]="(personName$ | async) ?? ''">
+      <div class="flex-grow-0 mx-1"
+           [ngClass]="isPreviousMessageFromTheSameSender ? 'opacity-0' : ''">
+        <div class="chat-icon" [style.background]="stringToColor(user.secondName)">
+          {{ getInitial(user.secondName) }}
+        </div>
+      </div>
+    </app-tooltip>
+
+    <!-- Message -->
+    <div class="bg-middle text-break rounded-3 d-flex flex-column"
+         style="min-width: 25%; max-width: 65%">
+
+      <!-- Sender name -->
+      @if (!isOutgoingMessage && !isPreviousMessageFromTheSameSender) {
+        <span class="ms-3 mt-1 fw-semibold">
+          {{ shortenPersonName$ | async }}
+        </span>
+      }
+
+      <div class="d-flex justify-content-between">
+        <!-- Message text -->
+        <span class="flex-grow-1 ps-3 pb-1 align-items-center text-start"
+            [ngClass]="!isOutgoingMessage && !isPreviousMessageFromTheSameSender ? '' : 'pt-1'">
+          {{ message.text }}
+        </span>
+
+        <!-- Time -->
+        <span class="time align-self-end me-2" style="font-size: 0.8rem; color: #878787;">
+          {{ messageTime$ | async }}
+        </span>
       </div>
     </div>
 
-    <div class="bg-middle text-break ms-1 rounded-3 px-3 py-1 position-relative" style="min-width: 25%;">
-      <span class="me-4">asdfasasl;dkfja;sldkfjasdfghasdjhf asdfaosidufy ahsdjfhoiuqy kjashdfoiuqwejklasdfhaf ffasdfas asdf asdfasd fasd asfdasd fasdfasd f</span>
-      <span class="position-absolute bottom-0 end-0 fw-medium pe-1" style="font-size: 0.8rem; color: #878787">
-        23:12
-      </span>
-    </div>
   </div>
 </div>

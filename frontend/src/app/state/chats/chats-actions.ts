@@ -12,7 +12,7 @@ export const ChatActions = {
   openChat: createAction('[Chats] Open Chat', props<{ chatID: string }>()),
   closeChat: createAction('[Chats] Close Chat'),
 
-  loadChatInfoSuccess: createAction('[Chats] Load Success Success', props<{ chat: Chat }>()),
+  loadChatInfoSuccess: createAction('[Chats] Load ChatInfo Success', props<{ chat: Chat }>()),
   loadChatInfoFailure: createAction('[Chats] Load ChatInfo Failure', props<{ chatInfoError: any }>())
 }
 

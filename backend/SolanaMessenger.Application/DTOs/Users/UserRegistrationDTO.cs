@@ -30,7 +30,7 @@ namespace SolanaMessenger.Application.DTOs
         public string SecondName { get; set; } = null!;
 
         [StringLength(50, ErrorMessage = "Last name must be at most 50 characters.")]
-        public string LastName { get; set; } = null!;
+        public string Patronymic { get; set; } = null!;
 
         public Role Role { get; set; } = Role.User;
     }

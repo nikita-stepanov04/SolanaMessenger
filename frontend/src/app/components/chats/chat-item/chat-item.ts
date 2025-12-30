@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {ChatsSelectors} from '../../../state/chats/chats-selectors';
 import {map} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
-import {getInitial, stringToColor} from '../shared';
+import {getInitial, stringToColor} from '../../../helpers/format';
 
 @Component({
   selector: 'app-chat-item',
@@ -27,6 +27,6 @@ export class ChatItem {
     this.onClickEvent.emit(this.chat.id);
   }
 
-  protected readonly stringToColor = stringToColor;
   protected readonly getInitial = getInitial;
+  protected readonly stringToColor = stringToColor;
 }

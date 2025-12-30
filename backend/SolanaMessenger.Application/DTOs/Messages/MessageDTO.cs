@@ -7,7 +7,7 @@
         public Guid ChatID { get; set; }
         public long Timestamp { get; set; }
         public string Text { get; set; } = null!;
-        public byte[] Salt { get; set; } = null!;
-        public byte[] Tag { get; set; } = null!;
+        public string Salt { get; set; } = null!;
+        public string Tag { get; set; } = null!;
     }
 }

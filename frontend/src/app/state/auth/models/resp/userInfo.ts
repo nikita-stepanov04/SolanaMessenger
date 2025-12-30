@@ -5,7 +5,7 @@ export class UserInfo {
     public x25519Pub: string,
     public firstName: string,
     public secondName: string,
-    public lastName: string,
+    public patronymic: string,
     public role: string
   ) {}
 }

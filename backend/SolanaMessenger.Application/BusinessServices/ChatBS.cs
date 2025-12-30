@@ -76,7 +76,7 @@ namespace SolanaMessenger.Application.BusinessServices
                         EncryptedMessageEncryptionKey = wd.Wrap.WrappedKey,
                         FirstName = wd.UserData.FirstName,
                         SecondName = wd.UserData.SecondName,
-                        LastName = wd.UserData.LastName
+                        Patronymic = wd.UserData.Patronymic
                     }
                 );
 

@@ -1,7 +1,7 @@
-import {Resource} from './resources-models';
+import {NameNotation, Resource} from './resources-models';
 
 export const ResourcesAvailable = [
-  new Resource('uk', 'uk-UA'),
-  new Resource('en', 'en-US'),
-  new Resource('ru', 'ru-UA'),
+  new Resource('uk', 'uk-UA', NameNotation.EASTERN),
+  new Resource('en', 'en-US', NameNotation.WESTERN),
+  new Resource('ru', 'ru-UA', NameNotation.EASTERN),
 ]

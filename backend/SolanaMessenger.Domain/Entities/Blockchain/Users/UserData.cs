@@ -9,6 +9,6 @@
         public Role Role { get; set; } = Role.User;
         public string FirstName { get; set; } = null!;
         public string SecondName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string Patronymic { get; set; } = null!;
     }
 }

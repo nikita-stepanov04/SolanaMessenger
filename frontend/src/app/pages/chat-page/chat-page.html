@@ -2,18 +2,15 @@
   <div class="flex-grow-1 d-flex">
     <div class="bg-light sidebar position-relative">
 
-      @if (loading$ | async) {
+      @if (chatsLoading$ | async) {
         <div class="position-absolute top-50 start-50 translate-middle">
-          <span
-            class="spinner-border spinner-border-sm"
-            role="status"
-            aria-hidden="true"
-            style="width:2rem; height:2rem">
-          </span>
+         <app-spinner
+          [size]="2">
+         </app-spinner>
         </div>
       }
 
-      @if (loaded$ | async) {
+      @if (chatsLoaded$ | async) {
         <div class="overflow-x-hidden overflow-y-auto d-flex flex-column chat-scroll-sidebar">
           <app-search-input
             placeholder="{{'str031' | translate}}"
@@ -35,13 +32,31 @@
     <div class="flex-grow-1">
 
       @if (chatSelected$ | async) {
-        <div class="d-flex flex-column h-100">
+        <div class="d-flex flex-column h-100 mx-4">
           <div>
             <app-chat-header>
             </app-chat-header>
           </div>
-          <div class="flex-grow-1">
-            <app-message></app-message>
+          <div class="flex-grow-1 my-2">
+            <cdk-virtual-scroll-viewport class="h-100" itemSize="30">
+              @if (messagesLoading$ | async) {
+                <div class="d-flex justify-content-center">
+                  <app-spinner
+                    [size]="2">
+                  </app-spinner>
+                </div>
+              } @else {
+                @if (selectedChat$ | async; as chat){
+                  <ng-container *cdkVirtualFor="let message of messages$ | async; let i = index; trackBy: trackByID">
+                    <app-message
+                      [chat]="chat"
+                      [message]="message"
+                      [previousMessage]="(messages$ | async)![i - 1]">
+                    </app-message>
+                  </ng-container>
+                }
+              }
+            </cdk-virtual-scroll-viewport>
           </div>
           <div>
             <app-chat-message-input>

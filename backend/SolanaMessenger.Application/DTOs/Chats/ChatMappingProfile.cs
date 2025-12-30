@@ -54,7 +54,7 @@ namespace SolanaMessenger.Application.DTOs
                         ID = up.Key,
                         FirstName = up.Value.FirstName,
                         SecondName = up.Value.SecondName,
-                        LastName = up.Value.LastName
+                        Patronymic = up.Value.Patronymic
                     })
                     .ToList();
                 return data;

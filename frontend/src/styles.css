@@ -186,3 +186,19 @@
   min-height: 38px;
   max-height: 200px;
 }
+
+.color-shift-badge {
+  animation: pulseColors 2s infinite alternate;
+}
+
+@keyframes pulseColors {
+  0%   { background-color: #28a745; }
+  100%  { background-color: #136d24; }
+}
+
+.time {
+  font-size: 0.8rem;
+  color: #878787;
+  min-width: 2rem;
+  font-weight: 500;
+}

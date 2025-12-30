@@ -23,6 +23,6 @@ export class ChatUsersData {
     public id: string,
     public firstName: string,
     public secondName: string,
-    public lastName: string
+    public patronymic: string
   ) {}
 }

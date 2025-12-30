@@ -5,7 +5,10 @@
     [disabled]="(disabled$ | async) || (loading$ | async)">
     {{ text }}
     @if(loading$ | async) {
-      <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span>
+      <app-spinner
+        [size]="1"
+        class="ms-1">
+      </app-spinner>
     }
   </button>
 </div>

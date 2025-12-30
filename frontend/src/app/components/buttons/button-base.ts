@@ -1,4 +1,4 @@
-import {Input, Directive, WritableSignal, Output, EventEmitter} from '@angular/core';
+import {Input, Output, EventEmitter, Directive} from '@angular/core';
 import {ComponentBase} from '../component-base';
 import {Observable} from 'rxjs';
 

@@ -7,13 +7,15 @@ import {AsyncPipe} from '@angular/common';
 import {TranslatePipe} from '@ngx-translate/core';
 import {filter, switchMap, withLatestFrom} from 'rxjs';
 import {ResourcesSelectors} from '../../../state/resources/resources-selectors';
+import {Spinner} from '../../spinner/spinner';
 
 @Component({
   selector: 'app-chat-header',
   imports: [
     CloseButton,
     AsyncPipe,
-    TranslatePipe
+    TranslatePipe,
+    Spinner
   ],
   templateUrl: './chat-header.html',
   styles: ``,
