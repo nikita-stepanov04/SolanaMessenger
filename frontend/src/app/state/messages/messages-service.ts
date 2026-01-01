@@ -13,7 +13,7 @@ export class MessagesService {
 
   private baseUrl = `${environment.apiBaseUrl}/api/message/list`;
 
-  getChats(chatID: string, lastMessageTimestamp: number): Observable<Message[]> {
-    return this.http.get<Message[]>(`${this.baseUrl}/${chatID}/${lastMessageTimestamp}`);
+  getMessages(chatID: string, lastMessageTimestamp: number): Observable<Message[]> {
+    return this.http.get<Message[]>(`${this.baseUrl}/${chatID}/${lastMessageTimestamp ?? 0}`);
   }
 }

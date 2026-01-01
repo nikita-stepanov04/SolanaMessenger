@@ -13,6 +13,9 @@ export const ChatActions = {
   closeChat: createAction('[Chats] Close Chat'),
 
   loadChatInfoSuccess: createAction('[Chats] Load ChatInfo Success', props<{ chat: Chat }>()),
-  loadChatInfoFailure: createAction('[Chats] Load ChatInfo Failure', props<{ chatInfoError: any }>())
+  loadChatInfoFailure: createAction('[Chats] Load ChatInfo Failure', props<{ chatInfoError: any }>()),
+
+  setAllMessagesFetchedForOpenedChat: createAction('[Chats] All messages were fetched'),
+  setLastMessageTimestampForOpenedChat: createAction('[Chats] LastMessage timestamp was set', props<{timestamp: number}>()),
 }
 

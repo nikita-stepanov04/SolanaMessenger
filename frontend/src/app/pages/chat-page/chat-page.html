@@ -32,35 +32,35 @@
     <div class="flex-grow-1">
 
       @if (chatSelected$ | async) {
-        <div class="d-flex flex-column h-100 mx-4">
-          <div>
-            <app-chat-header>
-            </app-chat-header>
-          </div>
-          <div class="flex-grow-1 my-2">
-            <cdk-virtual-scroll-viewport class="h-100" itemSize="30">
+        <div class="h-100 mx-auto" style="max-width: 1400px">
+          <div class="mx-4 d-flex flex-column h-100">
+            <div>
+              <app-chat-header>
+              </app-chat-header>
+            </div>
+            <div class="flex-grow-1 my-2 position-relative">
               @if (messagesLoading$ | async) {
-                <div class="d-flex justify-content-center">
-                  <app-spinner
-                    [size]="2">
-                  </app-spinner>
+                <div class="d-flex justify-content-center position-absolute bottom-50 w-100">
+                  <app-spinner [size]="2"></app-spinner>
                 </div>
-              } @else {
-                @if (selectedChat$ | async; as chat){
-                  <ng-container *cdkVirtualFor="let message of messages$ | async; let i = index; trackBy: trackByID">
-                    <app-message
-                      [chat]="chat"
-                      [message]="message"
-                      [previousMessage]="(messages$ | async)![i - 1]">
-                    </app-message>
-                  </ng-container>
-                }
               }
-            </cdk-virtual-scroll-viewport>
-          </div>
-          <div>
-            <app-chat-message-input>
-            </app-chat-message-input>
+              <cdk-virtual-scroll-viewport #messagesViewport class="h-100" [itemSize]="MESSAGE_ITEM_SIZE">
+                @if (messages$ | async; as messages) {
+                  @if (selectedChat$ | async; as chat) {
+                    <ng-container *cdkVirtualFor="let message of messages; let i = index; trackBy: trackByID">
+                      <app-message
+                        [chat]="chat"
+                        [message]="message">
+                      </app-message>
+                    </ng-container>
+                  }
+                }
+              </cdk-virtual-scroll-viewport>
+            </div>
+            <div>
+              <app-chat-message-input>
+              </app-chat-message-input>
+            </div>
           </div>
         </div>
       } @else {

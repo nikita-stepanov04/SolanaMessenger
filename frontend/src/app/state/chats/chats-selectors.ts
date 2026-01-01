@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { chatsAdapter, ChatsState } from './chats-reducers';
 import {OrderedArray} from '../../helpers/sorting';
+import {ChatsService} from './chats-service';
 
 const selectChatsState = createFeatureSelector<ChatsState>('chats');
 
@@ -26,8 +27,18 @@ export const ChatsSelectors = {
   isChatOpened: createSelector(selectChatsState, state => !!state.selectedChatID),
   chatInfoLoading: createSelector(selectChatsState, state => state.chatInfoLoading),
   chatInfoLoaded: createSelector(selectChatsState, state => state.chatInfoLoaded),
+
   openedChat: createSelector(
     selectEntities,
     selectChatsState,
-    (entities, state) => state.selectedChatID ? entities[state.selectedChatID] : null)
+    (entities, state) => state.selectedChatID ? entities[state.selectedChatID] : null),
+
+  areAllMessagesFetchedForOpenedChat: createSelector(
+    selectChatsState,
+    selectEntities,
+    (state, entities) => {
+      const chat = entities[state.selectedChatID];
+      return !!chat?.areAllMessagesFetched;
+    }
+  )
 };

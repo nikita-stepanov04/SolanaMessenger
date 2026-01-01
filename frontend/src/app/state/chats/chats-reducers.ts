@@ -24,7 +24,16 @@ export const initialChatsState: ChatsState = chatsAdapter.getInitialState({
 export const chatsReducers = createReducer(
   initialChatsState,
   on(ChatActions.loadChats, state => ({ ...state, loading: true, loaded: false, error: null })),
-  on(ChatActions.loadChatsSuccess, (state, {chats}) => chatsAdapter.setAll(chats, { ...state, loading: false, loaded: true, error: null }),),
+
+  on(ChatActions.loadChatsSuccess, (state, {chats}) =>
+    chatsAdapter.setAll(chats, {
+      ...state,
+      loading: false,
+      loaded: true,
+      error: null
+    })
+  ),
+
   on(ChatActions.loadChatsFailure, (state, {error}) => ({ ...state, loading: false, loaded: false, error: error})),
 
   on(ChatActions.setChatsSearch, (state, {search}) => ({ ...state, searchName: search })),
@@ -59,5 +68,16 @@ export const chatsReducers = createReducer(
       chatInfoLoading: false
     })
   ),
-  on(ChatActions.loadChatInfoFailure, (state, {chatInfoError}) => ({...state, chatInfoLoading: false, chatInfoLoaded: false, chatInfoError: chatInfoError})),
+  on(ChatActions.loadChatInfoFailure, (state, {chatInfoError}) => ({
+    ...state,
+    chatInfoLoading: false,
+    chatInfoLoaded: false,
+    chatInfoError: chatInfoError
+  })),
+
+  on(ChatActions.setAllMessagesFetchedForOpenedChat, (state) =>
+    chatsAdapter.updateOne({
+      id: state.selectedChatID,
+      changes: { areAllMessagesFetched: true }
+    }, {...state}))
 )

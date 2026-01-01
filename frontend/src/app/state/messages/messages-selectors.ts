@@ -1,6 +1,5 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {messagesAdapter, MessagesState} from './messges-reducers';
-import {OrderedArray} from '../../helpers/sorting';
 import {ChatsSelectors} from '../chats/chats-selectors';
 
 const selectMessagesState = createFeatureSelector<MessagesState>('messages');
@@ -18,14 +17,34 @@ export const MessagesSelectors = {
     selectMessagesState,
     (chatInfoLoaded, messageState) => chatInfoLoaded || messageState.loaded),
 
-  messages: createSelector(
+  openedChatMessages: createSelector(
+    ChatsSelectors.openedChat,
+    selectAll,
+    (chat, messages) => messages.filter(m => m.chatID == chat?.id)),
+
+  openedChatLastMessageTimestamp: createSelector(
     ChatsSelectors.openedChat,
     selectAll,
     (chat, messages) => {
       const filtered = messages.filter(m => m.chatID == chat?.id);
-      return new OrderedArray(filtered)
-        .orderBy(m => m.timestamp)
-        .toArray();
-    }
-  ),
+      return filtered[0]?.timestamp ?? 0;
+    }),
+
+  openedChatPreviousMessage: (messageId: string) =>
+    createSelector(
+      ChatsSelectors.openedChat,
+      selectAll,
+      (chat, messages) => {
+        if (!chat) return null;
+
+        // filter messages for the opened chat
+        const filtered = messages.filter(m => m.chatID === chat.id);
+
+        // find index of the current message
+        const idx = filtered.findIndex(m => m.id === messageId);
+        if (idx <= 0) return null; // no previous message
+
+        return filtered[idx - 1];
+      }
+    )
 }

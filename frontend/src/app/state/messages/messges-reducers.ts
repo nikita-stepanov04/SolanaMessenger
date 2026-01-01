@@ -6,14 +6,17 @@ import {MessagesActions} from './messages-actions';
 
 export interface MessagesState extends DefaultState, EntityState<Message> {}
 
-export const messagesAdapter = createEntityAdapter<Message>({selectId: message => message.id});
+export const messagesAdapter = createEntityAdapter<Message>({
+  selectId: message => message.id,
+  sortComparer: (a, b) => a.timestamp - b.timestamp,
+});
 export const initialMessageState: MessagesState = messagesAdapter.getInitialState({
   ...defaultState
 });
 
 export const messagesReducer = createReducer(
   initialMessageState,
-  on(MessagesActions.loadMessages, state => ({...state, loading: true, loaded: false, state: null})),
+  on(MessagesActions.loadNextMessagesBatchForOpenedChat, state => ({...state, loading: true, loaded: false, state: null})),
   on(MessagesActions.loadMessagesSuccess, (state, {messages}) =>
     messagesAdapter.addMany(messages, {
       ...state,

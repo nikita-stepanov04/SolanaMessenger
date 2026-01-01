@@ -6,7 +6,8 @@ export class Chat {
     public encryptionPayload: UserPayload | undefined,
     public usersData: ChatUsersData[] | undefined,
     public lastVisited: number,
-    public isNew: boolean
+    public isNew: boolean,
+    public areAllMessagesFetched: boolean,
   ) {}
 }
 

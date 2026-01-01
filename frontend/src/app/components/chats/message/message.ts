@@ -8,6 +8,7 @@ import {ResourcesSelectors} from '../../../state/resources/resources-selectors';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {AuthSelectors} from '../../../state/auth/auth.selectors';
 import {DefaultTooltip} from '../../tooltip/default-tooltip';
+import {MessagesSelectors} from '../../../state/messages/messages-selectors';
 
 @Component({
   selector: 'app-message',
@@ -22,10 +23,10 @@ import {DefaultTooltip} from '../../tooltip/default-tooltip';
 export class MessageComponent implements OnInit{
   @Input() chat: Chat;
   @Input() message: Message;
-  @Input() previousMessage: Message | undefined;
 
   private store = inject(Store);
   protected user: ChatUsersData;
+  previousMessage$: Observable<Message>;
 
   protected personName$: Observable<string>;
   protected shortenPersonName$: Observable<string>;
@@ -39,7 +40,9 @@ export class MessageComponent implements OnInit{
     this.personName$ = this.store.select(ResourcesSelectors.formatPersonName(this.user, false));
     this.shortenPersonName$ = this.store.select(ResourcesSelectors.formatPersonName(this.user, true));
     this.messageTime$ = this.store.select(ResourcesSelectors.formatTime(this.message.timestamp));
-    this.isPreviousMessageFromTheSameSender = this.message.userID == this.previousMessage?.userID;
+    this.store.select(MessagesSelectors.openedChatPreviousMessage(this.message.id)).subscribe(previous =>
+      this.isPreviousMessageFromTheSameSender = this.message.userID == previous?.userID
+    );
     this.store.select(AuthSelectors.userInfo).subscribe(userInfo => {
       this.isOutgoingMessage = userInfo!.id === this.message.userID;
     });

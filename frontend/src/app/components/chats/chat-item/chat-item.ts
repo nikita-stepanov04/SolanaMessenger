@@ -2,7 +2,7 @@ import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {Chat} from '../../../state/chats/chats-models';
 import {Store} from '@ngrx/store';
 import {ChatsSelectors} from '../../../state/chats/chats-selectors';
-import {map} from 'rxjs';
+import {filter, map, take} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {getInitial, stringToColor} from '../../../helpers/format';
 
@@ -19,12 +19,16 @@ export class ChatItem {
   @Output() onClickEvent = new EventEmitter<string>();
 
   private store = inject(Store);
-  protected isSelected = this.store.select(ChatsSelectors.openedChat).pipe(
+  protected isSelected$ = this.store.select(ChatsSelectors.openedChat).pipe(
     map(chat => chat?.id === this.chat.id)
   );
 
   onClick()  {
-    this.onClickEvent.emit(this.chat.id);
+    this.isSelected$
+      .pipe(
+        take(1),
+        filter(isSelected => !isSelected)
+      ).subscribe(() => this.onClickEvent.emit(this.chat.id));
   }
 
   protected readonly getInitial = getInitial;
