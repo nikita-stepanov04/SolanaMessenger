@@ -2,7 +2,7 @@ import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {ResourcesState} from './resources-reducers';
 import {ResourcesAvailable} from './models/resources-available';
 import {ChatUsersData} from '../chats/chats-models';
-import {localizeName} from '../../helpers/format';
+import {formatTime, formatDate, localizeName} from '../../helpers/format';
 
 const selectResourceState = createFeatureSelector<ResourcesState>('resources');
 
@@ -19,27 +19,12 @@ export const ResourcesSelectors = {
 
   formatDate: (date: number) => createSelector(
     ResourcesSelectors.selectedCountryCode,
-    countryCode => {
-      const formatter = new Intl.DateTimeFormat(countryCode, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      return formatter.format(new Date(date));
-    }
+    countryCode => formatDate(date, countryCode),
   ),
 
   formatTime: (date: number) => createSelector(
     ResourcesSelectors.selectedCountryCode,
-    countryCode => {
-      const formatter = new Intl.DateTimeFormat(countryCode, {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      return formatter.format(new Date(date));
-    }
+    countryCode => formatTime(date, countryCode),
   ),
 
   formatPersonName: (user: ChatUsersData, shortened: boolean) => createSelector(

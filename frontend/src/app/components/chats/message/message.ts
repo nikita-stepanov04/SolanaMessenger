@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
 import {Chat, ChatUsersData} from '../../../state/chats/chats-models';
 import {Message} from '../../../state/messages/messages-models';
 import { getInitial, stringToColor } from "app/helpers/format";
@@ -9,6 +9,7 @@ import {AsyncPipe, NgClass} from '@angular/common';
 import {AuthSelectors} from '../../../state/auth/auth.selectors';
 import {DefaultTooltip} from '../../tooltip/default-tooltip';
 import {MessagesSelectors} from '../../../state/messages/messages-selectors';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-message',
@@ -25,8 +26,9 @@ export class MessageComponent implements OnInit{
   @Input() message: Message;
 
   private store = inject(Store);
+  private destroyRef = inject(DestroyRef);
+
   protected user: ChatUsersData;
-  previousMessage$: Observable<Message>;
 
   protected personName$: Observable<string>;
   protected shortenPersonName$: Observable<string>;
@@ -40,12 +42,18 @@ export class MessageComponent implements OnInit{
     this.personName$ = this.store.select(ResourcesSelectors.formatPersonName(this.user, false));
     this.shortenPersonName$ = this.store.select(ResourcesSelectors.formatPersonName(this.user, true));
     this.messageTime$ = this.store.select(ResourcesSelectors.formatTime(this.message.timestamp));
-    this.store.select(MessagesSelectors.openedChatPreviousMessage(this.message.id)).subscribe(previous =>
-      this.isPreviousMessageFromTheSameSender = this.message.userID == previous?.userID
-    );
-    this.store.select(AuthSelectors.userInfo).subscribe(userInfo => {
-      this.isOutgoingMessage = userInfo!.id === this.message.userID;
-    });
+    this.store.select(MessagesSelectors.openedChatPreviousMessage(this.message.id))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(previous => {
+        this.isPreviousMessageFromTheSameSender = this.message.userID === previous?.userID;
+      });
+
+    this.store.select(AuthSelectors.userInfo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(userInfo => {
+        this.isOutgoingMessage = userInfo!.id === this.message.userID;
+      });
+
   }
 
   protected readonly getInitial = getInitial;

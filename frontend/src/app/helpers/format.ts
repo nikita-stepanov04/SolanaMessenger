@@ -52,3 +52,20 @@ export function localizeName(user: ChatUsersData, shortened: boolean, nameNotati
       return [firstName, lastName].filter(Boolean).join(' ');
   }
 }
+
+export function formatDate(date: number, countryCode: string) {
+  const formatter = new Intl.DateTimeFormat(countryCode, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  return formatter.format(new Date(date));
+}
+
+export function formatTime(time: number, countryCode: string) {
+  const formatter = new Intl.DateTimeFormat(countryCode, {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return formatter.format(new Date(time));
+}

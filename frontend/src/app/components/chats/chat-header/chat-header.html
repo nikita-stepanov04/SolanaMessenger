@@ -1,16 +1,17 @@
 <div class="mt-2 d-flex align-items-center bg-middle rounded-5">
   <app-close-button class="ms-1"
     [class]="'fa-lg close-dark'"
-    [disabled$]="chatInfoLoading$"
+    [disabled$]="messageLoading$"
     (onClickEvent)="closeChat()">
   </app-close-button>
 
-  @if (chatInfoLoading$ | async) {
+  @if (messageLoading$ | async) {
     <app-spinner
       [size]="1.2"
       class="ms-2 spinner-border-lg">
     </app-spinner>
-  } @else {
+  }
+  @if (chatInfoLoaded$ | async) {
     <div class="chat-text fw-medium flex-grow-1">
       {{(chat$ | async)?.name}}
     </div>

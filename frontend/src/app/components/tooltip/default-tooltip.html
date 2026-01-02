@@ -1,7 +1,11 @@
-<div #tooltip
-    data-bs-toggle="tooltip"
-    data-bs-custom-class="custom-tooltip"
-    [attr.data-bs-placement]="placement"
-    [attr.data-bs-title]="text">
+<span
+  [ngbTooltip]="text"
+  [placement]="placement"
+  [triggers]="'hover'"
+  [openDelay]="showDelay ?? 0"
+  [closeDelay]="hideDelay ?? 0"
+  [tooltipClass]="'custom-tooltip'"
+  container="body"
+>
   <ng-content></ng-content>
-</div>
+</span>

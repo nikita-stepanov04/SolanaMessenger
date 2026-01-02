@@ -5,13 +5,14 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from './app/interceptors/auth-interceptor';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { isDevMode } from '@angular/core';
+import {importProvidersFrom, isDevMode} from '@angular/core';
 import {provideStore} from '@ngrx/store';
 import {metaReducers, reducers} from './app/state/register-reducers';
 import {effects} from './app/state/register-effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import {TitleStrategy} from '@angular/router';
 import {NoopTitleStrategy} from './app/services/noop-title-service';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 bootstrapApplication(App, {
   ...appConfig,  providers: [
@@ -21,6 +22,7 @@ bootstrapApplication(App, {
     provideEffects(effects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), autoPause: true }),
     provideRouterStore(),
-    {provide: TitleStrategy, useClass: NoopTitleStrategy}
+    {provide: TitleStrategy, useClass: NoopTitleStrategy},
+    importProvidersFrom(NgbModule)
 ]
 }).catch(err => console.error(err));

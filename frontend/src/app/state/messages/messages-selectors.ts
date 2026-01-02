@@ -35,16 +35,20 @@ export const MessagesSelectors = {
       ChatsSelectors.openedChat,
       selectAll,
       (chat, messages) => {
-        if (!chat) return null;
-
-        // filter messages for the opened chat
-        const filtered = messages.filter(m => m.chatID === chat.id);
-
-        // find index of the current message
+        const filtered = messages.filter(m => m.chatID === chat!.id);
         const idx = filtered.findIndex(m => m.id === messageId);
-        if (idx <= 0) return null; // no previous message
-
+        if (idx <= 0) return null;
         return filtered[idx - 1];
       }
-    )
+    ),
+
+  calculatePreviousMessagesForOpenedChat: (index: number) => createSelector(
+    ChatsSelectors.openedChat,
+    selectAll,
+    (chat, messages) => {
+      const filtered = messages.filter(m => m.chatID === chat!.id);
+      const message = filtered[index];
+      return filtered.filter(m => m.timestamp < message.timestamp).length;
+    }
+  )
 }

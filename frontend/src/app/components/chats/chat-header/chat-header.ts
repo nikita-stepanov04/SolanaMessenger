@@ -8,6 +8,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {filter, switchMap, withLatestFrom} from 'rxjs';
 import {ResourcesSelectors} from '../../../state/resources/resources-selectors';
 import {Spinner} from '../../spinner/spinner';
+import {MessagesSelectors} from '../../../state/messages/messages-selectors';
 
 @Component({
   selector: 'app-chat-header',
@@ -24,7 +25,7 @@ export class ChatHeader {
   private store = inject(Store);
   protected chat$ = this.store.select(ChatsSelectors.openedChat);
   protected chatInfoLoaded$ = this.store.select(ChatsSelectors.chatInfoLoaded);
-  protected chatInfoLoading$ = this.store.select(ChatsSelectors.chatInfoLoading);
+  protected messageLoading$ = this.store.select(MessagesSelectors.loading);
   protected createdAt$ = this.chatInfoLoaded$.pipe(
     filter(loaded => loaded),
     withLatestFrom(this.chat$),

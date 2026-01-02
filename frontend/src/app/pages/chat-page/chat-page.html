@@ -19,10 +19,9 @@
 
           <cdk-virtual-scroll-viewport class="mt-2 flex-grow-1 overflow-x-hidden" itemSize="38">
             <ng-container *cdkVirtualFor="let chat of chats$ | async; trackBy: trackByID">
-              <app-chat-item
-                [chat]="chat"
-                (onClickEvent)="onChatOpen($event)">
-              </app-chat-item>
+              <app-chat-sidebar-item
+                [chat]="chat">
+              </app-chat-sidebar-item>
             </ng-container>
           </cdk-virtual-scroll-viewport>
         </div>
@@ -39,15 +38,12 @@
               </app-chat-header>
             </div>
             <div class="flex-grow-1 my-2 position-relative">
-              @if (messagesLoading$ | async) {
-                <div class="d-flex justify-content-center position-absolute bottom-50 w-100">
-                  <app-spinner [size]="2"></app-spinner>
-                </div>
-              }
-              <cdk-virtual-scroll-viewport #messagesViewport class="h-100" [itemSize]="MESSAGE_ITEM_SIZE">
+              <cdk-virtual-scroll-viewport #messagesViewport
+                  class="h-100"
+                  [itemSize]="MESSAGE_ITEM_SIZE">
                 @if (messages$ | async; as messages) {
                   @if (selectedChat$ | async; as chat) {
-                    <ng-container *cdkVirtualFor="let message of messages; let i = index; trackBy: trackByID">
+                    <ng-container *cdkVirtualFor="let message of messages; trackBy: trackByID">
                       <app-message
                         [chat]="chat"
                         [message]="message">
