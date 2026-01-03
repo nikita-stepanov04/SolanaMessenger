@@ -40,7 +40,7 @@ export class ChatSidebarItem implements OnInit {
   onClick()  {
     if (this.isDisabled) return;
     this.store.dispatch(ChatActions.closeChat());
-    this.store.dispatch(ChatActions.openChat({ chatID: this.chat.id }));
+    setTimeout(() => this.store.dispatch(ChatActions.openChat({ chatID: this.chat.id })));
   }
 
   protected readonly getInitial = getInitial;

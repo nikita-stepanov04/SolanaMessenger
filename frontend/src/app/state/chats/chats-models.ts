@@ -8,6 +8,7 @@ export class Chat {
     public lastVisited: number,
     public isNew: boolean,
     public areAllMessagesFetched: boolean,
+    public scrollOffset: number
   ) {}
 }
 

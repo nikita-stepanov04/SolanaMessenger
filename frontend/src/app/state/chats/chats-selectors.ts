@@ -1,18 +1,20 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { chatsAdapter, ChatsState } from './chats-reducers';
 import {OrderedArray} from '../../helpers/sorting';
-import {ChatsService} from './chats-service';
 
 const selectChatsState = createFeatureSelector<ChatsState>('chats');
 
-const { selectAll, selectEntities } = chatsAdapter.getSelectors(selectChatsState);
+export const {
+  selectAll: selectAllChats,
+  selectEntities: selectChatEntities
+} = chatsAdapter.getSelectors(selectChatsState);
 
 export const ChatsSelectors = {
   loading: createSelector(selectChatsState, state => state.loading),
   loaded: createSelector(selectChatsState, state => state.loaded),
   search: createSelector(selectChatsState, state => state.searchName),
   allByName: createSelector(
-    selectAll,
+    selectAllChats,
     createSelector(selectChatsState, state => state.searchName),
     (chats, search) => {
       const filtered = search
@@ -29,13 +31,13 @@ export const ChatsSelectors = {
   chatInfoLoaded: createSelector(selectChatsState, state => state.chatInfoLoaded),
 
   openedChat: createSelector(
-    selectEntities,
+    selectChatEntities,
     selectChatsState,
     (entities, state) => state.selectedChatID ? entities[state.selectedChatID] : null),
 
   areAllMessagesFetchedForOpenedChat: createSelector(
     selectChatsState,
-    selectEntities,
+    selectChatEntities,
     (state, entities) => {
       const chat = entities[state.selectedChatID];
       return !!chat?.areAllMessagesFetched;

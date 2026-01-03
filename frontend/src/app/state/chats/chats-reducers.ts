@@ -79,5 +79,11 @@ export const chatsReducers = createReducer(
     chatsAdapter.updateOne({
       id: state.selectedChatID,
       changes: { areAllMessagesFetched: true }
-    }, {...state}))
+    }, state)),
+
+  on(ChatActions.setScrollOffset, (state, {chatID, scrollOffset}) =>
+    chatsAdapter.updateOne({
+      id: chatID,
+      changes: { scrollOffset: scrollOffset }
+    }, state)),
 )

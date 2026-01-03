@@ -4,14 +4,17 @@
        [ngClass]="isOutgoingMessage ? 'flex-row-reverse text-end' : 'flex-row'">
 
     <!-- Icon -->
-    <app-tooltip [text]="(personName$ | async) ?? ''">
-      <div class="flex-grow-0 mx-1"
-           [ngClass]="isPreviousMessageFromTheSameSender ? 'opacity-0' : ''">
-        <div class="chat-icon" [style.background]="stringToColor(user.secondName)">
-          {{ getInitial(user.secondName) }}
+    @if (!isPreviousMessageFromTheSameSender) {
+      <app-tooltip [text]="(personName$ | async) ?? ''">
+        <div class="flex-grow-0 mx-1">
+          <div class="chat-icon" [style.background]="stringToColor(user.secondName)">
+            {{ getInitial(user.secondName) }}
+          </div>
         </div>
-      </div>
-    </app-tooltip>
+      </app-tooltip>
+    } @else {
+      <div class="chat-icon mx-1"></div>
+    }
 
     <!-- Message -->
     <div class="bg-middle text-break rounded-3 d-flex flex-column"

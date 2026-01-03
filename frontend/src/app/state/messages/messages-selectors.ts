@@ -1,6 +1,6 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {messagesAdapter, MessagesState} from './messges-reducers';
-import {ChatsSelectors} from '../chats/chats-selectors';
+import {messagesAdapter, MessagesState} from './messages-reducers';
+import {ChatsSelectors, selectChatEntities} from '../chats/chats-selectors';
 
 const selectMessagesState = createFeatureSelector<MessagesState>('messages');
 
@@ -27,18 +27,28 @@ export const MessagesSelectors = {
     selectAll,
     (chat, messages) => {
       const filtered = messages.filter(m => m.chatID == chat?.id);
-      return filtered[0]?.timestamp ?? 0;
+      return filtered.length > 0
+        ? filtered[0]?.timestamp ?? 0
+        : 0;
     }),
 
-  openedChatPreviousMessage: (messageId: string) =>
+  previousMessage: (messageId: string, chatID: string) =>
     createSelector(
-      ChatsSelectors.openedChat,
+      selectChatEntities,
       selectAll,
-      (chat, messages) => {
+      (entities, messages) => {
+        const chat = entities[chatID];
+        if (!chat) return null;
+
+        // console.log(messages)
         const filtered = messages.filter(m => m.chatID === chat!.id);
+        if (filtered.length == 0)
+          return null;
+
         const idx = filtered.findIndex(m => m.id === messageId);
-        if (idx <= 0) return null;
-        return filtered[idx - 1];
+        return idx > 0
+          ? filtered[idx - 1]
+          : null;
       }
     ),
 
@@ -46,6 +56,8 @@ export const MessagesSelectors = {
     ChatsSelectors.openedChat,
     selectAll,
     (chat, messages) => {
+      if (!chat) return 0;
+
       const filtered = messages.filter(m => m.chatID === chat!.id);
       const message = filtered[index];
       return filtered.filter(m => m.timestamp < message.timestamp).length;

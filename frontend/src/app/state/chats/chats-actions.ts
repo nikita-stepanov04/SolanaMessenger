@@ -17,5 +17,6 @@ export const ChatActions = {
 
   setAllMessagesFetchedForOpenedChat: createAction('[Chats] All messages were fetched'),
   setLastMessageTimestampForOpenedChat: createAction('[Chats] LastMessage timestamp was set', props<{timestamp: number}>()),
+  setScrollOffset: createAction('[Chats] Set scroll offset', props<{ chatID: string, scrollOffset: number }>()),
 }
 
