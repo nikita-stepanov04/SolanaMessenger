@@ -7,7 +7,11 @@ import {UserRegisterInfo} from './models/req/userRegisterInfo';
 
 export const AuthActions = {
   login: createAction('[Login] Login', props<{ loginInfo: UserLoginInfo }>()),
-  loginSuccess: createAction('[Login] Login Success', props<{ tokenInfo: TokensInfo, login: string }>()),
+  loginSuccess: createAction('[Login] Login Success', props<{
+    tokenInfo: TokensInfo,
+    login: string,
+    x25519Priv: string
+  }>()),
   loginError: createAction('[Login] Login Error', props<{ error: any }>()),
 
   logout: createAction('[Logout] Logout'),

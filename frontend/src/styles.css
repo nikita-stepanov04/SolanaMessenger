@@ -201,3 +201,7 @@
   min-width: 2rem;
   font-weight: 500;
 }
+
+.white-space-pre-line {
+  white-space: pre-line;
+}

@@ -8,10 +8,10 @@ namespace SolanaMessenger.Application.DTOs
     {
         public MessageMappingProfile() 
         {
-            CreateMap<WriteMessageDTO, MessageData>()
+            CreateMap<WriteMessageDTO, MessageData>()                
                 .ForMember(
-                    dest => dest.Salt,
-                    src => src.ConvertUsing(new StringToByteArrConverter(), src => src.Salt)
+                    dest => dest.Nonce,
+                    src => src.ConvertUsing(new StringToByteArrConverter(), src => src.Nonce)
                 )
                 .ForMember(
                     dest => dest.Tag,
@@ -20,8 +20,8 @@ namespace SolanaMessenger.Application.DTOs
 
             CreateMap<MessageData, MessageDTO>()
                 .ForMember(
-                    dest => dest.Salt,
-                    src => src.ConvertUsing(new ByteArrToStringConverter(), src => src.Salt)
+                    dest => dest.Nonce,
+                    src => src.ConvertUsing(new ByteArrToStringConverter(), src => src.Nonce)
                 )
                 .ForMember(
                     dest => dest.Tag,

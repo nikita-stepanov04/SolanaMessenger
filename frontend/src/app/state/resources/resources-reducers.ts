@@ -1,13 +1,13 @@
-import {ResourcesAvailable} from './models/resources-available';
 import {createReducer, on} from '@ngrx/store';
 import {ResourcesActions} from './resources-actions';
+import {environment} from '../../../environments/environment';
 
 export interface ResourcesState {
   selectedLangCode: string
 }
 
 export const initialResourcesState: ResourcesState = {
-  selectedLangCode: ResourcesAvailable[0].langCode,
+  selectedLangCode: environment.appDefaultLang,
 }
 
 export const ResourcesReducers = createReducer(

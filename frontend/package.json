@@ -41,9 +41,11 @@
     "@ngrx/store-devtools": "^21.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
+    "@noble/ciphers": "^2.1.1",
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "bootstrap": "^5.3.3",
+    "cyrillic-to-translit-js": "^3.2.1",
     "ngrx-store-localstorage": "^20.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

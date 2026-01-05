@@ -33,7 +33,7 @@ namespace SolanaMessenger.Web.Controllers
         }
 
         [HttpPost()]
-        [ProducesResponseType<Guid>(StatusCodes.Status200OK)]
+        [ProducesResponseType<IDResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<MessageResponse>(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> WriteMessage(
             [FromBody] WriteMessageDTO dto)
@@ -43,7 +43,7 @@ namespace SolanaMessenger.Web.Controllers
             if (res.HasError)
                 return Forbid(res.ErrorMessage);
 
-            return Ok(res.Result);
+            return Ok(new IDResponse(res.Result));
         }
     }
 }

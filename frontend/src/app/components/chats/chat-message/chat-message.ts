@@ -1,6 +1,6 @@
 import {Component, DestroyRef, inject, Input, OnChanges} from '@angular/core';
 import {Chat, ChatUsersData} from '../../../state/chats/chats-models';
-import {Message} from '../../../state/messages/messages-models';
+import {Message} from '../../../state/messages/models/message';
 import {getInitial, stringToColor} from "app/helpers/format";
 import {filter, Observable, take} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -12,16 +12,16 @@ import {MessagesSelectors} from '../../../state/messages/messages-selectors';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-message',
+  selector: 'app-chat-message',
   imports: [
     AsyncPipe,
     NgClass,
     DefaultTooltip
   ],
-  templateUrl: './message.html',
+  templateUrl: './chat-message.html',
   styles: ``,
 })
-export class MessageComponent implements OnChanges {
+export class ChatMessageComponent implements OnChanges {
   @Input() chat: Chat;
   @Input() message: Message;
 

@@ -8,12 +8,15 @@ import {RoutePath} from '../../app.routes';
 import {Store} from '@ngrx/store';
 import {ChatsSelectors} from './chats-selectors';
 import {ChatActions} from './chats-actions';
+import {CryptographyService} from '../../services/cryptography-service';
+import {AuthSelectors} from '../auth/auth.selectors';
 
 @Injectable()
 export class ChatsEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private chatsService = inject(ChatsService);
+  private crypto = inject(CryptographyService);
   private notifications = inject(NotificationService);
 
   loadOnRoute$ = createEffect(() =>
@@ -39,12 +42,16 @@ export class ChatsEffects {
   loadChatInfo$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ChatActions.openChat),
-      withLatestFrom(this.store.select(ChatsSelectors.openedChat)),
-      exhaustMap(([_, chat]) => {
+      withLatestFrom(
+        this.store.select(ChatsSelectors.openedChat),
+        this.store.select(AuthSelectors.state)
+      ),
+      exhaustMap(([_, chat, authState]) => {
         if (chat!.usersData)
           return of(ChatActions.loadChatInfoSuccess({chat: chat!}));
 
         return this.chatsService.getChatInfo(chat!.id).pipe(
+          map(chat => this.crypto.deriveCEK(authState.x25519Priv, authState.userInfo!.id, chat)),
           map(chat => ChatActions.loadChatInfoSuccess({chat})),
           catchError(err => of(ChatActions.loadChatInfoFailure({ chatInfoError: err})))
         )

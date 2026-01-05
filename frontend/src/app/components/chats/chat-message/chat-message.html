@@ -28,18 +28,19 @@
       }
 
       <div class="d-flex justify-content-between">
+
         <!-- Message text -->
-        <span class="flex-grow-1 ps-3 pb-1 align-items-center text-start"
+        <span class="flex-grow-1 ps-3 pb-1 pe-1 align-items-center text-start white-space-pre-line"
             [ngClass]="!isOutgoingMessage && !isPreviousMessageFromTheSameSender ? '' : 'pt-1'">
           {{ message.text }}
         </span>
 
         <!-- Time -->
-        <span class="time align-self-end me-2" style="font-size: 0.8rem; color: #878787;">
+        <span class="time align-self-end me-2">
           {{ messageTime$ | async }}
         </span>
+
       </div>
     </div>
-
   </div>
 </div>

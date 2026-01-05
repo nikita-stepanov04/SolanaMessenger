@@ -93,7 +93,6 @@ export class RegisterPage {
     const keyPair = this.cryptography.deriveX25519KeyPair(fv.password, fv.login);
     const pubBase64 = this.cryptography.bytesToBase64(keyPair.pub);
 
-    console.log(this.isAdmin$());
     const regInfo = new UserRegisterInfo(
       fv.login,
       fv.password,
@@ -104,7 +103,6 @@ export class RegisterPage {
       fv.patronymic,
       this.isAdmin$() ? Roles.Admin : Roles.User
     );
-    console.log(regInfo);
     this.store.dispatch(AuthActions.register({registerInfo: regInfo}));
   }
 

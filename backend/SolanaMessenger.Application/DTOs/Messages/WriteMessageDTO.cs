@@ -8,11 +8,11 @@ namespace SolanaMessenger.Application.DTOs
         public Guid ChatID { get; set; }
 
         [Required]
-        public string Text { get; set; } = null!;
+        public string Ciphertext { get; set; } = null!;
 
         [Required]
         [Base64String]
-        public string Salt { get; set; } = null!;
+        public string Nonce { get; set; } = null!;
 
         [Required]
         [Base64String]
@@ -20,10 +20,10 @@ namespace SolanaMessenger.Application.DTOs
 
         protected override List<ValidationResult> ValidateAfterBase(ValidationContext context)
         {
-            var realTextLength = Text.Trim().Length;
+            var realTextLength = Ciphertext.Trim().Length;
             if (realTextLength == 0)
             {
-                return [new ValidationResult("Text could not be shorter than 1 sign", [nameof(Text)])];
+                return [new ValidationResult("Text could not be shorter than 1 sign", [nameof(Ciphertext)])];
             }
             return [];
         }

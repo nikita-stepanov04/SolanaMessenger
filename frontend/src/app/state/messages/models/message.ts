@@ -3,9 +3,11 @@ export class Message {
     public id: string,
     public userID: string,
     public chatID: string,
-    public timestamp: number,
     public text: string,
-    public salt: string,
-    public tag: string
+    public timestamp: number,
+    public ciphertext: string,
+    public nonce: string,
+    public tag: string,
+    public isPending: boolean,
   ) {}
 }

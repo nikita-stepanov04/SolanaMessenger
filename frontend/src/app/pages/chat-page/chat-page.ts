@@ -19,7 +19,7 @@ import {SearchInput} from '../../components/inputs/search-input/search-input';
 import {TranslatePipe} from '@ngx-translate/core';
 import {ChatHeader} from '../../components/chats/chat-header/chat-header';
 import {ChatMessageInput} from '../../components/chats/chat-message-input/chat-message-input';
-import {MessageComponent} from '../../components/chats/message/message';
+import {ChatMessageComponent} from '../../components/chats/chat-message/chat-message';
 import {Spinner} from '../../components/spinner/spinner';
 import {ChatsSelectors} from '../../state/chats/chats-selectors';
 
@@ -36,8 +36,8 @@ import {ChatsSelectors} from '../../state/chats/chats-selectors';
     ChatMessageInput,
     CdkVirtualForOf,
     ScrollingModule,
-    MessageComponent,
     Spinner,
+    ChatMessageComponent,
   ],
   standalone: true,
   templateUrl: './chat-page.html',
@@ -141,7 +141,7 @@ export class ChatPage implements OnInit {
             this.messagesViewport?.scrollToOffset(chat!.scrollOffset);
           }
         })
-      } else {
+      } else if (this.selectedChatID) {
         const scrollOffset = Math.floor(this.messagesViewport?.measureScrollOffset() ?? 0);
         this.store.dispatch(ChatActions.setScrollOffset({
           chatID: this.selectedChatID,

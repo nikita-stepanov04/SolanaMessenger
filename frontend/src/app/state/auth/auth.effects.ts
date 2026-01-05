@@ -10,6 +10,7 @@ import {ResourcesService} from '../resources/resources-service';
 import {Router} from '@angular/router';
 import {RoutePath} from '../../app.routes';
 import {rootActions} from '../root/root-actions';
+import {CryptographyService} from '../../services/cryptography-service';
 
 @Injectable()
 export class AuthEffects {
@@ -19,6 +20,7 @@ export class AuthEffects {
   private router = inject(Router);
   private authService = inject(AuthService);
   private resources = inject(ResourcesService);
+  private crypto = inject(CryptographyService);
   private notifications = inject(NotificationService);
 
   login$ = createEffect(() =>
@@ -26,7 +28,15 @@ export class AuthEffects {
       ofType(AuthActions.login),
       exhaustMap(action =>
         this.authService.login(action.loginInfo).pipe(
-          map(tokenInfo => AuthActions.loginSuccess({tokenInfo: tokenInfo, login: action.loginInfo.login})),
+          map(tokenInfo => AuthActions.loginSuccess({
+            tokenInfo: tokenInfo,
+            login: action.loginInfo.login,
+            x25519Priv: this.crypto.bytesToBase64(
+              this.crypto.derivePBKDF2PrivateKey(
+                action.loginInfo.password,
+                action.loginInfo.login)
+            )
+          })),
           catchError(err => of(AuthActions.loginError({ error: err})))
         )
       )

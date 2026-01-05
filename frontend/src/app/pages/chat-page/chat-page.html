@@ -44,10 +44,10 @@
                 @if (messages$ | async; as messages) {
                   @if (selectedChat$ | async; as chat) {
                     <ng-container *cdkVirtualFor="let message of messages; trackBy: trackByID">
-                      <app-message
+                      <app-chat-message
                         [chat]="chat"
                         [message]="message">
-                      </app-message>
+                      </app-chat-message>
                     </ng-container>
                   }
                 }

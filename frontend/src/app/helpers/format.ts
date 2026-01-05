@@ -1,5 +1,7 @@
 import {NameNotation} from '../state/resources/models/resources-models';
 import {ChatUsersData} from '../state/chats/chats-models';
+import CyrillicToTranslit from 'cyrillic-to-translit-js';
+import {environment} from '../../environments/environment';
 
 export function stringFormat(str: string, ...args: (string | number)[]): string {
   return str.replace(/{(\d+)}/g, (match, index) => {
@@ -42,11 +44,19 @@ export function localizeName(user: ChatUsersData, shortened: boolean, nameNotati
       return [lastName, firstName, patronymic].filter(Boolean).join(' ');
 
     case NameNotation.WESTERN:
+      const c2l = new CyrillicToTranslit({ preset: environment.appDefaultLang });
+
       if (shortened) {
-        const initials = [firstName, patronymic].filter(Boolean).join('.');
-        return `${initials}${initials ? '. ' : ''}${lastName}`;
+        const initials = [firstName, patronymic]
+          .filter(Boolean)
+          .map(name => c2l.transform(name[0]))
+          .join('.');
+        return `${initials}${initials ? '. ' : ''}${c2l.transform(lastName)}`;
       }
-      return [firstName, patronymic, lastName].filter(Boolean).join(' ');
+      return [firstName, patronymic, lastName]
+        .filter(Boolean)
+        .map(name => c2l.transform(name))
+        .join(' ');
 
     default:
       return [firstName, lastName].filter(Boolean).join(' ');

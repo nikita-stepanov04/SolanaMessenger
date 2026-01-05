@@ -6,8 +6,8 @@
         public Guid UserID { get; set; }
         public Guid ChatID { get; set; }
         public long Timestamp { get; set; }
-        public string Text { get; set; } = null!;
-        public string Salt { get; set; } = null!;
+        public string Ciphertext { get; set; } = null!;
+        public string Nonce { get; set; } = null!;
         public string Tag { get; set; } = null!;
     }
 }

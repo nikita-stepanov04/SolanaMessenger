@@ -7,12 +7,14 @@ import {AuthActions} from './auth-actions';
 export interface AuthState extends DefaultState {
   tokenInfo: TokensInfo | null;
   userInfo: UserInfo | null;
+  x25519Priv: string;
 }
 
 export const initialAuthState: AuthState = {
   ...defaultState,
   tokenInfo: null,
-  userInfo: null
+  userInfo: null,
+  x25519Priv: ''
 };
 
 export const authReducers = createReducer(
@@ -20,13 +22,14 @@ export const authReducers = createReducer(
   // Login
   initialAuthState,
   on(AuthActions.login, state => ({...state, loading: true, loaded: false, error: null})),
-  on(AuthActions.loginSuccess, (state, {tokenInfo}) => ({
+  on(AuthActions.loginSuccess, (state, {tokenInfo, x25519Priv}) => ({
     ...state,
     loading: true,
     loaded: false,
     error: null,
     tokenInfo: tokenInfo,
-    userInfo: null
+    userInfo: null,
+    x25519Priv: x25519Priv
   })),
   on(AuthActions.loginError, (state, {error}) => ({ ...state, loading: false, loaded: false, error: error})),
 
