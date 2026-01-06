@@ -15,7 +15,7 @@ export const MessagesSelectors = {
   loaded: createSelector(
     ChatsSelectors.chatInfoLoaded,
     selectMessagesState,
-    (chatInfoLoaded, messageState) => chatInfoLoaded || messageState.loaded),
+    (chatInfoLoaded, messageState) => chatInfoLoaded && messageState.loaded),
 
   openedChatMessages: createSelector(
     ChatsSelectors.openedChat,
@@ -40,7 +40,6 @@ export const MessagesSelectors = {
         const chat = entities[chatID];
         if (!chat) return null;
 
-        // console.log(messages)
         const filtered = messages.filter(m => m.chatID === chat!.id);
         if (filtered.length == 0)
           return null;
@@ -60,7 +59,10 @@ export const MessagesSelectors = {
 
       const filtered = messages.filter(m => m.chatID === chat!.id);
       const message = filtered[index];
-      return filtered.filter(m => m.timestamp < message.timestamp).length;
+
+      return message
+        ? filtered.filter(m => m.timestamp < message.timestamp).length
+        : Number.MAX_SAFE_INTEGER;
     }
   ),
 

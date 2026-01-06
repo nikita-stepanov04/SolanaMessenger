@@ -40,7 +40,7 @@ import {ChatsSelectors} from '../../state/chats/chats-selectors';
     ChatMessageComponent,
   ],
   standalone: true,
-  templateUrl: './chat-page.html',
+  templateUrl: './chat-page.html'
 })
 export class ChatPage implements OnInit {
   private store = inject(Store);
@@ -61,7 +61,7 @@ export class ChatPage implements OnInit {
   protected infoLoaded$ = this.store.select(ChatsSelectors.chatInfoLoaded);
 
   private scrollSubscription: Subscription | null = null;
-  private isNotAutoScroll = false;
+  private isAutoScroll = true;
   private selectedChatID: string;
 
   @ViewChild('messagesViewport')
@@ -77,6 +77,19 @@ export class ChatPage implements OnInit {
       .subscribe(([selectedChat, messages, chatInfoLoaded, messageLoading]) => {
         setTimeout(() => {
           if (!this.messagesViewport) return;
+
+          // autoscroll on chat loading
+          combineLatest([
+            this.messagesViewport.renderedRangeStream,
+            this.messagesLoaded$,
+          ]).pipe(
+              take(1),
+              filter(([_, loaded]) => loaded && this.isAutoScroll)
+            ).subscribe(() => {
+              setTimeout(() => {
+                this.messagesViewport!.scrollToIndex(Number.MAX_SAFE_INTEGER);
+              });
+            });
 
           // load more messages if needed on scroll event
           if (!this.scrollSubscription) {
@@ -95,11 +108,11 @@ export class ChatPage implements OnInit {
                 )
               ).subscribe(([{index, remaining}, endReached, messagesLoading, chatSelected]) => {
                 const requiredCount = this.calculateMessagesPerPage();
-                if (remaining < requiredCount && !endReached && !messagesLoading && this.isNotAutoScroll && chatSelected) {
+                if (remaining < requiredCount && !endReached && !messagesLoading && !this.isAutoScroll && chatSelected) {
                   this.store.dispatch(MessagesActions.loadNextMessagesBatchForOpenedChat());
                 }
                 if (index > 0) {
-                  this.isNotAutoScroll = true;
+                  this.isAutoScroll = false;
                 }
               })
           }
@@ -113,23 +126,6 @@ export class ChatPage implements OnInit {
           }
         })
       });
-
-    // autoscroll to end on page filling
-    combineLatest([
-      this.messages$,
-      this.messagesLoaded$
-    ]).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      filter(() => !this.isNotAutoScroll)
-    ).subscribe(([messages, loaded]) => {
-      if (loaded) {
-        this.messagesViewport?.renderedRangeStream
-          .pipe(take(1))
-          .subscribe(() => {
-            setTimeout(() => this.messagesViewport!.scrollToIndex(messages.length - 1));
-          });
-      }
-    });
 
     // chat open and close event handling
     this.selectedChat$.pipe(
