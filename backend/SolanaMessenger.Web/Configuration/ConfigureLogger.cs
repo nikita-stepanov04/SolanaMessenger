@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Settings.Configuration;
 
 namespace SolanaMessenger.Web.Configuration
 {
@@ -9,9 +10,12 @@ namespace SolanaMessenger.Web.Configuration
         public static void SetupLogger(this WebApplicationBuilder builder)
         {
             var logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .MinimumLevel.Override("LuckyPennySoftware.AutoMapper.License", LogEventLevel.Fatal)
+                .ReadFrom.Configuration(
+                    builder.Configuration, 
+                    new ConfigurationReaderOptions 
+                    { 
+                        SectionName = "Serilog" 
+                    })
                 .Enrich.FromLogContext()
                 .Enrich.With<ShortSourceContextEnricher>()
                 .WriteTo.Console(

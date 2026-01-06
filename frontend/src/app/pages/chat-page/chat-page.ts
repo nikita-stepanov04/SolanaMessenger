@@ -58,6 +58,7 @@ export class ChatPage implements OnInit {
   protected messagesLoaded$ = this.store.select(MessagesSelectors.loaded);
   protected messagesLoading$ = this.store.select(MessagesSelectors.loading);
   protected endReached$ = this.store.select(ChatsSelectors.areAllMessagesFetchedForOpenedChat);
+  protected infoLoaded$ = this.store.select(ChatsSelectors.chatInfoLoaded);
 
   private scrollSubscription: Subscription | null = null;
   private isNotAutoScroll = false;
@@ -68,12 +69,12 @@ export class ChatPage implements OnInit {
 
   ngOnInit() {
     combineLatest([
-      this.chatSelected$,
+      this.selectedChat$,
       this.messages$,
-      this.endReached$,
+      this.infoLoaded$,
       this.messagesLoading$
     ]).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([chatSelected, messages, endReached, messageLoading]) => {
+      .subscribe(([selectedChat, messages, chatInfoLoaded, messageLoading]) => {
         setTimeout(() => {
           if (!this.messagesViewport) return;
 
@@ -104,7 +105,7 @@ export class ChatPage implements OnInit {
           }
 
           // load more messages if needed to fill the page
-          if (chatSelected && !endReached && !messageLoading) {
+          if (selectedChat && !selectedChat.areAllMessagesFetched && !messageLoading && chatInfoLoaded) {
             const requiredCount = this.calculateMessagesPerPage();
             if (messages.length < requiredCount) {
               this.store.dispatch(MessagesActions.loadNextMessagesBatchForOpenedChat());

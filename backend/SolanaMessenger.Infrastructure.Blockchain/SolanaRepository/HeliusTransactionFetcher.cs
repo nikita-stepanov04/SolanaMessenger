@@ -10,6 +10,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         where TObject : class, new()
     {
         const int REQUEST_TIMEOUT = 30; // seconds
+        const int REQUEST_RETRY_AFTER = 5; // seconds
         const int SIGNATURE_LENGTH = 64;
         const int MAX_REQUESTS_RETRIES = 3;
         const string DEV_URL = "https://devnet.helius-rpc.com";
@@ -64,7 +65,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         }
 
         private async Task<string?> GetTransactionAsync(string signature)
-        {
+        {            
             var payload = new
             {
                 id = 1,
@@ -87,11 +88,16 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
                 try
                 {
+                    _logger.LogDebug("Fetching transaction {s}, try: {r}/{m}",
+                        signature, retriesCount, MAX_REQUESTS_RETRIES);
+
                     var response = await _httpClient.PostAsync(_endpoint, content);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        _logger.LogWarning("Failed to fetch transaction {t}, status code: {c}", signature, response.StatusCode);
+                        _logger.LogWarning("Failed to fetch transaction {s}, status code: {c}, retry after {t} seconds",
+                            signature, response.StatusCode, REQUEST_RETRY_AFTER);
+                        await Task.Delay(TimeSpan.FromSeconds(REQUEST_RETRY_AFTER));
                         continue;
                     }
 

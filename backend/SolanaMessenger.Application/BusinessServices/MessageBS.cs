@@ -41,6 +41,7 @@ namespace SolanaMessenger.Application.BusinessServices
             var tasks = messages.Select(m => _messageBlockchainRep.GetObjectAsync(m.Signatures));
 
             var messageData = await Task.WhenAll(tasks);
+            messageData = messageData.Where(m => m != null).ToArray();
             var messageDTOs = _mapper.Map<List<MessageDTO>>(messageData);
             return OpRes.Success(messageDTOs);
         }
