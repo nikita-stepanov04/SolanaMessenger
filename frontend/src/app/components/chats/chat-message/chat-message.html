@@ -42,5 +42,14 @@
 
       </div>
     </div>
+
+    <!-- Waiting for message sending  -->
+    @if(isPending$ | async) {
+      <div class="me-2 d-flex flex-column justify-content-center">
+        <app-spinner class="text-secondary">
+        </app-spinner>
+      </div>
+    }
+
   </div>
 </div>

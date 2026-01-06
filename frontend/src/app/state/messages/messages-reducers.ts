@@ -1,12 +1,12 @@
 import {defaultState, DefaultState} from '../default-state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {Message} from './models/message';
+import {DecryptedMessage} from './models/decrypted-message';
 import {createReducer, on} from '@ngrx/store';
 import {MessagesActions} from './messages-actions';
 
-export interface MessagesState extends DefaultState, EntityState<Message> {}
+export interface MessagesState extends DefaultState, EntityState<DecryptedMessage> {}
 
-export const messagesAdapter = createEntityAdapter<Message>({
+export const messagesAdapter = createEntityAdapter<DecryptedMessage>({
   selectId: message => message.id,
   sortComparer: (a, b) => a.timestamp - b.timestamp,
 });
@@ -40,10 +40,7 @@ export const messagesReducer = createReducer(
     messagesAdapter.updateOne({
       id: messageID,
       changes: {
-        isPending: false,
-        ciphertext: '',
-        nonce: '',
-        tag: ''
+        isPending: false
       }
     }, state)),
 

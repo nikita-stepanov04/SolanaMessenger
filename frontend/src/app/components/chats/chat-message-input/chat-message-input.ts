@@ -19,7 +19,7 @@ import {MessagesActions} from '../../../state/messages/messages-actions';
   styles: ``,
 })
 export class ChatMessageInput {
-  @ViewChild('messageInput') messageInput: ElementRef;
+  @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
 
   protected isSendDisabled$ = signal(true);
 
@@ -35,7 +35,12 @@ export class ChatMessageInput {
       take(1),
       withLatestFrom(this.store.select(ChatsSelectors.openedChat))
     ).subscribe(([userInfo, chat]) => {
-      const text = this.messageInput.nativeElement.value.trim();
+      const inputNative = this.messageInput.nativeElement;
+
+      const text = inputNative.value.trim();
+      inputNative.value = '';
+      inputNative.dispatchEvent(new Event('input'));
+
       const message = {
         id: crypto.randomUUID(),
         text: text,
@@ -43,9 +48,6 @@ export class ChatMessageInput {
         chatID: chat!.id,
         timestamp: Date.now(),
         isPending: true,
-        ciphertext: '',
-        nonce: '',
-        tag: ''
       }
       this.store.dispatch(MessagesActions.sendMessage({message}));
     })

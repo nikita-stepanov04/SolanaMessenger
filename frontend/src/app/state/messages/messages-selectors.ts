@@ -4,7 +4,7 @@ import {ChatsSelectors, selectChatEntities} from '../chats/chats-selectors';
 
 const selectMessagesState = createFeatureSelector<MessagesState>('messages');
 
-const { selectAll } = messagesAdapter.getSelectors(selectMessagesState);
+const { selectAll, selectEntities } = messagesAdapter.getSelectors(selectMessagesState);
 
 export const MessagesSelectors = {
   loading: createSelector(
@@ -62,5 +62,10 @@ export const MessagesSelectors = {
       const message = filtered[index];
       return filtered.filter(m => m.timestamp < message.timestamp).length;
     }
+  ),
+
+  isPending: (id: string) => createSelector(
+    selectEntities,
+    messages => !!messages[id]?.isPending
   )
 }

@@ -33,11 +33,11 @@
       @if (chatSelected$ | async) {
         <div class="h-100 mx-auto" style="max-width: 1400px">
           <div class="mx-4 d-flex flex-column h-100">
-            <div>
+            <div class="mb-2">
               <app-chat-header>
               </app-chat-header>
             </div>
-            <div class="flex-grow-1 my-2 position-relative">
+            <div class="flex-grow-1 mb-2 position-relative">
               <cdk-virtual-scroll-viewport #messagesViewport
                   class="h-100"
                   [itemSize]="MESSAGE_ITEM_SIZE">

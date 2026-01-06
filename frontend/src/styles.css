@@ -185,11 +185,25 @@
   min-height: 38px;
   max-height: 200px;
 }
+.chat-input::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-input::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.chat-input::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+  border-right: 10px solid transparent;
+}
 
 .color-shift-badge {
   animation: pulseColors 2s infinite alternate;
 }
-
 @keyframes pulseColors {
   0%   { background-color: #28a745; }
   100%  { background-color: #136d24; }
@@ -205,3 +219,5 @@
 .white-space-pre-line {
   white-space: pre-line;
 }
+
+

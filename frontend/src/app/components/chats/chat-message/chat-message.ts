@@ -1,6 +1,6 @@
 import {Component, DestroyRef, inject, Input, OnChanges} from '@angular/core';
 import {Chat, ChatUsersData} from '../../../state/chats/chats-models';
-import {Message} from '../../../state/messages/models/message';
+import {DecryptedMessage} from '../../../state/messages/models/decrypted-message';
 import {getInitial, stringToColor} from "app/helpers/format";
 import {filter, Observable, take} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -10,20 +10,22 @@ import {AuthSelectors} from '../../../state/auth/auth.selectors';
 import {DefaultTooltip} from '../../tooltip/default-tooltip';
 import {MessagesSelectors} from '../../../state/messages/messages-selectors';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Spinner} from '../../spinner/spinner';
 
 @Component({
   selector: 'app-chat-message',
   imports: [
     AsyncPipe,
     NgClass,
-    DefaultTooltip
+    DefaultTooltip,
+    Spinner
   ],
   templateUrl: './chat-message.html',
   styles: ``,
 })
 export class ChatMessageComponent implements OnChanges {
   @Input() chat: Chat;
-  @Input() message: Message;
+  @Input() message: DecryptedMessage;
 
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
@@ -31,6 +33,7 @@ export class ChatMessageComponent implements OnChanges {
   protected personName$: Observable<string>;
   protected shortenPersonName$: Observable<string>;
   protected messageTime$: Observable<string>;
+  protected isPending$: Observable<boolean>;
 
   protected isPreviousMessageFromTheSameSender = false;
   protected isOutgoingMessage = false;
@@ -49,6 +52,8 @@ export class ChatMessageComponent implements OnChanges {
       .subscribe(previous => {
         this.isPreviousMessageFromTheSameSender = this.message.userID === previous?.userID;
       });
+
+    this.isPending$ = this.store.select(MessagesSelectors.isPending(this.message.id));
 
     this.store.select(AuthSelectors.userInfo)
       .pipe(take(1))

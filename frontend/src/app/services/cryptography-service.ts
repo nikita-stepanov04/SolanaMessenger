@@ -6,8 +6,9 @@ import Base64 from '@bindon/base64';
 import {hkdf} from '@noble/hashes/hkdf.js';
 import {Chat} from '../state/chats/chats-models';
 import {gcm} from '@noble/ciphers/aes.js';
-import {Message} from '../state/messages/models/message';
+import {DecryptedMessage} from '../state/messages/models/decrypted-message';
 import {WriteMessage} from '../state/messages/models/write-message';
+import {EncryptedMessage} from '../state/messages/models/encrypted-message';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -86,7 +87,7 @@ export class CryptographyService {
     }
   }
 
-  public decryptMessage(message: Message, cek: string): Message {
+  public decryptMessage(message: EncryptedMessage, cek: string): DecryptedMessage {
     const key = this.base64ToBytes(cek);
     const tag = this.base64ToBytes(message.tag);
     const nonce = this.base64ToBytes(message.nonce);
@@ -100,12 +101,16 @@ export class CryptographyService {
     const decrypted = aes.decrypt(cipherWithTag);
 
     return {
-      ...message,
-      text: decoder.decode(decrypted)
-    };
+      id: message.id,
+      userID: message.userID,
+      chatID: message.chatID,
+      text: decoder.decode(decrypted),
+      timestamp: message.timestamp,
+      isPending: false
+    }
   }
 
-  public encryptMessage(message: Message, cek: string): WriteMessage {
+  public encryptMessage(message: DecryptedMessage, cek: string): WriteMessage {
     const key = this.base64ToBytes(cek);
     const nonce = crypto.getRandomValues(new Uint8Array(NONCE_LENGTH));
     const text = encoder.encode(message.text);
