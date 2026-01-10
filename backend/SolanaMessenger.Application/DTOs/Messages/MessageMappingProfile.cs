@@ -6,9 +6,9 @@ namespace SolanaMessenger.Application.DTOs
 {
     public class MessageMappingProfile : Profile
     {
-        public MessageMappingProfile() 
+        public MessageMappingProfile()
         {
-            CreateMap<WriteMessageDTO, MessageData>()                
+            CreateMap<WriteMessageDTO, MessageData>()
                 .ForMember(
                     dest => dest.Nonce,
                     src => src.ConvertUsing(new StringToByteArrConverter(), src => src.Nonce)

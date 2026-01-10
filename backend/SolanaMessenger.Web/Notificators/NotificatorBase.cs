@@ -3,39 +3,42 @@ using SolanaMessenger.Application;
 
 namespace SolanaMessenger.Web
 {
-    public abstract class NotificatorBase<THub, THubType, TNotificationType>
+    public abstract class NotificatorBase<THub, TNotificationType>
         : INotificator<TNotificationType>
-        where THub : Hub<THubType>
-        where THubType : class
+        where THub : Hub
         where TNotificationType : class
     {
-        protected readonly IHubContext<THub, THubType> HubContext;
-        protected readonly ILogger _logger;
+        protected IServiceScopeFactory ServiceScopeFactory;
+        protected IHubContext<THub> HubContext;
+        protected ILogger Logger;
 
-        public NotificatorBase(
-            IHubContext<THub, THubType> hubContext,
-            ILoggerFactory loggerFactory)
+        public NotificatorBase(IServiceScopeFactory serviceScopeFactory)
         {
-            HubContext = hubContext;
-            _logger = loggerFactory.CreateLogger<INotificator<TNotificationType>>();
+            ServiceScopeFactory = serviceScopeFactory;
         }
 
         public void Notify(TNotificationType notification)
         {
             Task.Run(async () =>
             {
+                var services = ServiceScopeFactory.CreateScope().ServiceProvider;
                 try
                 {
-                    await NotifyAsync(notification);
+                    HubContext = services.GetRequiredService<IHubContext<THub>>();
+                    Logger = services
+                        .GetRequiredService<ILoggerFactory>()
+                        .CreateLogger<INotificator<TNotificationType>>();
+
+                    await NotifyAsync(notification, services);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical("Exception happened while invoking notification of type {type}\n{ex}",
+                    Logger.LogCritical("Exception happened while invoking notification of type {type}\n{ex}",
                         this.GetType().Name, ex);
                 }
             });
         }
 
-        protected abstract Task NotifyAsync(TNotificationType notification);
+        protected abstract Task NotifyAsync(TNotificationType notification, IServiceProvider services);
     }
 }

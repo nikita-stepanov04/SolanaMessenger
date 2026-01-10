@@ -5,21 +5,22 @@ using SolanaMessenger.Web.Hubs;
 
 namespace SolanaMessenger.Web
 {
-    public class NewMessageNotificator 
-        : NotificatorBase<ChatHub, IChatHub, MessageDTO>, INewMessageNotificator
+    public class NewMessageNotificator(IServiceScopeFactory serviceScopeFactory)
+        : NotificatorBase<ChatHub, MessageDTO>(serviceScopeFactory), INewMessageNotificator
     {
-        public NewMessageNotificator(
-            IHubContext<ChatHub, IChatHub> hubContext,
-            ILoggerFactory loggerFactory)
-            : base(hubContext, loggerFactory)
-        { }
+        const string EVENT_NAME = "receiveMessage";
 
-        protected override async Task NotifyAsync(MessageDTO message)
+        protected override async Task NotifyAsync(MessageDTO message, IServiceProvider services)
         {
-            var chatID = message.ChatID.ToString();
-            await HubContext.Clients
-                .Group(chatID)
-                .ReceiveMessage(message);
+            var chatBS = services.GetRequiredService<IChatBS>();
+            var chatUserIDs = await chatBS.GetChatUserIDsAsync(message.ChatID);
+
+            foreach (var id in chatUserIDs.Except([message.UserID]))
+            {
+                await HubContext.Clients
+                    .User(id.ToString())
+                    .SendAsync(EVENT_NAME, new { message });
+            }
         }
     }
 }

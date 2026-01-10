@@ -10,12 +10,12 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="Xunit.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="11.1.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit.v3" Version="3.2.0" />
+    <PackageReference Include="xunit.v3" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>

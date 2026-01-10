@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Notification} from './components/notification/notification';
-import {ChatHubService} from './services/chat-hub-service';
+import {ChatHubService} from './hubs/chat-hub-service';
 
 @Component({
   selector: 'app-root',

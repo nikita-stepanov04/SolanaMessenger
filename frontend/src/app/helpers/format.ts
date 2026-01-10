@@ -69,7 +69,7 @@ export function formatDate(date: number, countryCode: string) {
     month: 'long',
     day: 'numeric',
   });
-  return formatter.format(new Date(date));
+  return formatter.format(new Date(Math.ceil(date / 1000)));
 }
 
 export function formatTime(time: number, countryCode: string) {
@@ -77,5 +77,5 @@ export function formatTime(time: number, countryCode: string) {
     hour: '2-digit',
     minute: '2-digit',
   });
-  return formatter.format(new Date(time));
+  return formatter.format(new Date(Math.ceil(time / 1000)));
 }

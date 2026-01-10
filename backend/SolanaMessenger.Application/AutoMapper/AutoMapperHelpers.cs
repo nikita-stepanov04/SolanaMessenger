@@ -16,5 +16,5 @@ namespace SolanaMessenger.Application.AutoMapper
         {
             return System.Convert.FromBase64String(sourceMember);
         }
-    }
+    }    
 }

@@ -3,33 +3,25 @@ using Microsoft.AspNetCore.SignalR;
 using SolanaMessenger.Application.DTOs;
 using SolanaMessenger.Application.Notification;
 using SolanaMessenger.Web.Hubs;
-using System.Text.Json;
 
 namespace SolanaMessenger.Web
 {
-    public class NewChatNotificator
-        : NotificatorBase<ChatHub, IChatHub, ChatCreatedDTO>, INewChatNotificator
+    public class NewChatNotificator(IServiceScopeFactory serviceScopeFactory) 
+        : NotificatorBase<ChatHub, ChatCreatedDTO>(serviceScopeFactory), INewChatNotificator
     {
-        private readonly IMapper _mapper;
+        const string EVENT_NAME = "userAddedToChat";
 
-        public NewChatNotificator(
-            IHubContext<ChatHub, IChatHub> hubContext,
-            ILoggerFactory loggerFactory,
-            IMapper mapper)
-            : base(hubContext, loggerFactory)
+        protected override async Task NotifyAsync(ChatCreatedDTO chat, IServiceProvider services)
         {
-            _mapper = mapper;
-        }
+            var mapper = services.GetRequiredService<IMapper>();
+            var minDto = mapper.Map<ChatMinimalDTO>(chat);
 
-        protected override async Task NotifyAsync(ChatCreatedDTO chat)
-        {
-            var minDto = _mapper.Map<ChatMinimalDTO>(chat);
-            foreach(var id in chat.UserIDs)
+            foreach (var id in chat.UserIDs)
             {
                 await HubContext.Clients
                     .User(id.ToString())
-                    .UserAddedToChat(minDto);
-            };
+                    .SendAsync(EVENT_NAME, new { chat = minDto });
+            }
         }
     }
 }

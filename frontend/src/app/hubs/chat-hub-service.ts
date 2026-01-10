@@ -5,21 +5,15 @@ import {environment} from '../../environments/environment';
 import {AuthSelectors} from '../state/auth/auth.selectors';
 import {TokensInfo} from '../state/auth/models/resp/tokensInfo';
 import {AuthActions} from '../state/auth/auth-actions';
-import {Chat} from '../state/chats/chats-models';
-import {ChatActions} from '../state/chats/chats-actions';
-import {NotificationService} from './notification-service';
-import {ResourcesService} from '../state/resources/resources-service';
-import {stringFormat} from '../helpers/format';
-
-const USER_ADDED_TO_CHAT_COMMAND = "userAddedToChat";
+import {ChatHubEventHandlers} from './chat-hub-event-handlers';
+import {findAnnotatedMethods} from './chat-hub-event-decorator';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatHubService {
   private store = inject(Store);
-  private resources = inject(ResourcesService);
-  private notification = inject(NotificationService);
+  private handlers = inject(ChatHubEventHandlers);
   private connection: signalR.HubConnection | null = null;
 
   private hubUrl = `${environment.apiBaseUrl}/ws/chats`;
@@ -48,7 +42,8 @@ export class ChatHubService {
       .withAutomaticReconnect()
       .build();
 
-    this.connection.on(USER_ADDED_TO_CHAT_COMMAND, chat => this.onAddToChat(chat))
+    findAnnotatedMethods(this.handlers).forEach(info =>
+      this.connection?.on(info.event, params => info.handler(params)));
 
     this.connection.start()
       .then(() => console.log('Connected to SignalR ChatHub'))
@@ -57,7 +52,7 @@ export class ChatHubService {
           this.connection = null;
           this.store.dispatch(AuthActions.refresh());
         }
-      })
+      });
   }
 
   public disconnect() {
@@ -66,12 +61,5 @@ export class ChatHubService {
 
     this.connection.stop()
       .then(() => console.log('Disconnected from SignalR ChatHub'));
-  }
-
-  public onAddToChat(chat: Chat) {
-    this.store.dispatch(ChatActions.addChatSuccess({chat: chat}));
-    this.resources
-      .get('str036')
-      .subscribe(text => this.notification.success(stringFormat(text, chat.name)));
   }
 }

@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /SolanaMessenger.Web/appsettings.Development.json
 /SolanaMessenger.Tests/SolanaTests/config.json
+/build
+/obj

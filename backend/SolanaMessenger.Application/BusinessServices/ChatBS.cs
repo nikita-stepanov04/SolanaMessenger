@@ -133,5 +133,8 @@ namespace SolanaMessenger.Application.BusinessServices
             var dtos = _mapper.Map<List<ChatMinimalDTO>>(chats);
             return dtos;
         }
+
+        public async Task<List<Guid>> GetChatUserIDsAsync(Guid chatID) =>
+            await _chatRep.GetChatUserIDsAsync(chatID);
     }
 }

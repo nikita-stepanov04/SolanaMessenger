@@ -2,6 +2,6 @@
 {
     public static class LinuxTimeStamp
     {
-        public static long UtcNow => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        public static long UtcNow => (DateTimeOffset.UtcNow.Ticks - DateTimeOffset.UnixEpoch.Ticks) / 10;
     }
 }

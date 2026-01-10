@@ -220,4 +220,9 @@
   white-space: pre-line;
 }
 
+.no-scroll {
+  pointer-events: none;
+}
+
+
 

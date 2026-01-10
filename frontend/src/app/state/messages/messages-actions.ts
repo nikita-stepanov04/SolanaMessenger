@@ -6,7 +6,7 @@ export const MessagesActions = {
   loadMessagesSuccess: createAction('[Messages] Load Messages Success', props<{messages: DecryptedMessage[]}>()),
   loadMessagesFailure: createAction('[Messages] Load Messages Failure', props<{error: any}>()),
 
-  newMessage: createAction('[Messages] New DecryptedMessage', props<{message: DecryptedMessage}>()),
+  newMessage: createAction('[Messages] New Message', props<{message: DecryptedMessage}>()),
 
   sendMessage: createAction('[Messages] SendMessage', props<{message: DecryptedMessage}>()),
   sendMessageSuccess: createAction('[Messages] SendMessageSuccess', props<{messageID: string}>()),

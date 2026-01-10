@@ -46,7 +46,7 @@ export class ChatMessageInput {
         text: text,
         userID: userInfo!.id,
         chatID: chat!.id,
-        timestamp: Date.now(),
+        timestamp: Date.now() * 1000,
         isPending: true,
       }
       this.store.dispatch(MessagesActions.sendMessage({message}));
