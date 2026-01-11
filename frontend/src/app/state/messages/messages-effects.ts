@@ -3,7 +3,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {MessagesService} from './messages-service';
 import {NotificationService} from '../../services/notification-service';
 import {MessagesActions} from './messages-actions';
-import {catchError, concatMap, from, map, mergeMap, of, switchMap, tap, withLatestFrom} from 'rxjs';
+import {catchError, concatMap, filter, from, map, mergeMap, of, switchMap, tap, withLatestFrom} from 'rxjs';
 import {Action, Store} from '@ngrx/store';
 import {ChatsSelectors} from '../chats/chats-selectors';
 import {environment} from '../../../environments/environment';
@@ -58,6 +58,16 @@ export class MessagesEffects {
           catchError(err => of(MessagesActions.sendMessageFailure({messageID: originalMessage.id, error: err})))
         ))
     ));
+
+  newMessage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MessagesActions.newMessage),
+      withLatestFrom(this.store.select(ChatsSelectors.openedChat)),
+      filter(([action, openedChat]) => openedChat?.id !== action.message.chatID),
+      tap(([action]) => this.notifications.newMessage(action.message)),
+      map(([action]) => ChatActions.newMessage({ chatID: action.message.chatID }))
+    )
+  );
 
   notifyErrors$ = createEffect(() =>
     this.actions$.pipe(

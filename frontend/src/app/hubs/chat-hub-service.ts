@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {Store} from '@ngrx/store';
 import {environment} from '../../environments/environment';
@@ -7,26 +7,34 @@ import {TokensInfo} from '../state/auth/models/resp/tokensInfo';
 import {AuthActions} from '../state/auth/auth-actions';
 import {ChatHubEventHandlers} from './chat-hub-event-handlers';
 import {findAnnotatedMethods} from './chat-hub-event-decorator';
+import {auditTime, combineLatest} from 'rxjs';
+import {ChatsSelectors} from '../state/chats/chats-selectors';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatHubService {
   private store = inject(Store);
+  private destroyRef = inject(DestroyRef);
   private handlers = inject(ChatHubEventHandlers);
   private connection: signalR.HubConnection | null = null;
 
   private hubUrl = `${environment.apiBaseUrl}/ws/chats`;
 
   constructor() {
-    this.store
-      .select(AuthSelectors.tokenInfo)
-      .subscribe(tokenInfo => {
-        if (tokenInfo)
-          this.connect(tokenInfo);
-        else
-          this.disconnect();
-      })
+    combineLatest([
+      this.store.select(AuthSelectors.tokenInfo),
+      this.store.select(ChatsSelectors.loaded)
+    ]).pipe(
+      auditTime(0),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(([tokenInfo, loaded]) => {
+      if (tokenInfo && loaded)
+        this.connect(tokenInfo);
+      else
+        this.disconnect();
+    })
   }
 
   public connect(tokenInfo: TokensInfo) {
@@ -60,6 +68,9 @@ export class ChatHubService {
       return;
 
     this.connection.stop()
-      .then(() => console.log('Disconnected from SignalR ChatHub'));
+      .then(() => {
+        this.connection = null;
+        console.log('Disconnected from SignalR ChatHub')
+      });
   }
 }

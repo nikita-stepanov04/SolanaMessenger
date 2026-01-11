@@ -1,0 +1,38 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  @for (message of notification.messages$(); track message.id) {
+    <div
+      class="toast show m-0 p-0"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      animate.enter="fade-in" animate.leave="fade-out"
+    >
+      <div class="d-flex w-100 align-items-center" style="border-bottom: 1px solid lightgray">
+        <div class="my-2 d-flex align-items-center w-100"
+            (click)="openChat(message)">
+          <div class="chat-icon mx-2"
+            [style.background]="stringToColor(message.chatName)">
+            {{ getInitial(message.chatName) }}
+          </div>
+          <div class="flex-grow-1 my-2 text-truncate fs-6"
+            style="max-width: 250px">
+            {{ message.senderName }}
+          </div>
+        </div>
+        <div class="ms-auto me-2">
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="notification.clearMessage(message.id)">
+          </button>
+        </div>
+      </div>
+      <div class="toast-body text-truncate"
+          style="max-width: 300px"
+          (click)="openChat(message)">
+        {{ message.text }}
+      </div>
+    </div>
+  }
+</div>

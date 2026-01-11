@@ -72,7 +72,6 @@ export class ChatPage implements OnInit {
   messagesViewport?: CdkVirtualScrollViewport;
 
   ngOnInit() {
-
     // Load messages if there's not enough in store
     combineLatest([
       this.selectedChat$,
@@ -87,7 +86,7 @@ export class ChatPage implements OnInit {
           this.endReached$
         ),
       )
-      .subscribe(([_, messages, endReached]) => {
+      .subscribe(([[selectedChat, _], messages, endReached]) => {
         const required = this.requiredMessagesPerPage();
         if (messages.length < required && !endReached) {
 
@@ -119,6 +118,21 @@ export class ChatPage implements OnInit {
         // Subscribe for scroll if there are enough messages in store for page fill
         if (messages.length >= required && !endReached)
           this.subscribeForScroll();
+
+        this.newMessageSub = this.actions.pipe(
+          ofType(
+            MessagesActions.newMessage,
+            MessagesActions.sendMessage
+          )
+        ).subscribe(action => {
+          if (selectedChat!.id == action.message.chatID) {
+            this.messagesViewport!.renderedRangeStream.pipe(
+              take(1)
+            ).subscribe(() =>
+              setTimeout(() => this.messagesViewport!.scrollToOffset(Number.MAX_SAFE_INTEGER))
+            );
+          }
+        })
       });
 
     // Chat open/close events
@@ -144,19 +158,6 @@ export class ChatPage implements OnInit {
         this.chatLoadSub = null;
       }
     });
-
-    this.newMessageSub = this.actions.pipe(
-      ofType(
-        MessagesActions.newMessage,
-        MessagesActions.sendMessage
-      )
-    ).subscribe(() => {
-      this.messagesViewport!.renderedRangeStream.pipe(
-        take(1)
-      ).subscribe(() =>
-        setTimeout(() => this.messagesViewport!.scrollToOffset(Number.MAX_SAFE_INTEGER))
-      );
-    })
   }
 
   onSearch(search: string) {

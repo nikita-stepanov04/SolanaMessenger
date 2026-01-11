@@ -22,7 +22,7 @@ export const ChatsSelectors = {
           chat.name.toLowerCase().includes(search.trim().toLowerCase()))
         : chats;
       return new OrderedArray(filtered)
-        .orderByDescending(ch => ch.lastVisited)
+        .orderByDescending(ch => ch.lastEventTimestamp)
         .toArray();
     }
   ),
@@ -42,5 +42,10 @@ export const ChatsSelectors = {
       const chat = entities[state.selectedChatID];
       return !!chat?.areAllMessagesFetched;
     }
+  ),
+
+  chatByID: (chatID: string) => createSelector(
+    selectChatEntities,
+    chats => chats[chatID]
   )
 };

@@ -7,6 +7,7 @@ import {AuthSelectors} from '../../../state/auth/auth.selectors';
 import {take, withLatestFrom} from 'rxjs';
 import {ChatsSelectors} from '../../../state/chats/chats-selectors';
 import {MessagesActions} from '../../../state/messages/messages-actions';
+import {LinuxMicrosecondTimestamp} from '../../../helpers/timestamp';
 
 @Component({
   selector: 'app-chat-message-input',
@@ -46,7 +47,7 @@ export class ChatMessageInput {
         text: text,
         userID: userInfo!.id,
         chatID: chat!.id,
-        timestamp: Date.now() * 1000,
+        timestamp: LinuxMicrosecondTimestamp.now(),
         isPending: true,
       }
       this.store.dispatch(MessagesActions.sendMessage({message}));

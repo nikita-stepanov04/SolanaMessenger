@@ -5,8 +5,8 @@ export class Chat {
     public timestamp: number,
     public encryptionPayload: UserPayload | undefined,
     public usersData: ChatUsersData[] | undefined,
-    public lastVisited: number,
-    public isNew: boolean,
+    public hasNewEvents: boolean,
+    public lastEventTimestamp: number,
     public areAllMessagesFetched: boolean,
     public scrollOffset: number,
     public cek: string

@@ -1,4 +1,4 @@
-type KeySelector<T> = (item: T) => string | number;
+type KeySelector<T> = (item: T) => string | number | boolean;
 
 export class OrderedArray<T> {
   private array: T[];
@@ -26,6 +26,11 @@ export class OrderedArray<T> {
 
       if (typeof vA === "string" && typeof vB === "string") {
         const cmp = vA.localeCompare(vB);
+        return descending ? -cmp : cmp;
+      }
+
+      if (typeof vA === "boolean" && typeof vB === "boolean") {
+        const cmp = Number(vA) - Number(vB);
         return descending ? -cmp : cmp;
       }
 

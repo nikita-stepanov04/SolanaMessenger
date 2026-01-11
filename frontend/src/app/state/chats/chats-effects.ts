@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, exhaustMap, filter, map, of, tap, withLatestFrom} from 'rxjs';
+import {catchError, concatMap, exhaustMap, filter, map, of, tap, withLatestFrom} from 'rxjs';
 import {ChatsService} from './chats-service';
 import {NotificationService} from '../../services/notification-service';
 import {routerNavigationAction} from '@ngrx/router-store';
@@ -53,10 +53,27 @@ export class ChatsEffects {
         return this.chatsService.getChatInfo(chat!.id).pipe(
           map(chat => this.crypto.deriveCEK(authState.x25519Priv, authState.userInfo!.id, chat)),
           map(chat => ChatActions.loadChatInfoSuccess({chat})),
-          catchError(err => of(ChatActions.loadChatInfoFailure({ chatInfoError: err})))
+          catchError(err => of(ChatActions.loadChatInfoFailure({ error: err})))
         )
       })
     ));
+
+  loadChatInfoById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ChatActions.loadChatInfoById),
+      withLatestFrom(
+        this.store.select(AuthSelectors.state)
+      ),
+      concatMap(([action, authState]) =>
+        this.chatsService.getChatInfo(action.chatID).pipe(
+          map(chat => this.crypto.deriveCEK(authState.x25519Priv, authState.userInfo!.id, chat)),
+          map(chat => ChatActions.loadChatInfoByIdSuccess({chat})),
+          catchError(err => of(ChatActions.loadChatInfoByIdFailure({ error: err})))
+        )
+      ),
+    );
+  });
+
 
   notifyErrors$ = createEffect(() =>
     this.actions$.pipe(
@@ -66,7 +83,10 @@ export class ChatsEffects {
 
   notifyChatInfoErrors$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ChatActions.loadChatInfoFailure),
-      tap(({chatInfoError}) => this.notifications.error(chatInfoError))
+      ofType(
+        ChatActions.loadChatInfoFailure,
+        ChatActions.loadChatInfoByIdFailure
+      ),
+      tap(({error}) => this.notifications.error(error))
     ), { dispatch: false });
 }

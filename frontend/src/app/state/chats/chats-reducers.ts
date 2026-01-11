@@ -3,6 +3,7 @@ import {Chat} from './chats-models';
 import {createReducer, on} from '@ngrx/store';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {ChatActions} from './chats-actions';
+import {LinuxMicrosecondTimestamp} from '../../helpers/timestamp';
 
 export interface ChatsState extends DefaultState, EntityState<Chat> {
   searchName: string;
@@ -40,15 +41,15 @@ export const chatsReducers = createReducer(
   on(ChatActions.addChatSuccess, (state, {chat}) =>
     chatsAdapter.addOne({
       ...chat,
-      lastVisited: Date.now(),
-      isNew: true
+      hasNewEvents: true,
+      lastEventTimestamp: LinuxMicrosecondTimestamp.now()
     }, state)
   ),
 
   on(ChatActions.openChat, (state, {chatID}) =>
     chatsAdapter.updateOne({
       id: chatID,
-      changes: {lastVisited: Date.now()}
+      changes: {hasNewEvents: false},
     }, {
       ...state,
       selectedChatID: chatID,
@@ -68,11 +69,11 @@ export const chatsReducers = createReducer(
       chatInfoLoading: false
     })
   ),
-  on(ChatActions.loadChatInfoFailure, (state, {chatInfoError}) => ({
+  on(ChatActions.loadChatInfoFailure, (state, {error}) => ({
     ...state,
     chatInfoLoading: false,
     chatInfoLoaded: false,
-    chatInfoError: chatInfoError
+    chatInfoError: error
   })),
 
   on(ChatActions.setAllMessagesFetchedForOpenedChat, (state) =>
@@ -85,5 +86,25 @@ export const chatsReducers = createReducer(
     chatsAdapter.updateOne({
       id: chatID,
       changes: { scrollOffset: scrollOffset }
+    }, state)),
+
+  on(ChatActions.newMessage, (state, {chatID}) =>
+    chatsAdapter.updateOne({
+      id: chatID,
+      changes: {
+        hasNewEvents: true,
+        lastEventTimestamp: LinuxMicrosecondTimestamp.now()
+      }
+    }, state)),
+
+  on(ChatActions.loadChatInfoByIdSuccess, (state, {chat}) =>
+    chatsAdapter.updateOne({
+      id: chat.id,
+      changes: {
+        timestamp: chat.timestamp,
+        encryptionPayload: chat.encryptionPayload,
+        usersData: chat.usersData,
+        cek: chat.cek
+      }
     }, state)),
 )

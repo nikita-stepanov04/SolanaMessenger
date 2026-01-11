@@ -13,10 +13,16 @@ export const ChatActions = {
   closeChat: createAction('[Chats] Close Chat'),
 
   loadChatInfoSuccess: createAction('[Chats] Load ChatInfo Success', props<{ chat: Chat }>()),
-  loadChatInfoFailure: createAction('[Chats] Load ChatInfo Failure', props<{ chatInfoError: any }>()),
+  loadChatInfoFailure: createAction('[Chats] Load ChatInfo Failure', props<{ error: any }>()),
 
   setAllMessagesFetchedForOpenedChat: createAction('[Chats] All messages were fetched'),
   setLastMessageTimestampForOpenedChat: createAction('[Chats] LastMessage timestamp was set', props<{timestamp: number}>()),
   setScrollOffset: createAction('[Chats] Set scroll offset', props<{ chatID: string, scrollOffset: number }>()),
+
+  loadChatInfoById: createAction('[Chats] Load ChatInfo ById', props<{ chatID: string }>()),
+  loadChatInfoByIdSuccess: createAction('[Chats] Load ChatInfo ById Success', props<{chat: Chat}>()),
+  loadChatInfoByIdFailure: createAction('[Chats] Load ChatInfo ByIdFailure', props<{ error: any }>()),
+
+  newMessage: createAction('[Chats] New Message', props<{ chatID: string }>()),
 }
 

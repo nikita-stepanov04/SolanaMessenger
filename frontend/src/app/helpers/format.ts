@@ -2,6 +2,7 @@ import {NameNotation} from '../state/resources/models/resources-models';
 import {ChatUsersData} from '../state/chats/chats-models';
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import {environment} from '../../environments/environment';
+import {LinuxMicrosecondTimestamp} from './timestamp';
 
 export function stringFormat(str: string, ...args: (string | number)[]): string {
   return str.replace(/{(\d+)}/g, (match, index) => {
@@ -69,7 +70,7 @@ export function formatDate(date: number, countryCode: string) {
     month: 'long',
     day: 'numeric',
   });
-  return formatter.format(new Date(Math.ceil(date / 1000)));
+  return formatter.format(LinuxMicrosecondTimestamp.parse(date));
 }
 
 export function formatTime(time: number, countryCode: string) {
@@ -77,5 +78,5 @@ export function formatTime(time: number, countryCode: string) {
     hour: '2-digit',
     minute: '2-digit',
   });
-  return formatter.format(new Date(Math.ceil(time / 1000)));
+  return formatter.format(LinuxMicrosecondTimestamp.parse(time));
 }

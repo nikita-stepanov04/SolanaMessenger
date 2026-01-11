@@ -205,8 +205,8 @@
   animation: pulseColors 2s infinite alternate;
 }
 @keyframes pulseColors {
-  0%   { background-color: #28a745; }
-  100%  { background-color: #136d24; }
+  0%   { background-color: #136d24; }
+  100%  { background-color: #28a745; }
 }
 
 .time {
@@ -224,5 +224,15 @@
   pointer-events: none;
 }
 
+.toast-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
 
 
