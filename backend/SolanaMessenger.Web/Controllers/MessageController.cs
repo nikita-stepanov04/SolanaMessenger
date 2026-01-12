@@ -34,14 +34,14 @@ namespace SolanaMessenger.Web.Controllers
 
         [HttpPost()]
         [ProducesResponseType<IDResponse>(StatusCodes.Status200OK)]
-        [ProducesResponseType<MessageResponse>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<MessageResponse>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> WriteMessage(
             [FromBody] WriteMessageDTO dto)
         {
             var res = await _messageBS.WriteMessageAsync(dto, UserID);
 
             if (res.HasError)
-                return Forbid(res.ErrorMessage);
+                return BadRequest(res.ErrorMessage);
 
             return Ok(new IDResponse(res.Result));
         }

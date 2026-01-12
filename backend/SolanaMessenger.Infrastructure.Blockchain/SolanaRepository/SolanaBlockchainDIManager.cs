@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SolanaMessenger.Domain;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
-    public class SolanaBlockchainDIManager : IBlockchainInfrastructureDIManager
+    public class SolanaBlockchainDIManager : IDependencyInjectionManager
     {
-        public IServiceCollection SetupBlockchainInfrastructureDI(IServiceCollection services, IConfiguration config)
+        public IServiceCollection SetupDI(IServiceCollection services, IConfiguration config)
         {
             services.AddScoped(typeof(IBlockchainRepository<>), typeof(SolanaRepository<>));
             services.AddScoped(typeof(SolanaTransactionManager<>));

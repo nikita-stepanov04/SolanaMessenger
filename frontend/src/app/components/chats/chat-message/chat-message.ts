@@ -45,13 +45,9 @@ export class ChatMessageComponent implements OnChanges {
     this.shortenPersonName$ = this.store.select(ResourcesSelectors.formatPersonName(this.user, true));
     this.messageTime$ = this.store.select(ResourcesSelectors.formatTime(this.message.timestamp));
 
-    this.store.select(MessagesSelectors.previousMessage(this.message.id, this.chat.id))
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter(Boolean))
-      .subscribe(previous => {
-        this.isPreviousMessageFromTheSameSender = this.message.userID === previous?.userID;
-      });
+    this.store.select(MessagesSelectors.openedChatPreviousMessage(this.message.id))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(previous => this.isPreviousMessageFromTheSameSender = this.message.userID === previous?.userID);
 
     this.isPending$ = this.store.select(MessagesSelectors.isPending(this.message.id));
 

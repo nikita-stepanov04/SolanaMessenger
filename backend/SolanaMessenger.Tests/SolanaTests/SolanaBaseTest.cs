@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SolanaMessenger.Infrastructure.Blockchain;
 using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;
 using System.Text;
 
@@ -35,8 +34,8 @@ namespace SolanaMessenger.Tests.SolanaTests
 
             services.AddSingleton<IConfiguration>(config);
 
-            IBlockchainInfrastructureDIManager blockchainInfrastructureManager = new SolanaBlockchainDIManager();
-            blockchainInfrastructureManager.SetupBlockchainInfrastructureDI(services, config);
+            var blockchainInfrastructureManager = new SolanaBlockchainDIManager();
+            blockchainInfrastructureManager.SetupDI(services, config);
         }
     }
 }

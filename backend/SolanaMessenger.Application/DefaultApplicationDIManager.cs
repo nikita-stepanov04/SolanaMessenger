@@ -2,12 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Application.BusinessServices;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
+using SolanaMessenger.Domain;
 
 namespace SolanaMessenger.Application
 {
-    public class DefaultApplicationDIManager : IApplicationDIManager
+    public class DefaultApplicationDIManager : IDependencyInjectionManager
     {
-        public IServiceCollection SetupApplicationDI(IServiceCollection services, IConfiguration config)
+        public IServiceCollection SetupDI(IServiceCollection services, IConfiguration config)
         {
             services.AddAutoMapper(cfg => { }, typeof(DefaultApplicationDIManager).Assembly);
 

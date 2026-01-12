@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SolanaMessenger.Domain;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
-    public class EFInfrastructureDIManager : IInfrastructureDIManager
+    public class EFInfrastructureDIManager : IDependencyInjectionManager
     {
-        public IServiceCollection SetupInfrastructureDI(IServiceCollection services, IConfiguration config)
+        public IServiceCollection SetupDI(IServiceCollection services, IConfiguration config)
         {
             string? dbConnection = config
                 .GetConnectionString("DbConnection");

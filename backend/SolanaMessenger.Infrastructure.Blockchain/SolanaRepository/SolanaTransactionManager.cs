@@ -42,6 +42,9 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         internal async Task<byte[]?> SendObjectAsync(TObject obj)
         {
+            if (!_solListener.IsConnectionAlive) 
+                return null;
+
             var slices = SliceObject(obj);
             var tasks = slices.Select(s => SendMessageAsync(s));
             var signatures = await Task.WhenAll(tasks);
@@ -110,32 +113,42 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
                 var memoInstruction = MemoProgram.NewMemo(_account, message);
 
-                var tx = new TransactionBuilder()
-                    .SetFeePayer(_account)
-                    .AddInstruction(ComputeBudgetProgram.SetComputeUnitLimit(TRANSACTION_COMPUTING_UNITS))
-                    .AddInstruction(memoInstruction)
-                    .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
-                    .Build(_account);
-
-                var sendingResponse = await _rpcClient.SendTransactionAsync(tx);
-
-                if (!sendingResponse.WasSuccessful)
+                try
                 {
-                    _logger.LogWarning("Failed to send transaction, error: {e}, retry {retry}/{max}",
-                        JsonSerializer.Serialize(sendingResponse.ErrorData), retriesCount, MAX_TRANSACTION_COUNT);
-                    continue;
+                    var tx = new TransactionBuilder()
+                   .SetFeePayer(_account)
+                   .AddInstruction(ComputeBudgetProgram.SetComputeUnitLimit(TRANSACTION_COMPUTING_UNITS))
+                   .AddInstruction(memoInstruction)
+                   .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
+                   .Build(_account);
+
+                    var sendingResponse = await _rpcClient.SendTransactionAsync(tx);
+
+                    if (!sendingResponse.WasSuccessful)
+                    {
+                        _logger.LogWarning("Failed to send transaction, error: {e}, retry {retry}/{max}",
+                            JsonSerializer.Serialize(sendingResponse.ErrorData), retriesCount, MAX_TRANSACTION_COUNT);
+                        continue;
+                    }
+
+                    var confirmResult = await _solListener.WaitTransactionConfirmation(sendingResponse.Result);
+
+                    if (confirmResult == TransactionResult.Rejected)
+                    {
+                        _logger.LogWarning("Transaction {sig} failed to confirm, retry {retry}/{max}",
+                            sendingResponse.Result, retriesCount, MAX_REQUESTS_RETRIES);
+                        continue;
+                    }
+
+                    if (confirmResult == TransactionResult.NotAwaited)
+                        return null;
+
+                    return sendingResponse.Result;
                 }
-
-                var waitingResponse = await _solListener.WaitTransactionConfirmation(sendingResponse.Result);
-
-                if (!waitingResponse)
+                catch 
                 {
-                    _logger.LogWarning("Transaction {sig} failed to confirm, retry {retry}/{max}",
-                        sendingResponse.Result, retriesCount, MAX_REQUESTS_RETRIES);
-                    continue;
-                }
-
-                return sendingResponse.Result;
+                    return null; 
+                }               
             }
 
             _logger.LogCritical("Failed to send message {message}", message);
