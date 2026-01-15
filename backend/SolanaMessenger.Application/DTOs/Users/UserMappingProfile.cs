@@ -18,6 +18,8 @@ namespace SolanaMessenger.Application.DTOs.Users
                     dest => dest.X25519Pub,
                     opt => opt.ConvertUsing(new StringToByteArrConverter(), src => src.X25519Pub)
                 );
+
+            CreateMap<UserData, UserMinDTO>();
         }
     }
 }

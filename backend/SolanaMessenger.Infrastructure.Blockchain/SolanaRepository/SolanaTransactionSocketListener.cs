@@ -4,7 +4,6 @@ using Solnet.Rpc;
 using Solnet.Rpc.Core.Sockets;
 using Solnet.Rpc.Types;
 using System.Collections.Concurrent;
-using System.Net;
 using System.Net.WebSockets;
 using System.Text.Json;
 
@@ -28,7 +27,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         public SolanaTransactionSocketListener(ILoggerFactory loggerFactory, IOptions<SolanaSettings> solOpts)
         {
-           
+
             _logger = loggerFactory.CreateLogger<SolanaTransactionSocketListener>();
             _settings = solOpts.Value;
 
@@ -39,8 +38,8 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 {
                     IsConnectionAlive = false;
                     _logger.LogWarning($"Connection status: {status.ToString()}, stopping all listening tasks, trying to reconnect");
-                    
-                    foreach(var kvp in _pendingSignatures.ToList())
+
+                    foreach (var kvp in _pendingSignatures.ToList())
                     {
                         _pendingSignatures.TryRemove(kvp.Key, out var ewp);
                         using (ewp)
@@ -50,7 +49,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                     }
 
                     int counter = 1;
-                    while (true) 
+                    while (true)
                     {
                         _logger.LogWarning($"Connection try: {counter++}");
                         StartConnection();
@@ -62,7 +61,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                         Thread.Sleep(SOCKET_RECONNECT_TIME);
                     }
                 }
-            };            
+            };
         }
 
         internal Task<TransactionResult> WaitTransactionConfirmation(string signature)
@@ -124,7 +123,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                         }
                     },
                     Commitment.Confirmed
-                );            
+                );
             }
             catch (AggregateException ex)
             {
@@ -138,7 +137,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             IsConnectionAlive = false;
             _wssClient?.Unsubscribe(_subscriptionState);
             _logger.LogInformation("Solana RPC Streaming listener successfully closed connection");
-        }        
+        }
     }
 
     internal class EventWaitingPayload : IDisposable

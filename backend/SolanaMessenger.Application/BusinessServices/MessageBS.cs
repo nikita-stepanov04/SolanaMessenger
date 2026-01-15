@@ -14,13 +14,13 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IMessageRepository _messageRep;
         private readonly IBlockchainRepository<MessageData> _messageBlockchainRep;
         private readonly INewMessageNotificator _newMessageNotificator;
-        private readonly ChatSettings _chatSettings;
+        private readonly RequestSettings _chatSettings;
 
         public MessageBS(
             IMapper mapper,
             IMessageRepository messageRep,
             IBlockchainRepository<MessageData> blockchainMessageRep,
-            IOptions<ChatSettings> chatOpts,
+            IOptions<RequestSettings> chatOpts,
             IChatRepository chatRep,
             INewMessageNotificator newMessageNotificator)
         {

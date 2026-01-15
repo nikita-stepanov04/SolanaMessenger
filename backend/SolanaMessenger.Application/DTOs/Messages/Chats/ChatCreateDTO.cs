@@ -9,7 +9,7 @@ namespace SolanaMessenger.Application.DTOs
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Chat users list is required")]
-        [MinLength(2, ErrorMessage = "Chat must have at least 2 participants")]
+        [Length(2, 10, ErrorMessage = "Chat must include between 2 and 10 participants")]
         public List<Guid> ChatUsersIDs { get; set; } = new();
     }
 

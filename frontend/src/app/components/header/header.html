@@ -4,6 +4,16 @@
     <h1 class="fs-5 fw-semibold">Solana Messenger</h1>
   </div>
 
+  @if (isAdmin$ | async) {
+    <div class="me-2">
+      <app-tooltip text="{{ 'str041' | translate }}" placement="left">
+        <button (click)="toChatCreatePage()" class="btn btn-outline-dark btn-sm px-2">
+          <i class="fa-solid fa-comment-medical"></i>
+        </button>
+      </app-tooltip>
+    </div>
+  }
+
   <div class="me-2">
     <app-language-select class="btn-outline-dark"></app-language-select>
   </div>

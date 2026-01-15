@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoginInput} from '../../components/inputs/login-input/login-input';
-import {AuthTemplate} from '../../templates/auth/auth-template';
+import {FormTemplate} from '../../templates/form-template/form-template';
 import {TranslatePipe} from '@ngx-translate/core';
 import {PasswordInput} from '../../components/inputs/password-input/password-input';
 import {UserLoginInfo} from '../../state/auth/models/req/userLoginInfo';
@@ -18,7 +18,7 @@ import {AuthActions} from '../../state/auth/auth-actions';
   imports: [
     ReactiveFormsModule,
     LoginInput,
-    AuthTemplate,
+    FormTemplate,
     TranslatePipe,
     PasswordInput,
     DefaultButton,

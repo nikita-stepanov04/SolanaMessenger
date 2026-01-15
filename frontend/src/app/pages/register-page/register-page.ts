@@ -1,5 +1,5 @@
 import {Component, signal} from '@angular/core';
-import {AuthTemplate} from '../../templates/auth/auth-template';
+import {FormTemplate} from '../../templates/form-template/form-template';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../state/auth/auth-service';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -22,7 +22,7 @@ import {AuthActions} from '../../state/auth/auth-actions';
 @Component({
   selector: 'app-register-page',
   imports: [
-    AuthTemplate,
+    FormTemplate,
     ReactiveFormsModule,
     TranslatePipe,
     LoginInput,

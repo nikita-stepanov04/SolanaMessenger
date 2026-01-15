@@ -3,6 +3,7 @@ import {ChatUsersData} from '../state/chats/chats-models';
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import {environment} from '../../environments/environment';
 import {LinuxMicrosecondTimestamp} from './timestamp';
+import {UserInfo} from '../state/auth/models/resp/userInfo';
 
 export function stringFormat(str: string, ...args: (string | number)[]): string {
   return str.replace(/{(\d+)}/g, (match, index) => {
@@ -31,7 +32,7 @@ export function normalizeName(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-export function localizeName(user: ChatUsersData, shortened: boolean, nameNotation: NameNotation) {
+export function localizeName(user: ChatUsersData | UserInfo, shortened: boolean, nameNotation: NameNotation) {
   const firstName = shortened ? getInitial(user.firstName) : normalizeName(user.firstName);
   const lastName = shortened ? normalizeName(user.secondName) : normalizeName(user.secondName);
   const patronymic = shortened ? getInitial(user.patronymic) : normalizeName(user.patronymic);

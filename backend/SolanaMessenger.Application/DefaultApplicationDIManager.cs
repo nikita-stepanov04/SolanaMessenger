@@ -30,8 +30,8 @@ namespace SolanaMessenger.Application
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-            services.AddOptions<ChatSettings>()
-                .BindConfiguration("Chat")
+            services.AddOptions<RequestSettings>()
+                .BindConfiguration("Requests")
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 

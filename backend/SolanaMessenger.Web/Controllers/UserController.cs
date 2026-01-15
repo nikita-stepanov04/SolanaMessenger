@@ -4,6 +4,7 @@ using SolanaMessenger.Application;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
 using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
+using SolanaMessenger.Application.DTOs.Users;
 using SolanaMessenger.Web.Identity;
 using SolanaMessenger.Web.Models;
 
@@ -25,10 +26,21 @@ namespace SolanaMessenger.Web.Controllers
 
         [HttpGet("{login}")]
         [ProducesResponseType<UserDTO>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByLogin([FromRoute] string login)
         {
-            var user = await _userBS.GetByLoginAsync(login);
-            return Ok(user);
+            var user = await _userBS.GetByLoginAsync(login);           
+            return user != null 
+                ? Ok(user)
+                : NotFound();
+        }
+
+        [HttpGet("search/{loginSubstring}")]
+        [ProducesResponseType<List<UserMinDTO>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchByLoginSubstring([FromRoute] string loginSubstring)
+        {
+            var users = await _userBS.GetByLoginSubstring(loginSubstring);
+            return Ok(users);
         }
 
         [HttpGet("check-login/{login}")]

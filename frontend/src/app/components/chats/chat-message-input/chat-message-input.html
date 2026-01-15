@@ -1,11 +1,22 @@
-<div class="mb-2 d-flex align-items-center">
+<div class="mb-2 d-flex align-items-center position-relative">
+  @if (writingMessage$()) {
+    <span
+        class="ms-2 badge text-dark bg-white border position-absolute start-0"
+        style="top: -2rem;">
+      {{ messageLength$() }} / {{ MAX_MESSAGE_LENGTH }}
+    </span>
+  }
+
   <div class="w-100 d-flex flex-row">
     <div class="flex-grow-1">
       <textarea #messageInput
         class="form-control chat-input rounded-5"
         rows="1"
+        [maxLength]="MAX_MESSAGE_LENGTH"
         placeholder="{{'str038' | translate}}"
         (input)="onInput()"
+        (blur)="writingMessage$.set(false)"
+        (focus)="writingMessage$.set(true)"
         (keydown)="onKeyDown($event)"
         appAutoResize></textarea>
     </div>

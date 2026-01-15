@@ -6,6 +6,8 @@ export class UserInfo {
     public firstName: string,
     public secondName: string,
     public patronymic: string,
-    public role: string
+    public role: string,
+
+    public formatedName: string
   ) {}
 }

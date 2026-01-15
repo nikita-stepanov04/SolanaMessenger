@@ -1,0 +1,90 @@
+<app-form-template [isWide]="true">
+  <form class="form" [formGroup]="createChatForm" (ngSubmit)="onSubmit()">
+    <h3 class="text-center mb-3">{{ 'str041' | translate }}</h3>
+
+    <div class="mb-3">
+      <app-text-input
+        label="{{ 'str042' | translate }}"
+        placeholder="{{ 'str043' | translate }}"
+        controlName="name"
+        [minLength]="3"
+        [maxLength]="50"
+        [parentForm]="createChatForm">
+      </app-text-input>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label ms-2">{{'str045' | translate}}</label>
+      <div class="d-flex">
+
+        <div class="w-50 me-1">
+          <div class="d-flex align-items-center">
+            <div class="px-1 flex-grow-1">
+              <div>
+                <div class="input-group has-validation">
+                  <span class="input-group-text" id="addon-wrapping">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </span>
+                  <input
+                    #userSearchInput
+                    type="text"
+                    class="form-control text-truncate"
+                    [class.is-invalid]="fh.isInvalid(createChatForm.get('userSearch'))"
+                    placeholder="{{ 'str044' | translate }}"
+                    (input)="clearUserSearchError()"
+                    (selectItem)="onUserSelected($event)"
+                    [ngbTypeahead]="search"
+                    formControlName="userSearch"
+                    [resultFormatter]="userSearchResultFormat"
+                    [inputFormatter]="userSearchResultFormat"
+                  />
+                  <div class="invalid-feedback">
+                    @if (fh.hasError(createChatForm.get('userSearch'), 'notEnoughUsers')) {
+                      <span>{{ 'str048' | translate }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            @if (loadingUsers$()) {
+              <div class="ms-1">
+                <app-spinner></app-spinner>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="w-50 ms-1 rounded bg-white border px-2 pb-2 pt-1">
+          @for (user of selectedUsers$(); track user.id) {
+            <div class="bg-light rounded border px-2 py-1 d-flex mt-1">
+              <div class="flex-grow-1 text-truncate">
+                {{user.formatedName}}
+              </div>
+              <div>
+                <app-close-button
+                  (onClickEvent)="onUserRemove(user.id)"
+                  [class]="'text-dark cursor-pointer'">
+                </app-close-button>
+              </div>
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+
+    <div class="d-grid mt-4 mb-2">
+      <app-default-button
+        text="{{'str050' | translate }}"
+        [disabled$]="of(createChatForm.invalid)"
+        [loading$]="creatingChat$">
+      </app-default-button>
+      <app-router-link
+        text="{{'str051' | translate }}"
+        [path]="RoutePath.Chats">
+      </app-router-link>
+    </div>
+
+  </form>
+</app-form-template>

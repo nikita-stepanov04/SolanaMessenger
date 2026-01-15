@@ -2,8 +2,9 @@
 
 namespace SolanaMessenger.Application
 {
-    public class ChatSettings
+    public class RequestSettings
     {
         [Required] public int MessagesPerRequest { get; set; }
+        [Required] public int UsersPerSearch { get; set; }
     }
 }

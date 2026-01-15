@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
+using SolanaMessenger.Application.DTOs.Users;
 using SolanaMessenger.Domain.Entities;
 using SolanaMessenger.Infrastructure;
 using SolanaMessenger.Infrastructure.Blockchain;
@@ -15,24 +16,27 @@ namespace SolanaMessenger.Application.BusinessServices
         private readonly IBlockchainRepository<UserData> _blockchainRep;
 
         private readonly AdminSettings _adminSettings;
+        private readonly RequestSettings _requestSettings;
 
         public UserBS(
             IMapper mapper,
             IUserRepository userRep,
             IBlockchainRepository<UserData> blockchainRep,
-            IOptions<AdminSettings> adminOpts)
+            IOptions<AdminSettings> adminOpts,
+            IOptions<RequestSettings> requestOpts)
         {
             _mapper = mapper;
             _userRep = userRep;
             _blockchainRep = blockchainRep;
             _adminSettings = adminOpts.Value;
+            _requestSettings = requestOpts.Value;
         }
 
         public async Task<UserDTO?> GetByLoginAsync(string login)
         {
             var user = await _userRep.GetByLoginAsync(login);
 
-            var userData = user != null 
+            var userData = user != null
                 ? await _blockchainRep.GetObjectAsync(user.Signatures)
                 : null;
 
@@ -52,7 +56,7 @@ namespace SolanaMessenger.Application.BusinessServices
                 userDTO.MasterPassword != _adminSettings.AdminMasterPassword)
             {
                 return OpRes.Err<Guid>("Invalid master password for admin registration");
-            }            
+            }
 
             var id = Guid.NewGuid();
             userData.ID = id;
@@ -62,7 +66,7 @@ namespace SolanaMessenger.Application.BusinessServices
             userData.Salt = hashRes.Salt;
 
             var signatures = await _blockchainRep.WriteObjectAsync(userData);
-            if (signatures == null) 
+            if (signatures == null)
                 return OpRes.Err<Guid>();
 
             var user = new User
@@ -74,7 +78,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             await _userRep.AddAsync(user);
             await _userRep.SaveChangesAsync();
-            return OpRes.Success(user.ID);           
+            return OpRes.Success(user.ID);
         }
 
         public async Task<bool> IsLoginNotTakenAsync(string login)
@@ -98,5 +102,17 @@ namespace SolanaMessenger.Application.BusinessServices
 
             return _mapper.Map<UserDTO>(userData);
         }
-    }    
+
+        public async Task<List<UserMinDTO>> GetByLoginSubstring(string loginSubstring)
+        {
+            var users = await _userRep.GetByLoginSubstring(loginSubstring, _requestSettings.UsersPerSearch);
+            var tasks = users.Select(u => _blockchainRep.GetObjectAsync(u.Signatures));
+
+            var usersData = await Task.WhenAll(tasks);
+            usersData = usersData.Where(u => u != null).ToArray();
+
+            var userDTOs = _mapper.Map<List<UserMinDTO>>(usersData);
+            return userDTOs;
+        }
+    }
 }

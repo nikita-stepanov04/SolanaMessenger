@@ -5,7 +5,6 @@ using SolanaMessenger.Application.Notification;
 using SolanaMessenger.Domain.Entities;
 using SolanaMessenger.Infrastructure;
 using SolanaMessenger.Infrastructure.Blockchain;
-using System;
 
 namespace SolanaMessenger.Application.BusinessServices
 {
@@ -120,7 +119,7 @@ namespace SolanaMessenger.Application.BusinessServices
 
             var chatData = await _blockchainChatRep.GetObjectAsync(chat.Signatures);
 
-            if (chatData == null) 
+            if (chatData == null)
                 return OpRes.Err<ChatDTO>();
 
             var dto = _mapper.Map<ChatDTO>(chatData, opts => opts.Items["UserID"] = userID);

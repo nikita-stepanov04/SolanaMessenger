@@ -4,11 +4,13 @@ import {ChatPage} from './pages/chat-page/chat-page';
 import {RegisterPage} from './pages/register-page/register-page';
 import {Polices} from '@models/enums/policies';
 import {AuthGuardService} from './services/auth-guard-service';
+import {CreateChatPage} from './pages/create-chat-page/create-chat-page';
 
 export enum RoutePath {
   Login = 'login',
   Chats = 'chats',
   Register = 'register',
+  CreateChat = 'create-chat',
 }
 
 export const routes: Routes = [
@@ -32,6 +34,13 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
     title: 'str004',
     data: { policy: Polices.NotAuthorized }
+  },
+  {
+    path: RoutePath.CreateChat,
+    component: CreateChatPage,
+    canActivate: [AuthGuardService],
+    title: 'str041',
+    data: { policy: Polices.AuthorizedAdmins }
   },
   {
     path: '',

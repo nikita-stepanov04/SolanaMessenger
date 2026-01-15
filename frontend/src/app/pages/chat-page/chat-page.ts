@@ -119,6 +119,7 @@ export class ChatPage implements OnInit {
         if (messages.length >= required && !endReached)
           this.subscribeForScroll();
 
+        // Scroll on new message or sending message
         this.newMessageSub = this.actions.pipe(
           ofType(
             MessagesActions.newMessage,
@@ -127,7 +128,7 @@ export class ChatPage implements OnInit {
         ).subscribe(action => {
           if (selectedChat!.id == action.message.chatID) {
             this.messagesViewport!.renderedRangeStream.pipe(
-              take(1)
+              take(1),
             ).subscribe(() =>
               setTimeout(() => this.messagesViewport!.scrollToOffset(Number.MAX_SAFE_INTEGER))
             );

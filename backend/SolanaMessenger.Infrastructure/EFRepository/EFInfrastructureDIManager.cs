@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Domain;
+using System;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
@@ -9,8 +10,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
     {
         public IServiceCollection SetupDI(IServiceCollection services, IConfiguration config)
         {
-            string? dbConnection = config
-                .GetConnectionString("DbConnection");
+            string? dbConnection = config.GetConnectionString("DbConnection");
 
             if (dbConnection == null) throw new ArgumentNullException("DbConnection is not defined");
 
@@ -19,6 +19,10 @@ namespace SolanaMessenger.Infrastructure.EFRepository
                 opts.UseLazyLoadingProxies();
                 opts.UseNpgsql(dbConnection, dbOpts =>
                     dbOpts.MigrationsAssembly("SolanaMessenger.Infrastructure"));
+
+                #if DEBUG
+                    opts.EnableSensitiveDataLogging();
+                #endif
             });
 
             services.SetupEFDependencyInjection();

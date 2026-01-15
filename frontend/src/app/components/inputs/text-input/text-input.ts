@@ -3,12 +3,14 @@ import { InputBase} from '../input-base';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {stringFormat} from '../../../helpers/format';
+import {TrimInputDirective} from '../trim-input-directive';
 
 @Component({
   selector: 'app-text-input',
   imports: [
     ReactiveFormsModule,
-    TranslatePipe
+    TranslatePipe,
+    TrimInputDirective,
   ],
   templateUrl: './text-input.html',
   styles: ``,

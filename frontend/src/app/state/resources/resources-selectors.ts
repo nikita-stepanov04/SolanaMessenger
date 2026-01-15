@@ -3,6 +3,7 @@ import {ResourcesState} from './resources-reducers';
 import {ResourcesAvailable} from './models/resources-available';
 import {ChatUsersData} from '../chats/chats-models';
 import {formatTime, formatDate, localizeName} from '../../helpers/format';
+import {UserInfo} from '../auth/models/resp/userInfo';
 
 const selectResourceState = createFeatureSelector<ResourcesState>('resources');
 
@@ -27,7 +28,7 @@ export const ResourcesSelectors = {
     countryCode => formatTime(date, countryCode),
   ),
 
-  formatPersonName: (user: ChatUsersData, shortened: boolean) => createSelector(
+  formatPersonName: (user: ChatUsersData | UserInfo, shortened: boolean) => createSelector(
     ResourcesSelectors.selectNameNotation,
     nameNotation => localizeName(user, shortened, nameNotation)
   )

@@ -13,6 +13,13 @@ export class Chat {
   ) {}
 }
 
+export class CreateChat {
+  constructor(
+    public name: string,
+    public chatUsersIDs: string[],
+  ) {}
+}
+
 export class UserPayload {
   constructor(
     public ephemeralPublicKey: string,

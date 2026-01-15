@@ -2,7 +2,7 @@
   @if (label) {
     <label class="form-label ms-2">{{label}}</label>
   }
-  <input
+  <input trimInput
     type="text"
     class="form-control"
     (blur)="blurEvent.emit()"
