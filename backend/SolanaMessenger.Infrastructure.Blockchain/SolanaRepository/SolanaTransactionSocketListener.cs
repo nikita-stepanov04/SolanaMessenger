@@ -27,41 +27,9 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         public SolanaTransactionSocketListener(ILoggerFactory loggerFactory, IOptions<SolanaSettings> solOpts)
         {
-
             _logger = loggerFactory.CreateLogger<SolanaTransactionSocketListener>();
             _settings = solOpts.Value;
-
-            StartConnection();
-            _wssClient!.ConnectionStateChangedEvent += (_, status) =>
-            {
-                if (status == WebSocketState.CloseReceived || status == WebSocketState.Aborted)
-                {
-                    IsConnectionAlive = false;
-                    _logger.LogWarning($"Connection status: {status.ToString()}, stopping all listening tasks, trying to reconnect");
-
-                    foreach (var kvp in _pendingSignatures.ToList())
-                    {
-                        _pendingSignatures.TryRemove(kvp.Key, out var ewp);
-                        using (ewp)
-                        {
-                            ewp?.Tcs.TrySetResult(TransactionResult.NotAwaited);
-                        }
-                    }
-
-                    int counter = 1;
-                    while (true)
-                    {
-                        _logger.LogWarning($"Connection try: {counter++}");
-                        StartConnection();
-
-                        if (IsConnectionAlive)
-                            break;
-
-                        _logger.LogWarning($"Reconnect after : {SOCKET_RECONNECT_TIME}ms");
-                        Thread.Sleep(SOCKET_RECONNECT_TIME);
-                    }
-                }
-            };
+            StartConnection();            
         }
 
         internal Task<TransactionResult> WaitTransactionConfirmation(string signature)
@@ -124,6 +92,37 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                     },
                     Commitment.Confirmed
                 );
+
+                _wssClient!.ConnectionStateChangedEvent += (_, status) =>
+                {
+                    if (status == WebSocketState.CloseReceived || status == WebSocketState.Aborted)
+                    {
+                        IsConnectionAlive = false;
+                        _logger.LogWarning($"Connection status: {status.ToString()}, stopping all listening tasks, trying to reconnect");
+
+                        foreach (var kvp in _pendingSignatures.ToList())
+                        {
+                            _pendingSignatures.TryRemove(kvp.Key, out var ewp);
+                            using (ewp)
+                            {
+                                ewp?.Tcs.TrySetResult(TransactionResult.NotAwaited);
+                            }
+                        }
+
+                        int counter = 1;
+                        while (true)
+                        {
+                            _logger.LogWarning($"Connection try: {counter++}");
+                            StartConnection();
+
+                            if (IsConnectionAlive)
+                                break;
+
+                            _logger.LogWarning($"Reconnect after : {SOCKET_RECONNECT_TIME}ms");
+                            Thread.Sleep(SOCKET_RECONNECT_TIME);
+                        }
+                    }
+                };
             }
             catch (AggregateException ex)
             {

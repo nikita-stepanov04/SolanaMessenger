@@ -44,7 +44,7 @@ export class MessagesEffects {
     )
   );
 
-  sendMessages$ = createEffect(() =>
+  sendMessage$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MessagesActions.sendMessage),
       withLatestFrom(this.store.select(ChatsSelectors.openedChat)),
