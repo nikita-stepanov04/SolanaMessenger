@@ -11,7 +11,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
     public class SolanaTransactionSocketListener : IDisposable
     {
-        private const int AWAITING_TIMEOUT = 30 * 1000;
+        private const int AWAITING_TIMEOUT = 120 * 1000;
         private const int SOCKET_RECONNECT_TIME = 5 * 1000;
         private const string DEV_WSS_ENDPOINT = "wss://api.devnet.solana.com";
         private const string MAIN_WSS_ENDPOINT = "wss://api.mainnet-beta.solana.com";
