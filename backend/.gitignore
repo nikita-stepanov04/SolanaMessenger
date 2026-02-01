@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /SolanaMessenger.Tests/SolanaTests/config.json
 /build
 /obj
+/SolanaMessenger.Web/appsettings.Production.json
