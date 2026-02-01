@@ -116,11 +116,11 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 try
                 {
                     var tx = new TransactionBuilder()
-                   .SetFeePayer(_account)
-                   .AddInstruction(ComputeBudgetProgram.SetComputeUnitLimit(TRANSACTION_COMPUTING_UNITS))
-                   .AddInstruction(memoInstruction)
-                   .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
-                   .Build(_account);
+                       .SetFeePayer(_account)
+                       .AddInstruction(ComputeBudgetProgram.SetComputeUnitLimit(TRANSACTION_COMPUTING_UNITS))
+                       .AddInstruction(memoInstruction)
+                       .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
+                       .Build(_account);
 
                     var sendingResponse = await _rpcClient.SendTransactionAsync(tx);
 
