@@ -5,7 +5,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 {
     public class EFMessageRepository : EFRepositoryBase<Message>, IMessageRepository
     {
-        public EFMessageRepository(EFDataContext context) 
+        public EFMessageRepository(EFDataContext context)
             : base(context) { }
 
         public Task<List<Message>> GetMessagesAsync(Guid chatID, int count, long lastMessageTimestamp = 0)

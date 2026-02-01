@@ -6,7 +6,7 @@ namespace SolanaMessenger.Application.DTOs.Users
 {
     public class UserMappingProfile : Profile
     {
-        public UserMappingProfile() 
+        public UserMappingProfile()
         {
             CreateMap<UserData, UserDTO>()
                 .ForMember(

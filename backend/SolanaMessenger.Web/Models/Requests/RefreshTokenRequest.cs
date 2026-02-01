@@ -1,5 +1,5 @@
 ﻿namespace SolanaMessenger.Web.Models
-{ 
+{
     public class RefreshTokenRequest
     {
         public RefreshTokenRequest(string refreshToken)

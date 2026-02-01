@@ -1,5 +1,5 @@
 ﻿namespace SolanaMessenger.Application.DTOs
-{ 
+{
     public class MessageDTO : DTOBase
     {
         public Guid ID { get; set; }

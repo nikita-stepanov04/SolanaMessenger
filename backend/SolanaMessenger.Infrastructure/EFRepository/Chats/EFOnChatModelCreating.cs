@@ -9,7 +9,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         protected override void OnModelCreating(EntityTypeBuilder<Chat> model)
         {
             model.Property(e => e.Name)
-                .HasColumnType("varchar(50)");            
+                .HasColumnType("varchar(50)");
         }
     }
 }

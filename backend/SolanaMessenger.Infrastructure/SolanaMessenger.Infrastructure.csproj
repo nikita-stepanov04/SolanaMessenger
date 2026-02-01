@@ -26,6 +26,5 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<OutputPath>$(SolutionDir)build\</OutputPath>
-		<BaseIntermediateOutputPath>$(SolutionDir)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
 	</PropertyGroup>
 </Project>

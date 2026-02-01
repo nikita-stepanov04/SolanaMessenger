@@ -10,7 +10,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 
         public DbSet<TEntity> DbSet => DbContext.Set<TEntity>();
 
-        public EFRepositoryBase(EFDataContext context) 
+        public EFRepositoryBase(EFDataContext context)
         {
             DbContext = context;
         }
@@ -18,7 +18,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         public async Task AddAsync(TEntity entity)
         {
             await DbContext.Set<TEntity>().AddAsync(entity);
-        }       
+        }
 
         public async Task<TEntity?> GetByIDAsync(Guid id)
         {

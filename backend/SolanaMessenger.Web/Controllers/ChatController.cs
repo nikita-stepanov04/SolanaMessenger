@@ -41,7 +41,7 @@ namespace SolanaMessenger.Web.Controllers
 
             if (result.HasError)
                 return NotFound(new MessageResponse(result.ErrorMessage));
-            
+
             return Ok(result.Result);
         }
 

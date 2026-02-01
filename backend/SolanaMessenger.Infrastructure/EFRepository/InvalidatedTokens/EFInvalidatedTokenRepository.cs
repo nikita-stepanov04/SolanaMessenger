@@ -5,7 +5,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 {
     public class EFInvalidatedTokenRepository : EFRepositoryBase<InvalidatedToken>, IInvalidatedTokenRepository
     {
-        public EFInvalidatedTokenRepository(EFDataContext context) 
+        public EFInvalidatedTokenRepository(EFDataContext context)
             : base(context) { }
 
         public Task<bool> IsTokenPresentAsync(string tokenId)

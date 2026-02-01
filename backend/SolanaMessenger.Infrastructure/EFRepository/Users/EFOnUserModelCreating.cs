@@ -10,7 +10,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         {
             model.HasIndex(e => e.Login)
                 .IsUnique();
-            
+
             model.Property(e => e.Login)
                 .HasColumnType("varchar(50)");
         }

@@ -1,5 +1,6 @@
 ﻿namespace SolanaMessenger.Infrastructure.Blockchain
 {
-    public class ObjectTooLargeException 
-        : Exception { }
+    public class ObjectTooLargeException
+        : Exception
+    { }
 }

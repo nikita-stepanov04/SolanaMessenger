@@ -1,7 +1,5 @@
 using SolanaMessenger.Application;
 using SolanaMessenger.Domain;
-using SolanaMessenger.Infrastructure;
-using SolanaMessenger.Infrastructure.Blockchain;
 using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository;
 using SolanaMessenger.Infrastructure.EFRepository;
 using SolanaMessenger.Web.Configuration;
@@ -51,6 +49,7 @@ namespace SolanaMessenger.Web
             app.MapControllers();
             app.MapHubs();
 
+            app.Services.ApplyMigrations();
             app.Run();
         }
     }

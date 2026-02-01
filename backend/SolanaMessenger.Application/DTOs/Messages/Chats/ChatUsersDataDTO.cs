@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SolanaMessenger.Application.DTOs
+﻿namespace SolanaMessenger.Application.DTOs
 {
     public class ChatUsersDataDTO
     {

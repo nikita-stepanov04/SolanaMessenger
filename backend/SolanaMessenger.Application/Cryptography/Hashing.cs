@@ -1,6 +1,6 @@
-﻿using NCrypto = NSec.Cryptography;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using NCrypto = NSec.Cryptography;
 
 namespace SolanaMessenger.Application.Cryptography
 {
@@ -14,7 +14,7 @@ namespace SolanaMessenger.Application.Cryptography
 
         public static byte[] Sha256(params List<byte[]> parts) => Sha256(null, parts);
 
-        public static byte[] Sha256(params List<string> parts) => 
+        public static byte[] Sha256(params List<string> parts) =>
             Sha256(null, parts.Select(Encoding.UTF8.GetBytes).ToList());
 
         public static byte[] Sha256(string? label, params List<byte[]> parts)
@@ -31,8 +31,8 @@ namespace SolanaMessenger.Application.Cryptography
         public static PBKDF2Result PBKDF2(string password, byte[]? salt = null)
         {
             salt = salt ?? RandomNumberGenerator.GetBytes(PBKDF2_SALT_SIZE);
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, PBKDF2_ITERATIONS, HashAlgorithmName.SHA256);
-            var hash = pbkdf2.GetBytes(PBKDF2_HASH_LENGTH);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 
+                PBKDF2_ITERATIONS, HashAlgorithmName.SHA256, PBKDF2_HASH_LENGTH);
 
             return new PBKDF2Result
             {

@@ -5,16 +5,16 @@ using Serilog.Settings.Configuration;
 
 namespace SolanaMessenger.Web.Configuration
 {
-    public static class ConfigureLogger 
+    public static class ConfigureLogger
     {
         public static void SetupLogger(this WebApplicationBuilder builder)
         {
             var logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(
-                    builder.Configuration, 
-                    new ConfigurationReaderOptions 
-                    { 
-                        SectionName = "Serilog" 
+                    builder.Configuration,
+                    new ConfigurationReaderOptions
+                    {
+                        SectionName = "Serilog"
                     })
                 .Enrich.FromLogContext()
                 .Enrich.With<ShortSourceContextEnricher>()
@@ -33,7 +33,7 @@ namespace SolanaMessenger.Web.Configuration
                 .CreateLogger();
 
             Log.Logger = logger;
-            builder.Host.UseSerilog(logger, dispose: true);       
+            builder.Host.UseSerilog(logger, dispose: true);
         }
     }
 

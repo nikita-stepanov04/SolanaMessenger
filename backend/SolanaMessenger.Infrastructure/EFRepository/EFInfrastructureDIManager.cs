@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Domain;
-using System;
 
 namespace SolanaMessenger.Infrastructure.EFRepository
 {
@@ -30,4 +29,17 @@ namespace SolanaMessenger.Infrastructure.EFRepository
             return services;
         }
     }
+
+    public static class StartUpDb
+    {
+        public static void ApplyMigrations(this IServiceProvider services)
+        {
+            using (var scope = services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<EFDataContext>();
+                db.Database.Migrate();
+            }
+        }
+    }     
+
 }

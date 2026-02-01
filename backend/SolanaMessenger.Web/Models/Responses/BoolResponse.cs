@@ -2,7 +2,7 @@
 {
     public class BoolResponse
     {
-        public BoolResponse(bool result) 
+        public BoolResponse(bool result)
         {
             Result = result;
         }

@@ -1,6 +1,6 @@
-﻿using System.Text;
+﻿using Solnet.Wallet.Utilities;
+using System.Text;
 using System.Text.Json.Serialization;
-using Solnet.Wallet.Utilities;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
@@ -41,7 +41,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         internal string? GetMemoData()
         {
-            var message = Result.Transaction.Message;            
+            var message = Result.Transaction.Message;
 
             var memoDataProgramIndex = message.AccountKeys.FindIndex(ak => ak.StartsWith("Memo"));
             if (memoDataProgramIndex != -1)
@@ -50,7 +50,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                 var decodedData = Encoders.Base58.DecodeData(base58Data);
                 return Encoding.UTF8.GetString(decodedData);
             }
-            
+
             return null;
         }
     }

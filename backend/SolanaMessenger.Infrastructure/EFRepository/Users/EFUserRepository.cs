@@ -5,7 +5,7 @@ namespace SolanaMessenger.Infrastructure.EFRepository
 {
     public class EFUserRepository : EFRepositoryBase<User>, IUserRepository
     {
-        public EFUserRepository(EFDataContext context) 
+        public EFUserRepository(EFDataContext context)
             : base(context) { }
 
         public Task<User?> GetByLoginAsync(string login)

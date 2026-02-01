@@ -6,7 +6,7 @@ using SolanaMessenger.Web.Hubs;
 
 namespace SolanaMessenger.Web
 {
-    public class NewChatNotificator(IServiceScopeFactory serviceScopeFactory) 
+    public class NewChatNotificator(IServiceScopeFactory serviceScopeFactory)
         : NotificatorBase<ChatHub, ChatCreatedDTO>(serviceScopeFactory), INewChatNotificator
     {
         const string EVENT_NAME = "userAddedToChat";

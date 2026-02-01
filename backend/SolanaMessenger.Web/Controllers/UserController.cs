@@ -29,8 +29,8 @@ namespace SolanaMessenger.Web.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByLogin([FromRoute] string login)
         {
-            var user = await _userBS.GetByLoginAsync(login);           
-            return user != null 
+            var user = await _userBS.GetByLoginAsync(login);
+            return user != null
                 ? Ok(user)
                 : NotFound();
         }

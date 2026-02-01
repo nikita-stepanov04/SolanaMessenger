@@ -65,7 +65,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         }
 
         private async Task<string?> GetTransactionAsync(string signature)
-        {            
+        {
             var payload = new
             {
                 id = 1,

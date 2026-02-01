@@ -4,12 +4,12 @@ namespace SolanaMessenger.Application
 {
     public record struct OpRes<TResult>
     {
-        public TResult? Result { get; set; }        
+        public TResult? Result { get; set; }
         public string? ErrorMessage { get; set; }
 
         [MemberNotNullWhen(false, nameof(Result))]
         [MemberNotNullWhen(true, nameof(ErrorMessage))]
-        public bool HasError => !string.IsNullOrEmpty(ErrorMessage);        
+        public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
     }
 
     public static class OpRes

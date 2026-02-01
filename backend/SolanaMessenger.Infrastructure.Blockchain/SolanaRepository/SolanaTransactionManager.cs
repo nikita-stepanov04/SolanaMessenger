@@ -42,7 +42,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
         internal async Task<byte[]?> SendObjectAsync(TObject obj)
         {
-            if (!_solListener.IsConnectionAlive) 
+            if (!_solListener.IsConnectionAlive)
                 return null;
 
             var slices = SliceObject(obj);
@@ -145,10 +145,10 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 
                     return sendingResponse.Result;
                 }
-                catch 
+                catch
                 {
-                    return null; 
-                }               
+                    return null;
+                }
             }
 
             _logger.LogCritical("Failed to send message {message}", message);

@@ -1,5 +1,4 @@
-﻿using SolanaMessenger.Application.Cryptography;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SolanaMessenger.Web
 {
@@ -24,7 +23,7 @@ namespace SolanaMessenger.Web
 
             if (allowedHosts == null)
                 throw new Exception("Cors origins are not defined");
-            
+
             services.AddCors(opts =>
             {
                 opts.AddPolicy("AllowAll", builder =>

@@ -29,7 +29,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         {
             _logger = loggerFactory.CreateLogger<SolanaTransactionSocketListener>();
             _settings = solOpts.Value;
-            StartConnection();            
+            StartConnection();
         }
 
         internal Task<TransactionResult> WaitTransactionConfirmation(string signature)

@@ -3,6 +3,7 @@ using SolanaMessenger.Application;
 
 namespace SolanaMessenger.Web
 {
+    #pragma warning disable CS8618
     public abstract class NotificatorBase<THub, TNotificationType>
         : INotificator<TNotificationType>
         where THub : Hub
@@ -41,4 +42,5 @@ namespace SolanaMessenger.Web
 
         protected abstract Task NotifyAsync(TNotificationType notification, IServiceProvider services);
     }
+    #pragma warning restore CS8618
 }

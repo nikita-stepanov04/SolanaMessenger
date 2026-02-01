@@ -2,7 +2,7 @@
 {
     public class MessageResponse
     {
-        public MessageResponse(string message) 
+        public MessageResponse(string message)
         {
             Message = message;
         }

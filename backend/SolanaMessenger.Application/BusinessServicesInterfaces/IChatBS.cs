@@ -1,5 +1,4 @@
 ﻿using SolanaMessenger.Application.DTOs;
-using SolanaMessenger.Domain.Entities;
 
 namespace SolanaMessenger.Application
 {

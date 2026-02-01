@@ -3,5 +3,5 @@
 namespace SolanaMessenger.Application.Notification
 {
     public interface INewChatNotificator : INotificator<ChatCreatedDTO>
-    {}
+    { }
 }
