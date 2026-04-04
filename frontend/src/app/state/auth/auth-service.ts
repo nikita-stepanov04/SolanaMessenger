@@ -20,20 +20,28 @@ export class AuthService {
   private baseUrl = `${environment.apiBaseUrl}/api/user`;
   private registerUrl = `${this.baseUrl}/registration`;
   private refreshUrl = `${this.baseUrl}/refresh`;
+  private logoutUrl = `${this.baseUrl}/logout`;
   private loginUrl = `${this.baseUrl}/login`;
   private checkLoginUrl = `${this.baseUrl}/check-login`;
 
   constructor(private http: HttpClient) {}
 
-  login(loginInfo: UserLoginInfo): Observable<TokensInfo> {
+  public login(loginInfo: UserLoginInfo): Observable<TokensInfo> {
     return this.http.post<TokensInfo>(this.loginUrl,
       loginInfo,
       httpOptions
     );
   }
 
-  getUserInfo(login: string): Observable<UserInfo> {
+  public getUserInfo(login: string): Observable<UserInfo> {
     return this.http.get<UserInfo>(this.baseUrl + '/' + login);
+  }
+
+  public logout(refreshToken: string): Observable<any> {
+    return this.http
+      .post(this.logoutUrl, {
+        refreshToken: refreshToken
+      }, httpOptions);
   }
 
   public register(registerInfo: UserRegisterInfo): Observable<any> {

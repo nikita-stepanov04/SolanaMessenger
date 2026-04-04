@@ -11,7 +11,7 @@ namespace SolanaMessenger.Application.BusinessServicesInterfaces
         string GenerateRefreshToken();
         IEnumerable<Claim>? ValidateAccessTokenForRefresh(string token);
         IEnumerable<Claim>? ValidateRefreshTokenForRefresh(string token);
-        Task<bool> RevokeToken(string token);
+        Task<bool> RevokeToken(string token, bool isAccess);
         Task<InvalidatedToken?> GetByIDAsync(Guid id);
         Task<bool> IsTokenRevokedAsync(string token);
         Task<bool> IsTokenRevokedAsync(JwtSecurityToken jwtToken);

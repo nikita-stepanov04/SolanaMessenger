@@ -1,0 +1,11 @@
+<app-tooltip text="{{ 'str030' | translate }}" placement="left">
+  <button (click)="logout()" class="btn btn-outline-dark btn-sm px-2">
+    <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+    @if (loading$ | async) {
+      <app-spinner
+        [class]="'ms-2'"
+        [size]="0.95">
+      </app-spinner>
+    }
+  </button>
+</app-tooltip>

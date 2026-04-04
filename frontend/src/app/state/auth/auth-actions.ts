@@ -15,6 +15,8 @@ export const AuthActions = {
   loginError: createAction('[Login] Login Error', props<{ error: any }>()),
 
   logout: createAction('[Logout] Logout'),
+  logoutSuccess: createAction('[Logout] Logout Success'),
+  logoutError: createAction('[Logout] Logout Error', props<{ error: any }>()),
 
   register: createAction('[Register] Register', props<{ registerInfo: UserRegisterInfo }>()),
   registerSuccess: createAction('[Register] Register Success'),

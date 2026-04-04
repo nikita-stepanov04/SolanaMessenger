@@ -3,12 +3,12 @@ import {DefaultTooltip} from '../tooltip/default-tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
 import {LanguageSelect} from '../selects/language-select/language-select';
 import {Store} from '@ngrx/store';
-import {rootActions} from '../../state/root/root-actions';
 import {Router} from '@angular/router';
 import {RoutePath} from '../../app.routes';
 import {AuthSelectors} from '../../state/auth/auth.selectors';
 import {Polices} from '@models/enums/policies';
 import {AsyncPipe} from '@angular/common';
+import {LogoutButton} from '../buttons/logout-button/logout-button';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,8 @@ import {AsyncPipe} from '@angular/common';
     DefaultTooltip,
     TranslatePipe,
     LanguageSelect,
-    AsyncPipe
+    AsyncPipe,
+    LogoutButton
   ],
   templateUrl: './header.html',
   styles: ``,
@@ -24,11 +25,8 @@ import {AsyncPipe} from '@angular/common';
 export class Header{
   private store = inject(Store);
   private router = inject(Router);
+  protected isLogOuting$ = this.store.select((AuthSelectors.loading));
   protected isAdmin$ = this.store.select(AuthSelectors.isAuthorized(Polices.AuthorizedAdmins));
-
-  logout() {
-    this.store.dispatch(rootActions.clearStore());
-  }
 
   toChatCreatePage() {
     this.router.navigate([RoutePath.CreateChat]);

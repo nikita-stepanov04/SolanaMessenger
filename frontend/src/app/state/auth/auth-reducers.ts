@@ -62,5 +62,14 @@ export const authReducers = createReducer(
     tokenInfo: new TokensInfo(accessTokensInfo.accessToken, state.tokenInfo!.refreshToken)
   })),
   on(AuthActions.refreshError, (state, {error}) => ({ ...state, loading: false, loaded: false, error: error})),
+
+  // Logout
+  on(AuthActions.logout, state => ({...state, loading: true, loaded: false, error: null})),
+  on(AuthActions.logoutSuccess, (state) => ({
+    ...state,
+    loading: false,
+    loaded: true,
+  })),
+  on(AuthActions.logoutError, (state, {error}) => ({ ...state, loading: false, loaded: false, error: error})),
 )
 

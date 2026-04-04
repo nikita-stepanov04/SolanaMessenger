@@ -69,10 +69,32 @@ export class AuthEffects {
 
   logout$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(rootActions.clearStore),
-      exhaustMap(() => this.router.navigate([RoutePath.Login])),
-    ), { dispatch: false }
+      ofType(AuthActions.logout),
+      withLatestFrom(this.store.select(AuthSelectors.tokenInfo)),
+      exhaustMap(([_, tokenInfo]) =>
+        this.authService.logout(tokenInfo!.refreshToken).pipe(
+          map(() => AuthActions.logoutSuccess()),
+          catchError(err => of(AuthActions.logoutError({ error: err })))
+        )
+      ),
+    )
   );
+
+
+  logoutSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logoutSuccess),
+      tap(() => this.router.navigate([RoutePath.Login])),
+      map(() => rootActions.clearStore())
+    )
+  );
+
+  logoutError$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.registerError),
+      exhaustMap(() => this.resources.get('str032')),
+      tap(errorText => this.notifications.error(errorText))
+    ), { dispatch: false });
 
   register$ = createEffect(() =>
     this.actions$.pipe(

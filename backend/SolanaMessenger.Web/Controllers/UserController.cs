@@ -85,8 +85,8 @@ namespace SolanaMessenger.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest req)
         {
-            await _tokenBS.RevokeToken(AccessToken);
-            await _tokenBS.RevokeToken(req.RefreshToken);
+            await _tokenBS.RevokeToken(AccessToken, isAccess: true);
+            await _tokenBS.RevokeToken(req.RefreshToken, isAccess: false);
 
             return Ok();
         }

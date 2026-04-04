@@ -5,6 +5,7 @@ using SolanaMessenger.Application.Cryptography;
 using SolanaMessenger.Application.DTOs;
 using SolanaMessenger.Domain.Entities;
 using SolanaMessenger.Infrastructure;
+using SolanaMessenger.Infrastructure.Blockchain;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,16 +15,19 @@ namespace SolanaMessenger.Application.BusinessServices
     public class TokenBS : ITokenBS
     {
         private readonly IInvalidatedTokenRepository _tokenRep;
+        private readonly IBlockchainRepository<InvalidatedRefreshTokenData> _tokenBlockchainRep;
         private readonly JwtSettings _jwtSettings;
 
         private JwtSecurityTokenHandler Decoder = new JwtSecurityTokenHandler();
 
         public TokenBS(
             IInvalidatedTokenRepository tokenRep,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings,
+            IBlockchainRepository<InvalidatedRefreshTokenData> tokenBlockchainRep)
         {
             _tokenRep = tokenRep;
             _jwtSettings = jwtSettings.Value;
+            _tokenBlockchainRep = tokenBlockchainRep;
         }
 
         public string GenerateAccessToken(UserDTO user)
@@ -90,21 +94,34 @@ namespace SolanaMessenger.Application.BusinessServices
         }
 
 
-        public async Task<bool> RevokeToken(string token)
+        public async Task<bool> RevokeToken(string token, bool isAccess)
         {
             var jwtToken = Decoder.ReadJwtToken(token);
-
-            var tokenID = GetTokenID(jwtToken);
-            var expDate = jwtToken.ValidTo;
 
             if (await IsTokenRevokedAsync(jwtToken))
                 return false;
 
+            var id = Guid.NewGuid();
+            var tokenID = GetTokenID(jwtToken);
+            var expDate = jwtToken.ValidTo;
+
             var invalidatedToken = new InvalidatedToken
             {
+                ID = id,
                 TokenID = tokenID,
                 DateExpiration = expDate
             };
+
+            if (!isAccess)
+            {
+                var refreshTokenData = new InvalidatedRefreshTokenData
+                {
+                    ID = id,
+                    TokenID = tokenID,
+                    DateExpiration = expDate
+                };
+                await _tokenBlockchainRep.WriteObjectAsync(refreshTokenData);
+            }
 
             await _tokenRep.AddAsync(invalidatedToken);
             await _tokenRep.SaveChangesAsync();

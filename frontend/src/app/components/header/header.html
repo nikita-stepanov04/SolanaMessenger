@@ -19,10 +19,8 @@
   </div>
 
   <div>
-    <app-tooltip text="{{ 'str030' | translate }}" placement="left">
-      <button (click)="logout()" class="btn btn-outline-dark btn-sm px-2">
-        <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
-      </button>
-    </app-tooltip>
+    <app-logout-button
+      [loading$]="isLogOuting$">
+    </app-logout-button>
   </div>
 </div>
