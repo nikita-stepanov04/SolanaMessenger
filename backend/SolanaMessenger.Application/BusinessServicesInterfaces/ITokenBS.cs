@@ -15,5 +15,6 @@ namespace SolanaMessenger.Application.BusinessServicesInterfaces
         Task<InvalidatedToken?> GetByIDAsync(Guid id);
         Task<bool> IsTokenRevokedAsync(string token);
         Task<bool> IsTokenRevokedAsync(JwtSecurityToken jwtToken);
+        Task RemoveExpiredInvalidatedTokens();
     }
 }

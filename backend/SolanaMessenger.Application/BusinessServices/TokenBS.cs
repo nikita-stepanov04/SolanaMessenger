@@ -20,6 +20,8 @@ namespace SolanaMessenger.Application.BusinessServices
 
         private JwtSecurityTokenHandler Decoder = new JwtSecurityTokenHandler();
 
+        const int EXPIRED_TOKEN_REMOVAL_OFFSET = 30; // Minutes
+
         public TokenBS(
             IInvalidatedTokenRepository tokenRep,
             IOptions<JwtSettings> jwtSettings,
@@ -147,5 +149,11 @@ namespace SolanaMessenger.Application.BusinessServices
 
         private string GetTokenID(JwtSecurityToken jwtToken) => jwtToken.Claims.FirstOrDefault(c => c.Type == JwtClaimType.TokenID)!.Value;
         private string NewRandomGUID() => Guid.NewGuid().ToString().Replace("-", string.Empty);
+
+        public Task RemoveExpiredInvalidatedTokens()
+        {
+            return _tokenRep.RemoveInvalidatedTokensExpiredBefore(
+                DateTime.UtcNow.AddMinutes(-EXPIRED_TOKEN_REMOVAL_OFFSET));
+        }
     }
 }

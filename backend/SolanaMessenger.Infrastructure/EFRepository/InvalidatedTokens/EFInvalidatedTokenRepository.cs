@@ -12,5 +12,12 @@ namespace SolanaMessenger.Infrastructure.EFRepository
         {
             return DbSet.AnyAsync(t => t.TokenID == tokenId);
         }
+
+        public Task RemoveInvalidatedTokensExpiredBefore(DateTime date)
+        {
+            return DbSet
+                .Where(t => t.DateExpiration < date)
+                .ExecuteDeleteAsync();
+        }
     }
 }

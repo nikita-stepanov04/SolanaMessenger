@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SolanaMessenger.Application.BusinessServices;
 using SolanaMessenger.Application.BusinessServicesInterfaces;
+using SolanaMessenger.Application.Jobs;
 using SolanaMessenger.Domain;
 
 namespace SolanaMessenger.Application
@@ -11,6 +12,7 @@ namespace SolanaMessenger.Application
         public IServiceCollection SetupDI(IServiceCollection services, IConfiguration config)
         {
             services.AddAutoMapper(cfg => { }, typeof(DefaultApplicationDIManager).Assembly);
+            services.SetUpJobs();
 
             services.AddScoped<IUserBS, UserBS>();
             services.AddScoped<ITokenBS, TokenBS>();

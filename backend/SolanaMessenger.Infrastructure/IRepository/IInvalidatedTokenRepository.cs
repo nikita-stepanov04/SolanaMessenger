@@ -5,5 +5,7 @@ namespace SolanaMessenger.Infrastructure
     public interface IInvalidatedTokenRepository : IRepositoryBase<InvalidatedToken>
     {
         Task<bool> IsTokenPresentAsync(string tokenId);
+
+        Task RemoveInvalidatedTokensExpiredBefore(DateTime date);
     }
 }

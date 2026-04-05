@@ -17,6 +17,8 @@
 		<PackageReference Include="AutoMapper" Version="16.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.5" />
+		<PackageReference Include="Quartz" Version="3.17.1" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.17.1" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
 		<PackageReference Include="NSec.Cryptography" Version="25.4.0" />
 	</ItemGroup>
