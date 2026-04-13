@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
-    public class SolanaTransactionManager<TObject>
+    public class SolanaTransactionWriter<TObject>
         where TObject : class, new()
     {
         private const int MAX_REQUESTS_RETRIES = 3;
@@ -23,7 +23,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
         private readonly SolanaSettings _solSettings;
         private readonly SolanaTransactionSocketListener _solListener;
 
-        public SolanaTransactionManager(
+        public SolanaTransactionWriter(
             ILoggerFactory loggerFactory,
             IOptions<SolanaSettings> solSettings,
             SolanaTransactionSocketListener solListener)
@@ -36,7 +36,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
                     : Cluster.MainNet,
                 logger: loggerFactory.CreateLogger("SolanaRpcClient")
             );
-            _logger = loggerFactory.CreateLogger<SolanaTransactionManager<TObject>>();
+            _logger = loggerFactory.CreateLogger<SolanaTransactionWriter<TObject>>();
             _account = new Account(_solSettings.WalletPrivateKey, _solSettings.WalletPublicKey);
         }
 

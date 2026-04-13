@@ -16,6 +16,7 @@
 		<PackageReference Include="Solana.Programs" Version="8.7.0" />
 		<PackageReference Include="Solana.Rpc" Version="8.7.0" />
 		<PackageReference Include="Solana.Wallet" Version="8.7.0" />
+		<PackageReference Include="System.Threading.RateLimiting" Version="10.0.5" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\SolanaMessenger.Domain\SolanaMessenger.Domain.csproj" />
