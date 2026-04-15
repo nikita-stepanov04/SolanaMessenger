@@ -13,7 +13,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
         private readonly string _baseUrl;
         private readonly HttpClient _httpClient;
         private readonly SolanaSettings _settings;
-        private readonly IEnumerable<EndpointInfo> _apiKeyPull;
+        private readonly IEnumerable<ApiKeyInfo> _apiKeyPull;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly ILogger<HeliusSolanaTransactionHttpClient> _logger;
 
@@ -48,7 +48,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
             if (!lease.IsAcquired)
                 throw new InvalidOperationException("Failed to acquire a lease");
 
-            return await _httpClient.PostAsync(leastOccupiedEndpointInfo.Endpoint, content);
+            return await _httpClient.PostAsync(leastOccupiedEndpointInfo.Url, content);
         }
 
         public void Dispose()
@@ -61,12 +61,12 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
             }
         }
 
-        private List<EndpointInfo> CreateApiKeyPull()
+        private List<ApiKeyInfo> CreateApiKeyPull()
         {
-            var pull = _settings.HeliusApiKeys.Select((key, index) => new EndpointInfo
+            var pull = _settings.HeliusApiKeys.Select((key, index) => new ApiKeyInfo
             {
                 Number = index + 1,
-                Endpoint = $"{_baseUrl}/?api-key={key}",
+                Url = $"{_baseUrl}/?api-key={key}",
                 RateLimiter = new FixedWindowRateLimiter(new FixedWindowRateLimiterOptions
                 {
                     Window = TimeSpan.FromSeconds(1),
@@ -81,10 +81,10 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
             return pull;
         }
 
-        private class EndpointInfo
+        private class ApiKeyInfo
         {
             public int Number { get; init; }
-            public required string Endpoint { get; init; }
+            public required string Url { get; init; }
             public required RateLimiter RateLimiter { get; init; }
 
             public long LimiterQueueCount => RateLimiter.GetStatistics()?.CurrentQueuedCount ?? 0;

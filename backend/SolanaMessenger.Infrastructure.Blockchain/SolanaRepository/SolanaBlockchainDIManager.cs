@@ -12,7 +12,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
             services.AddScoped(typeof(IBlockchainRepository<>), typeof(SolanaRepository<>));
 
             services.AddScoped(typeof(SolanaTransactionWriter<>));
-            services.AddScoped(typeof(HeliusSolanaTransactionReader<>));
+            services.AddScoped(typeof(SolanaTransactionReader<>), typeof(HeliusSolanaTransactionReader<>));
 
             services.AddSingleton(typeof(SolanaTransactionSocketListener));
             services.AddSingleton(typeof(HeliusSolanaTransactionHttpClient));

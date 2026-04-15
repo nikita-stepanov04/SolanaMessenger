@@ -1,19 +1,17 @@
-﻿using SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius;
-
-namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
+﻿namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository
 {
     public class SolanaRepository<TObject> : IBlockchainRepository<TObject>
         where TObject : class, new()
     {
         private readonly SolanaTransactionWriter<TObject> _transactionWriter;
-        private readonly HeliusSolanaTransactionReader<TObject> _transactionReader;
+        private readonly SolanaTransactionReader<TObject> _transactionReader;
 
         public SolanaRepository(
-            SolanaTransactionWriter<TObject> transactionManager,
-            HeliusSolanaTransactionReader<TObject> transactionFetcher)
+            SolanaTransactionWriter<TObject> transactionWriter,
+            SolanaTransactionReader<TObject> transactionReader)
         {
-            _transactionWriter = transactionManager;
-            _transactionReader = transactionFetcher;
+            _transactionWriter = transactionWriter;
+            _transactionReader = transactionReader;
         }
 
         public async Task<TObject?> GetObjectAsync(byte[] signatures)
