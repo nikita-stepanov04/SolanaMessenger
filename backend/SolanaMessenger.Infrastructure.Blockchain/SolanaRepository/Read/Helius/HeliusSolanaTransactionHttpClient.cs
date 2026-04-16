@@ -15,9 +15,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
         private readonly SolanaSettings _settings;
         private readonly IReadOnlyList<ApiKeyInfo> _apiKeyPull;
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly ILogger<HeliusSolanaTransactionHttpClient> _logger;
-
-        private readonly Random _random = new();
+        private readonly ILogger<HeliusSolanaTransactionHttpClient> _logger;      
 
         public HeliusSolanaTransactionHttpClient(
             IOptions<SolanaSettings> opts,
@@ -40,7 +38,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
 
         public async Task<HttpResponseMessage> PostAsync(HttpContent content)
         {
-            var apiKeyInfo = _apiKeyPull[_random.Next(_apiKeyPull.Count)];
+            var apiKeyInfo = _apiKeyPull[Random.Shared.Next(_apiKeyPull.Count)];
 
             _logger.LogDebug("Using api key {key} for request execution, remaining permits: {p}", 
                 apiKeyInfo.Number, apiKeyInfo.LimiterAvailablePermits);
@@ -72,7 +70,7 @@ namespace SolanaMessenger.Infrastructure.Blockchain.SolanaRepository.Read.Helius
                 Url = $"{_baseUrl}/?api-key={key}",
                 RateLimiter = new FixedWindowRateLimiter(new FixedWindowRateLimiterOptions
                 {
-                    Window = TimeSpan.FromSeconds(1),
+                    Window = TimeSpan.FromMilliseconds(1200),
                     PermitLimit = _settings.HeliusRequestsPerSecLimit,
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = _settings.HeliusRequestsPerSecLimit * 10,
